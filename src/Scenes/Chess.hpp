@@ -22,7 +22,8 @@ public:
 	enum PieceColor
 	{
 		Black,
-		White
+		White,
+		Neutral
 	};
 
 	enum PieceType
@@ -75,6 +76,8 @@ public:
 private:
 	PieceColor getPieceColor(const sf::Vector2i& coords);
 
+	PieceColor getPieceColor(const PieceType pieceType);
+
 	PieceType getPieceType(const sf::Vector2i coords);
 
 	std::string getPieceTypeStr(const sf::Vector2i coords);
@@ -84,15 +87,18 @@ private:
 	std::string getPlayerTurnStr();
 
 	bool isPieceCanTake(const sf::Vector2i& selected, const sf::Vector2i& target);
+
 	void switchPlayerTurn();
 
+	void updateMoveablePiece(PieceType pieceType);
 
 	sf::Sprite m_chessBoard_Spr;
 	sf::Sprite m_moveableChessPiece_Spr;
 	TileMap m_chessPieces_TlMap;
 	MoveHistory m_moveHistory;
 	PieceColor m_playerTurn;
-	sf::Vector2i m_selectedPiece;
+	sf::Vector2i m_selectedPieceCoords;
+	PieceType m_selectedPieceType;
 	std::vector<sf::Vector2i> m_validMoves;
 
 	bool m_isCheckMate = 0;

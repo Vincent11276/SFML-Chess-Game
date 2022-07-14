@@ -46,7 +46,7 @@ namespace Helper
     }
 
     inline void centerSprite(sf::Sprite *sprite)
-    {
+    {    
         sprite->setOrigin(sprite->getGlobalBounds().getSize() / 2.f);
     }
 

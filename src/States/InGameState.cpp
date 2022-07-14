@@ -45,8 +45,6 @@ void InGameState::update(GameStateManager* game, float deltaTime)
 		sf::Vector2i selected = m_chessGame.getSelectedPiece();
 
 		if (m_chessGame.moveSelectedPiece(target)) {
-			
-		
 			if (m_chessGame.isCheckMate())
 			{
 				Logger::getInstance().log(LogLevel::INFO,

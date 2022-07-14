@@ -1,4 +1,16 @@
-#pragma once
+// #include <iostream>
+// #include <string>
+// #include <filesystem>
+
+// using std::cout; using std::cin;
+// using std::endl; using std::string;
+// using std::filesystem::current_path;
+
+// int main() {
+//     cout << "Current working directory: " << current_path() << endl;
+
+//     return EXIT_SUCCESS;
+// }
 
 #include <bitset>
 #include <vector>

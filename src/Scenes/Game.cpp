@@ -2,8 +2,10 @@
 
 
 Game::Game()
-	: m_window(sf::VideoMode(600, 600), "Chess Game")
+	: m_window(sf::VideoMode(800, 600), "f")
 {
+	// m_window.setTitle("Chess Game");
+	// m_window.setSize({ 800, 600 });
 	m_window.setKeyRepeatEnabled(false);
 	m_window.setFramerateLimit(60);
 
@@ -13,6 +15,8 @@ Game::Game()
 
 void Game::run()
 {
+	this->loadResources();
+	
 	m_gameStateManager.changeState(InGameState::getInstance());
 
 	const sf::Time fixedUpdateInterval = sf::seconds(1.0f / 50.0f);
@@ -59,6 +63,18 @@ void Game::run()
 
 void Game::loadResources()
 {
-	ResourceManager::addResource(new RTexture, "chess board",
-		"../../../Assets/Chess_Artwork/Chess Board/Wood/Chess_Board.png");
+	ResourceManager::addTexture(ResourceKey::WoodChessBoard, "../Assets/Chess_Artwork/Chess_Artwork/Chess Board/Wood/Chess_Board.png");
+
+	ResourceManager::addTexture(ResourceKey::WoodPieceBishopB, "../Assets/Chess_Artwork/Chess_Artwork/Chess Pieces/Wood/BishopB.png");
+	ResourceManager::addTexture(ResourceKey::WoodPieceBishopW, "../Assets/Chess_Artwork/Chess_Artwork/Chess Pieces/Wood/BishopW.png");
+	ResourceManager::addTexture(ResourceKey::WoodPieceKingB, "../Assets/Chess_Artwork/Chess_Artwork/Chess Pieces/Wood/KingB.png");
+	ResourceManager::addTexture(ResourceKey::WoodPieceKingW, "../Assets/Chess_Artwork/Chess_Artwork/Chess Pieces/Wood/KingW.png");
+	ResourceManager::addTexture(ResourceKey::WoodPieceKnightB, "../Assets/Chess_Artwork/Chess_Artwork/Chess Pieces/Wood/KnightB.png");
+	ResourceManager::addTexture(ResourceKey::WoodPieceKnightW, "../Assets/Chess_Artwork/Chess_Artwork/Chess Pieces/Wood/KnightW.png");
+	ResourceManager::addTexture(ResourceKey::WoodPiecePawnB, "../Assets/Chess_Artwork/Chess_Artwork/Chess Pieces/Wood/PawnB.png");
+	ResourceManager::addTexture(ResourceKey::WoodPiecePawnW, "../Assets/Chess_Artwork/Chess_Artwork/Chess Pieces/Wood/PawnW.png");
+	ResourceManager::addTexture(ResourceKey::WoodPieceQueenB, "../Assets/Chess_Artwork/Chess_Artwork/Chess Pieces/Wood/QueenB.png");
+	ResourceManager::addTexture(ResourceKey::WoodPieceQueenW, "../Assets/Chess_Artwork/Chess_Artwork/Chess Pieces/Wood/QueenW.png");
+	ResourceManager::addTexture(ResourceKey::WoodPieceRookB, "../Assets/Chess_Artwork/Chess_Artwork/Chess Pieces/Wood/RookB.png");
+	ResourceManager::addTexture(ResourceKey::WoodPieceRookW, "../Assets/Chess_Artwork/Chess_Artwork/Chess Pieces/Wood/RookW.png");
 }

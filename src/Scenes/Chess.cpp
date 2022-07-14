@@ -12,21 +12,30 @@ ChessGame::ChessGame()
 
 void ChessGame::init()
 {
-	static sf::Texture chessBoard_Tex;
-
-	if (!chessBoard_Tex.loadFromFile("../../../Assets/Chess_Artwork/Chess Board/Wood/Chess_Board.png"))
-	{
-		Logger::getInstance().log(LogLevel::ERROR, "Failed to load chess board texture!");
-	}
-	m_chessBoard_Spr.setTexture(chessBoard_Tex);
+	auto& chessBoardTex = ResourceManager::getTexture(ResourceKey::WoodChessBoard);
+	m_chessBoard_Spr.setTexture(chessBoardTex);
 	m_chessBoard_Spr.setOrigin(20, 22);
 
 	static TileSet tileSet;
+
 	if (!tileSet.create(sf::Vector2f(80.0f, 80.0f), 12))
 	{
 		Logger::getInstance().log(LogLevel::ERROR, "Failed to create tileset!");
 	}
-	tileSet.loadFromDirectory("../../../Assets/Chess_Artwork/Chess Pieces/Wood");
+
+	tileSet.loadFromTexture(ResourceManager::getTexture(ResourceKey::WoodPieceBishopB));
+	tileSet.loadFromTexture(ResourceManager::getTexture(ResourceKey::WoodPieceBishopW));
+	tileSet.loadFromTexture(ResourceManager::getTexture(ResourceKey::WoodPieceKingB));
+	tileSet.loadFromTexture(ResourceManager::getTexture(ResourceKey::WoodPieceKingW));
+	tileSet.loadFromTexture(ResourceManager::getTexture(ResourceKey::WoodPieceKnightB));
+	tileSet.loadFromTexture(ResourceManager::getTexture(ResourceKey::WoodPieceKnightW));
+	tileSet.loadFromTexture(ResourceManager::getTexture(ResourceKey::WoodPiecePawnB));
+	tileSet.loadFromTexture(ResourceManager::getTexture(ResourceKey::WoodPiecePawnW));
+	tileSet.loadFromTexture(ResourceManager::getTexture(ResourceKey::WoodPieceQueenB));
+	tileSet.loadFromTexture(ResourceManager::getTexture(ResourceKey::WoodPieceQueenW));
+	tileSet.loadFromTexture(ResourceManager::getTexture(ResourceKey::WoodPieceRookB));
+	tileSet.loadFromTexture(ResourceManager::getTexture(ResourceKey::WoodPieceRookW));
+
 	m_chessPieces_TlMap.setTileSet(tileSet);
 
 	std::vector<std::vector<int>> chessLayout
@@ -50,6 +59,19 @@ void ChessGame::init()
 
 void ChessGame::handleEvents(const sf::Event& e)
 {	
+	switch (m_state)
+	{
+	case State::SelectingPiece:
+	{
+		auto mouse = MouseInput::getRelativePosition();
+		m_moveableChessPiece_Spr.setPosition(mouse.x, mouse.y);
+	}
+	break;
+
+	case State::DraggingPiece:
+		break;
+	}
+
 }
 
 void ChessGame::update(float delta)
@@ -73,9 +95,11 @@ void ChessGame::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	states.transform = this->getTransform();
 
-	target.draw(this->m_chessBoard_Spr, states);
+	target.draw(m_chessBoard_Spr, states);
 
 	target.draw(m_chessPieces_TlMap, states);
+
+	target.draw(m_moveableChessPiece_Spr, states);
 }
 
 // actions
@@ -84,56 +108,84 @@ bool ChessGame::selectPiece(const sf::Vector2i& selectedPiece)
 {
 	if (this->getPieceColor(selectedPiece) == m_playerTurn)
 	{
+
 		// important to update the value before quering for valid moves
 		m_selectedPiece = selectedPiece;
 
 		// process and cache valid moves for further processing
 		this->processValidMoves();
 
+		// remove selected piece from tile map and spawn moveable sprite
+		//m_chessPieces_TlMap.setCell(-1, m_selectedPiece);
+
 		switch (this->getPieceType(selectedPiece))
 		{
 		case B_PAWN:
+			m_moveableChessPiece_Spr.setTexture(
+				ResourceManager::getTexture(ResourceKey::WoodPiecePawnB));
 			break;
 
 		case B_ROOK:
+			m_moveableChessPiece_Spr.setTexture(
+				ResourceManager::getTexture(ResourceKey::WoodPieceRookB));
 			break;
 
 		case B_KNIGHT:
+			m_moveableChessPiece_Spr.setTexture(
+				ResourceManager::getTexture(ResourceKey::WoodPieceKnightB));
 			break;
 
 		case B_BISHOP:
+			m_moveableChessPiece_Spr.setTexture(
+				ResourceManager::getTexture(ResourceKey::WoodPieceBishopB));
 			break;
 
 		case B_QUEEN:
+			m_moveableChessPiece_Spr.setTexture(
+				ResourceManager::getTexture(ResourceKey::WoodPieceQueenB));
 			break;
 
 		case B_KING:
+			m_moveableChessPiece_Spr.setTexture(
+				ResourceManager::getTexture(ResourceKey::WoodPieceKingB));
 			break;
 
 		case W_PAWN:
+			m_moveableChessPiece_Spr.setTexture(
+				ResourceManager::getTexture(ResourceKey::WoodPiecePawnW));
+			
 			break;
 
 		case W_ROOK:
+			m_moveableChessPiece_Spr.setTexture(
+				ResourceManager::getTexture(ResourceKey::WoodPieceRookW));
 			break;
 
 		case W_KNIGHT:
+			m_moveableChessPiece_Spr.setTexture(
+				ResourceManager::getTexture(ResourceKey::WoodPieceKnightW));
 			break;
 
 		case W_BISHOP:
+			m_moveableChessPiece_Spr.setTexture(
+				ResourceManager::getTexture(ResourceKey::WoodPieceBishopW));
 			break;
 
 		case W_QUEEN:
+			m_moveableChessPiece_Spr.setTexture(
+				ResourceManager::getTexture(ResourceKey::WoodPieceQueenW));
 			break;
 
 		case W_KING:
+			m_moveableChessPiece_Spr.setTexture(
+				ResourceManager::getTexture(ResourceKey::WoodPieceKingW));
 			break;
 
 		default:
-			Logger::getInstance().log(LogLevel::ERROR,
+			Logger::getInstance().log(LogLevel::DEBUG,
 				"Unknown piece type enum value received for setting moveable chess piece sprite");
 			break;
 		}
-		//m_moveableChessPiece_Spr.setTexture();
 
 		// play grabbing piece sound
 

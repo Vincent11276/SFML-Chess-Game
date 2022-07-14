@@ -4,27 +4,26 @@
 #include <utility>
 #include <string>
 
-#include "Resource.hpp"
-#include "Singleton.hpp"
 #include "../Utility/Logger.hpp"
-#include "RTexture.hpp"
+#include "../Engine/LoadResult.hpp"
+#include "../Engine/ResourceKey.hpp"
 
+#include <SFML/Graphics/Texture.hpp>
 #include <memory>
 #include <unordered_map>
 #include <string>
+#include <format>
+#include <iostream>
 
 class ResourceManager
 {
 public:
     ResourceManager() = delete;
 
-    static void addResource(Resource* resource, const std::string& name, const std::string& path);
+    static bool addTexture(uint32_t key, std::string filePath);
 
-    template <typename T>
-    static T* getResource(const std::string& name);
-
-    static void eraseResource(const std::string& name);
+    static const sf::Texture& getTexture(uint32_t key);
 
 private:    
-    static std::unordered_map<std::string, std::unique_ptr<Resource>> m_resource;
+    static std::unordered_map<uint32_t, std::unique_ptr<sf::Texture>> m_textures;
 };

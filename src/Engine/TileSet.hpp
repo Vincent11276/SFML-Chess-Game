@@ -21,13 +21,13 @@ public:
 	{
 		if (this->m_tileSet_rendTex.create(tileSize.x * tileCount, tileSize.y))
 		{
-			return false;
+			return 1;
 		}
 		m_tileSize = tileSize;
 
 		m_tileSet_rendTex.clear(sf::Color::Transparent);
 
-		return true;
+		return 0;
 	}
 
 	sf::Int32 getTileCount()
@@ -44,6 +44,14 @@ public:
 	{
 		// type of this is sf::RenderTexture
 		return m_tileSet_rendTex.getTexture();
+	}
+
+	void loadFromTexture(const sf::Texture& texture)
+	{
+		sf::Sprite newTile_spr(texture);
+		newTile_spr.setPosition(this->m_tileCount++ * this->m_tileSize.x, 0);
+		this->m_tileSet_rendTex.draw(newTile_spr);
+		this->m_tileSet_rendTex.display();
 	}
 
 	bool loadFromFile(std::string path, LoadType loadType = LoadType::Single)

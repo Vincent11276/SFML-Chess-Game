@@ -1,4 +1,4 @@
-#include "tilemap.hpp"
+#include "TileMap.hpp"
 
 
 TileMap::TileMap()
@@ -40,7 +40,6 @@ sf::Vector2i TileMap::getDimension()
 
 void TileMap::setCell(int id, sf::Vector2i p_coords)
 {    
-        std::cout << id << " " << m_tileSet->getTileCount() << " " << (id < m_tileSet->getTileCount()) << std::endl;
     if (this->isInBounds(p_coords) && id < m_tileSet->getTileCount())
     {
         this->mapdata[p_coords.y][p_coords.x] = id;
@@ -100,7 +99,6 @@ void TileMap::setTileVertices(int id, sf::Vector2i p_coords)
 
     // check if request for remove
     if (id == -1) {
-        std::cout << "poop" << std::endl;
         // clear its texture by setting all to coords to nil
         quad[0].texCoords = sf::Vector2f(0, 0);
         quad[1].texCoords = sf::Vector2f(0, 0);

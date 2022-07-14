@@ -1,20 +1,29 @@
 #include "ResourceManager.hpp"
 
 
-void ResourceManager::addResource(Resource* resource, const std::string& name, const std::string& path)
-{
-    resource->loadResource();
+std::unordered_map<uint32_t, std::unique_ptr<sf::Texture>> ResourceManager::m_textures { };
 
-    m_resource.insert(std::make_pair(name, resource));
+
+bool ResourceManager::addTexture(uint32_t key, std::string filePath)
+{
+    auto newTexture = std::make_unique<sf::Texture>();
+
+    if (!newTexture->loadFromFile(filePath))
+    {
+        return LoadResult::Failure;
+    }
+    m_textures.emplace(std::make_pair(key, std::move(newTexture)));
+
+    return LoadResult::Success;
 }
 
-template <typename T>
-T* ResourceManager::getResource(const std::string& name)
+const sf::Texture& ResourceManager::getTexture(uint32_t key)
 {
-    return dynamic_cast<T*>(m_resource.find(name)->second);
+    if (m_textures.find(key) == m_textures.end())
+    {
+        Logger::getInstance().log(LogLevel::ERROR,
+            std::format("The key '{}' you are trying to access doesn't exists!", key));
+    }
+    return *m_textures[key];
 }
 
-void ResourceManager::eraseResource(const std::string& name)
-{
-    m_resource.erase(name);
-}

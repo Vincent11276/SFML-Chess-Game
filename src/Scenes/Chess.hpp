@@ -5,15 +5,16 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <string>
+#include <iostream>
 
 #include "../Engine/TileMap.hpp"
 #include "../Inputs/Mouse.hpp"
 #include "../Utility/Logger.hpp"
 #include "../Utility/Helper.hpp"
 #include "../States/GameStateManager.hpp"
+#include "../Engine/ResourceManager.hpp"
 
 typedef std::vector<std::pair<std::string, std::string>> MoveHistory;
-
 
 class ChessGame: public sf::Drawable, public sf::Transformable
 {
@@ -41,7 +42,6 @@ public:
 
 		None = -1
 	};
-
 
 	ChessGame();
 

@@ -9,7 +9,6 @@
 #include "../States/InGameState.hpp"
 #include "../Engine/ResourceManager.hpp"
 
-
 class Game
 {
 public:

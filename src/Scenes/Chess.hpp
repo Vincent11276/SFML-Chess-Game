@@ -13,6 +13,9 @@
 #include "../Utility/Helper.hpp"
 #include "../States/GameStateManager.hpp"
 #include "../Engine/ResourceManager.hpp"
+#include "../Engine/PieceType.hpp"
+#include "../Scenes/MoveablePiece.hpp"
+
 
 typedef std::vector<std::pair<std::string, std::string>> MoveHistory;
 

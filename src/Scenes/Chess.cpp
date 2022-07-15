@@ -144,7 +144,7 @@ bool ChessGame::selectPiece(const sf::Vector2i& selectedPiece)
 		// update current state
 		m_state = State::DraggingPiece;
 
-		Logger::getInstance().log(LogLevel::INFO,
+		Logger::getInstance().log(LogLevel::DEBUG,
 			std::format("You have selected your piece at [{}, {}]!",
 				selectedPiece.x, selectedPiece.y));
 
@@ -152,7 +152,7 @@ bool ChessGame::selectPiece(const sf::Vector2i& selectedPiece)
 	}
 	else
 	{
-		Logger::getInstance().log(LogLevel::INFO,
+		Logger::getInstance().log(LogLevel::DEBUG,
 			"You cannot selected your enemy's piece!");
 
 		return false;
@@ -174,11 +174,11 @@ bool ChessGame::moveSelectedPiece(const sf::Vector2i& target)
 			// play piece touch down sound
 			successFlag = true;
 
-			Logger::getInstance().log(LogLevel::INFO,
+			Logger::getInstance().log(LogLevel::DEBUG,
 				std::format("You have moved your piece from [{}, {}] to [{}, {}]",
 					m_selectedPieceCoords.x, m_selectedPieceCoords.y, target.x, target.y));
 
-			Logger::getInstance().log(LogLevel::INFO,
+			Logger::getInstance().log(LogLevel::DEBUG,
 				this->getPlayerTurnStr() + "'s turn to make a move!");
 		}
 		else
@@ -186,7 +186,7 @@ bool ChessGame::moveSelectedPiece(const sf::Vector2i& target)
 			// reset selected piece back
 			m_chessPieces_TlMap.setCell(m_selectedPieceType, m_selectedPieceCoords);
 
-			Logger::getInstance().log(LogLevel::INFO,
+			Logger::getInstance().log(LogLevel::DEBUG,
 				std::format("You cannot move your piece from [{}, {}] to [{}, {}]",
 					m_selectedPieceCoords.x, m_selectedPieceCoords.y, target.x, target.y));
 		}
@@ -207,7 +207,7 @@ bool ChessGame::processValidMoves()
 
 	switch (this->getPieceType(m_selectedPieceCoords))
 	{
-	case B_PAWN:
+	case B_PAWN: 
 	{
 		// check if pawn can move forward 1x
 		sf::Vector2i target { m_selectedPieceCoords.x, m_selectedPieceCoords.y + 1 };

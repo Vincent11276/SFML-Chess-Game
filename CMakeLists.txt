@@ -23,9 +23,12 @@ add_executable(CMakeSFMLProject
                 "src/Inputs/Keyboard.cpp"
                 "src/Scenes/Game.cpp"
                 "src/Scenes/Chess.cpp"
-                "src/States/GameStateManager.cpp"
+                "src/Scenes/PieceHighlighter.cpp"
+                "src/Scenes/MoveablePiece.cpp"
                 "src/States/InGameState.cpp"
-) 
+                "src/States/GameStateManager.cpp"
+                
+)
 
 target_link_libraries(CMakeSFMLProject PRIVATE sfml-graphics sfml-audio)
 target_compile_features(CMakeSFMLProject PRIVATE cxx_std_20)

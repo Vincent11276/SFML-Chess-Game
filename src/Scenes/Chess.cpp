@@ -67,8 +67,10 @@ void ChessGame::handleEvents(const sf::Event& e)
 
 	case State::DraggingPiece:
 	{
-		auto mouse = MouseInput::getRelativePosition();
-		m_moveableChessPiece_Spr.setPosition(mouse.x, mouse.y);
+		m_moveablePiece.followMouse();
+
+		// auto mouse = MouseInput::getRelativePosition();
+		// m_moveableChessPiece_Spr.setPosition(mouse.x, mouse.y);
 	}	
 	break;
 	}
@@ -105,7 +107,7 @@ void ChessGame::draw(sf::RenderTarget& target, sf::RenderStates states) const
 		break;
 
 	case State::DraggingPiece:
-		target.draw(m_moveableChessPiece_Spr, states);
+		target.draw(m_moveablePiece, states);
 		break;
 	}
 }
@@ -134,7 +136,8 @@ bool ChessGame::selectPiece(const sf::Vector2i& selectedPiece)
 		this->processValidMoves();
 
 		// change the texture of moveable piece to what the player selected
-		this->updateMoveablePiece(this->getPieceType(selectedPiece));
+		m_moveablePiece.changeType(m_selectedPieceType);
+		m_moveablePiece.followMouse();
 
 		// remove selected piece from tile map and spawn moveable sprite
 		m_chessPieces_TlMap.setCell(-1, m_selectedPieceCoords);
@@ -494,79 +497,4 @@ void ChessGame::switchPlayerTurn()
 	{
 		m_playerTurn = PieceColor::Black;
 	}
-}
-
-void ChessGame::updateMoveablePiece(PieceType pieceType)
-{
-	switch (pieceType)
-	{
-	case B_PAWN:
-		m_moveableChessPiece_Spr.setTexture(
-			ResourceManager::getTexture(ResourceKey::WoodPiecePawnB));
-		break;
-
-	case B_ROOK:
-		m_moveableChessPiece_Spr.setTexture(
-			ResourceManager::getTexture(ResourceKey::WoodPieceRookB));
-		break;
-
-	case B_KNIGHT:
-		m_moveableChessPiece_Spr.setTexture(
-			ResourceManager::getTexture(ResourceKey::WoodPieceKnightB));
-		break;
-
-	case B_BISHOP:
-		m_moveableChessPiece_Spr.setTexture(
-			ResourceManager::getTexture(ResourceKey::WoodPieceBishopB));
-		break;
-
-	case B_QUEEN:
-		m_moveableChessPiece_Spr.setTexture(
-			ResourceManager::getTexture(ResourceKey::WoodPieceQueenB));
-		break;
-
-	case B_KING:
-		m_moveableChessPiece_Spr.setTexture(
-			ResourceManager::getTexture(ResourceKey::WoodPieceKingB));
-		break;
-
-	case W_PAWN:
-		m_moveableChessPiece_Spr.setTexture(
-			ResourceManager::getTexture(ResourceKey::WoodPiecePawnW));
-		
-		break;
-
-	case W_ROOK:
-		m_moveableChessPiece_Spr.setTexture(
-			ResourceManager::getTexture(ResourceKey::WoodPieceRookW));
-		break;
-
-	case W_KNIGHT:
-		m_moveableChessPiece_Spr.setTexture(
-			ResourceManager::getTexture(ResourceKey::WoodPieceKnightW));
-		break;
-
-	case W_BISHOP:
-		m_moveableChessPiece_Spr.setTexture(
-			ResourceManager::getTexture(ResourceKey::WoodPieceBishopW));
-		break;
-
-	case W_QUEEN:
-		m_moveableChessPiece_Spr.setTexture(
-			ResourceManager::getTexture(ResourceKey::WoodPieceQueenW));
-		break;
-
-	case W_KING:
-		m_moveableChessPiece_Spr.setTexture(
-			ResourceManager::getTexture(ResourceKey::WoodPieceKingW));
-		break;
-
-	default:
-		Logger::getInstance().log(LogLevel::DEBUG,
-			"Unknown piece type enum value received for setting moveable chess piece sprite");
-		break;
-	}
-	auto mouse = MouseInput::getRelativePosition();
-	m_moveableChessPiece_Spr.setPosition(mouse.x, mouse.y);
-	Helper::centerSprite(&m_moveableChessPiece_Spr);
 }

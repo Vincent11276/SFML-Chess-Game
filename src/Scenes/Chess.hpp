@@ -15,6 +15,7 @@
 #include "../Engine/ResourceManager.hpp"
 #include "../Engine/PieceType.hpp"
 #include "../Scenes/MoveablePiece.hpp"
+#include "../Engine/ValidMoves.hpp"
 
 
 typedef std::vector<std::pair<std::string, std::string>> MoveHistory;
@@ -93,10 +94,9 @@ private:
 
 	void switchPlayerTurn();
 
-	void updateMoveablePiece(PieceType pieceType);
-
 	sf::Sprite m_chessBoard_Spr;
-	sf::Sprite m_moveableChessPiece_Spr;
+	// sf::Sprite m_moveableChessPiece_Spr;
+	MoveablePiece m_moveablePiece;
 	TileMap m_chessPieces_TlMap;
 	MoveHistory m_moveHistory;
 	PieceColor m_playerTurn;

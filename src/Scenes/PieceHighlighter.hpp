@@ -1,41 +1,72 @@
 #pragma once
 
 #include "../Engine/TileMap.hpp"
+#include "../Utility/Logger.hpp"
+#include "../Engine/ResourceManager.hpp"
+#include "SFML/Graphics/RenderStates.hpp"
+#include "SFML/Graphics/Transformable.hpp"
+#include "SFML/System/Vector2.hpp"
+
+#include <iostream>
 
 
-class PieceHighlighter
+class PieceHighlighter : public sf::Drawable, public sf::Transformable
 {
 public:
     PieceHighlighter()
+        : m_tilemap({ 8, 8 }, { 80.f, 80.f })
     {
+        if (!m_tileSet.create({ 80.f, 80.f }, 3))
+        {
+            Logger::getInstance().log(LogLevel::ERROR,
+                "Unable to create tileset object for PieceHighlighter class");
+        }
+        m_tileSet.loadFromTexture(ResourceManager::getTexture(ResourceKey::ActionMark));
+        m_tileSet.loadFromTexture(ResourceManager::getTexture(ResourceKey::CanMoveMark));
+        m_tileSet.loadFromTexture(ResourceManager::getTexture(ResourceKey::CanTakeMark));
 
+        m_tilemap.setTileSet(m_tileSet);
     }
 
-    void markAsCanTake()
+    void clear()
     {
-
+        m_tilemap.clear();
     }
 
-    void markAsCanMove()
+    void unmark(const sf::Vector2i& coords)
     {
-
+        m_tilemap.setCell(-1, coords);
     }
 
-    void markAsSelected()
+    void markAsCanMove(const sf::Vector2i& coords)
     {
-
+        m_tilemap.setCell(1, coords);
     }
 
-    void markAsPreviousMove()
+    void markAsCanTake(const sf::Vector2i& coords)
     {
-
+        m_tilemap.setCell(2, coords);
     }
 
-    void progress()
+    void markAsSelected(const sf::Vector2i& coords)
     {
+        m_tilemap.setCell(0, coords);
+    }
 
+    void markAsPreviousMove(const sf::Vector2i& selected, const sf::Vector2i& target)
+    {
+        m_tilemap.setCell(0, selected);
+        m_tilemap.setCell(0, target);
+    }
+
+    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override
+    {
+        states.transform *= this->getTransform();
+
+        target.draw(m_tilemap, states);
     }
 
 private:
-    TileMap highlights_TlMap;
-}
+    TileMap m_tilemap;
+    TileSet m_tileSet;
+};

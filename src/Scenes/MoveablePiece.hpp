@@ -17,16 +17,10 @@ public:
 
     void changeType(int pieceType);
 
-    void show();
-
-    void hide();
-
     void followMouse();
 
 private:
     static std::unordered_map<int, ResourceKey> m_resourceKeys;
-
-    bool m_isVisible = false;
 
     sf::Sprite moveablePiece_Spr;
 

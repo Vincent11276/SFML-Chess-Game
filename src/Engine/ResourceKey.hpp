@@ -2,6 +2,10 @@
 
 enum ResourceKey
 {
+    ActionMark,
+    CanMoveMark,
+    CanTakeMark,
+
     StoneBlackChessBoard,
     StoneBlueChessBoard,
     StoneGreyChessBoard,

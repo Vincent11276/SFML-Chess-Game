@@ -1,4 +1,5 @@
 #include "Chess.hpp"
+#include <functional>
 
 
 ChessGame::ChessGame()
@@ -68,9 +69,6 @@ void ChessGame::handleEvents(const sf::Event& e)
 	case State::DraggingPiece:
 	{
 		m_moveablePiece.followMouse();
-
-		// auto mouse = MouseInput::getRelativePosition();
-		// m_moveableChessPiece_Spr.setPosition(mouse.x, mouse.y);
 	}	
 	break;
 	}
@@ -99,6 +97,7 @@ void ChessGame::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	states.transform = this->getTransform();
 
 	target.draw(m_chessBoard_Spr, states);
+	target.draw(m_pieceHighlighter, states);
 	target.draw(m_chessPieces_TlMap, states);
 
 	switch (m_state)
@@ -116,8 +115,15 @@ void ChessGame::draw(sf::RenderTarget& target, sf::RenderStates states) const
 
 bool ChessGame::selectPiece(const sf::Vector2i& selectedPiece)
 {
+	// check if selected piece is in bounds of 8x8 board
+	if (!this->isPieceInBounds(selectedPiece))
+	{
+		return false;
+	}
+
 	PieceColor pieceColor = this->getPieceColor(selectedPiece);
 
+	// check if selected "piece" is empty
 	if (pieceColor == PieceColor::Neutral)
 	{
 		Logger::getInstance().log(LogLevel::INFO,
@@ -129,20 +135,33 @@ bool ChessGame::selectPiece(const sf::Vector2i& selectedPiece)
 	if (pieceColor == m_playerTurn)
 	{
 		// important to update the values before quering for valid moves
-		m_selectedPieceCoords = selectedPiece;
+		m_selectedCoords = selectedPiece;
 		m_selectedPieceType = this->getPieceType(selectedPiece);
 
-		// process and cache valid moves for further processing
-		this->processValidMoves();
+		// delete previously marked valid moves
+		for (auto& coords: m_validMoves)
+		{
+			m_pieceHighlighter.unmark(coords);
+		}
 
-		// change the texture of moveable piece to what the player selected
+		// clear previously set valid moves and generate new one
+		m_validMoves.clear();
+
+		this->processValidMoves(&m_validMoves);
+
+		// mark new valid moves after deleting old one
+		for (auto& coords: m_validMoves)
+		{
+			m_pieceHighlighter.markAsCanMove(coords);
+		}
+
+		// remove selected piece from tile map and spawn moveable sprite
+		m_chessPieces_TlMap.setCell(-1, m_selectedCoords);
 		m_moveablePiece.changeType(m_selectedPieceType);
 		m_moveablePiece.followMouse();
 
-		// remove selected piece from tile map and spawn moveable sprite
-		m_chessPieces_TlMap.setCell(-1, m_selectedPieceCoords);
-
 		// play grabbing piece sound
+
 
 		// update current state
 		m_state = State::DraggingPiece;
@@ -157,8 +176,6 @@ bool ChessGame::selectPiece(const sf::Vector2i& selectedPiece)
 	{
 		Logger::getInstance().log(LogLevel::DEBUG,
 			"You cannot selected your enemy's piece!");
-
-		return false;
 	}
 	return false;
 }
@@ -172,14 +189,20 @@ bool ChessGame::moveSelectedPiece(const sf::Vector2i& target)
 		if (Helper::isElementExists(target, m_validMoves))
 		{
 			m_chessPieces_TlMap.setCell(m_selectedPieceType, target);
-			m_chessPieces_TlMap.setCell(-1, m_selectedPieceCoords);
+			m_chessPieces_TlMap.setCell(-1, m_selectedCoords);
+
+			// delete previously marked valid moves
+			for (auto& coords: m_validMoves)
+			{
+				m_pieceHighlighter.unmark(coords);
+			}
 
 			// play piece touch down sound
 			successFlag = true;
 
 			Logger::getInstance().log(LogLevel::DEBUG,
 				std::format("You have moved your piece from [{}, {}] to [{}, {}]",
-					m_selectedPieceCoords.x, m_selectedPieceCoords.y, target.x, target.y));
+					m_selectedCoords.x, m_selectedCoords.y, target.x, target.y));
 
 			Logger::getInstance().log(LogLevel::DEBUG,
 				this->getPlayerTurnStr() + "'s turn to make a move!");
@@ -187,11 +210,11 @@ bool ChessGame::moveSelectedPiece(const sf::Vector2i& target)
 		else
 		{
 			// reset selected piece back
-			m_chessPieces_TlMap.setCell(m_selectedPieceType, m_selectedPieceCoords);
+			m_chessPieces_TlMap.setCell(m_selectedPieceType, m_selectedCoords);
 
 			Logger::getInstance().log(LogLevel::DEBUG,
 				std::format("You cannot move your piece from [{}, {}] to [{}, {}]",
-					m_selectedPieceCoords.x, m_selectedPieceCoords.y, target.x, target.y));
+					m_selectedCoords.x, m_selectedCoords.y, target.x, target.y));
 		}
 	}
 	// update state
@@ -204,191 +227,222 @@ bool ChessGame::moveSelectedPiece(const sf::Vector2i& target)
 	return successFlag;
 }
 
-bool ChessGame::processValidMoves()
+void ChessGame::generateDiagonalMoves(std::vector<sf::Vector2i>* validMovesPtr)
 {
-	m_validMoves.clear();
-
-	switch (this->getPieceType(m_selectedPieceCoords))
+	auto validateMove = [&](const sf::Vector2i& target)
 	{
-	case B_PAWN: 
-	{
-		// check if pawn can move forward 1x
-		sf::Vector2i target { m_selectedPieceCoords.x, m_selectedPieceCoords.y + 1 };
-
-		if (not this->isPieceExists(target) 
-			&& this->isPieceInBounds(target))
+		if (!this->isPieceExists(target))
 		{
-			m_validMoves.push_back(target);
+			validMovesPtr->push_back(target);
 		}
-
-		// check if pawn has ever been moved to move forward 2x
-		if (m_selectedPieceCoords.y == 1)
+		else
 		{
-			sf::Vector2i target = { m_selectedPieceCoords.x, m_selectedPieceCoords.y + 2 };
-
-			if (not this->isPieceExists(target)) 
+			if (this->isPieceCanTake(m_selectedCoords, target))
 			{
-				m_validMoves.push_back(target);
+				validMovesPtr->push_back(target); 
 			}
+			return true;
 		}
-
-		// check if pawn can take left
-		target = m_selectedPieceCoords + sf::Vector2i(-1, 1);
-
-		if (this->isPieceCanTake(m_selectedPieceCoords, target))
-		{
-			m_validMoves.push_back(target);
-		}
-
-		// check if pawn can take right
-		target = m_selectedPieceCoords + sf::Vector2i(1, 1);
-
-		if (this->isPieceCanTake(m_selectedPieceCoords, target))
-		{
-			m_validMoves.push_back(target);
-		}
-	}
-	break;
-
-	case B_ROOK:
-	{
-		// check for base to top
-		for (int y = m_selectedPieceCoords.y - 1; y > 0; y--)
-		{
-			if (this->isPieceExists({ m_selectedPieceCoords.x, y }))
-			{
-				m_validMoves.push_back({ m_selectedPieceCoords.x, y });
-			}
-			else break;
-		}
-
-		// check for base to down
-		for (int y = m_selectedPieceCoords.y + 1; y < 8; y++)
-		{
-			if (this->isPieceExists({ m_selectedPieceCoords.x, y }))
-			{
-				m_validMoves.push_back({ m_selectedPieceCoords.x, y });
-			}
-			else break;
-		}
-
-		// check for base to left
-		for (int x = m_selectedPieceCoords.x - 1; x > 0; x--)
-		{
-			if (this->isPieceExists({ x, m_selectedPieceCoords.y }))
-			{
-				m_validMoves.push_back({ x, m_selectedPieceCoords.y });
-			}
-			else break;
-		}
-
-		// check for base to right
-		for (int x = m_selectedPieceCoords.x + 1; x < 8; x++)
-		{
-			if (this->isPieceExists({ x, m_selectedPieceCoords.y }))
-			{
-				m_validMoves.push_back({ x, m_selectedPieceCoords.y });
-			}
-			else break;
-		}
-	}
-	break;
-
-	case B_KNIGHT:
-	{
-		static std::vector<sf::Vector2i> knightValidOffsets
-		{
-			{ -1, 2 }, { 1, 2 },
-			{ -1, -2 }, { 1, -2 },
-			{ -2, 1 }, { -2, -1 },
-			{ 2, 1 }, { 2, -1 }
-		};
-
-		for (auto& offset : knightValidOffsets)
-		{
-			sf::Vector2i target = m_selectedPieceCoords + offset;
-
-			if (this->isPieceInBounds(target)
-				|| this->isPieceCanTake(m_selectedPieceCoords, target))
-			{
-				m_validMoves.push_back(target);
-			}
-		}
-	}
-	break;
-
-	case B_BISHOP:
-		break;
-
-	case B_QUEEN:
-		break;
-
-	case B_KING:
-		break;
-
-	case W_PAWN:
-	{
-		// check if pawn can move forward 1x
-		sf::Vector2i target{ m_selectedPieceCoords.x, m_selectedPieceCoords.y - 1 };
-
-		if (not this->isPieceExists(target)
-			&& this->isPieceInBounds(target))
-		{
-			m_validMoves.push_back(target);
-		}
-
-		// check if pawn has ever been moved to move forward 2x
-		if (m_selectedPieceCoords.y == 6)
-		{
-			sf::Vector2i target = { m_selectedPieceCoords.x, m_selectedPieceCoords.y - 2 };
-
-			if (not this->isPieceExists(target))
-			{
-				m_validMoves.push_back(target);
-			}
-		}
-
-		// check if pawn can take left
-		target = m_selectedPieceCoords + sf::Vector2i(-1, -1);
-
-		if (this->isPieceCanTake(m_selectedPieceCoords, target))
-		{
-			m_validMoves.push_back(target);
-		}
-
-		// check if pawn can take right
-		target = m_selectedPieceCoords + sf::Vector2i(1, -1);
-
-		if (this->isPieceCanTake(m_selectedPieceCoords, target))
-		{
-			m_validMoves.push_back(target);
-		}
-	}
-	break;
-
-	case W_ROOK:
-		break;
-
-	case W_KNIGHT:
-		break;
-
-	case W_BISHOP:
-		break;
-
-	case W_QUEEN:
-		break;
-
-	case W_KING:
-		break;
-
-	case None:
 		return false;
+	};
 
+	std::vector<std::pair<sf::Vector2i, std::function<bool(sf::Vector2i target)>>> registers
+	{
+		{ sf::Vector2i(-1, -1), [](const sf::Vector2i& target) { return target.x >= 0 && target.y >= 0; } },
+		{ sf::Vector2i(1, -1), [](const sf::Vector2i& target) { return target.x < 7 && target.y >= 0; } },
+		{ sf::Vector2i(-1, 1), [](const sf::Vector2i& target) { return target.x >= 0 && target.y < 7; } },
+		{ sf::Vector2i(1, 1), [](const sf::Vector2i& target) { return target.x < 7 && target.y < 7; } },
+	};
+
+	for (auto& reg: registers)
+	{
+		for (sf::Vector2i target = m_selectedCoords + reg.first; reg.second(target); target += reg.first)
+		{
+			if (validateMove(target)) break;
+		}
 	}
-	return m_validMoves.size();
 }
 
-ChessGame::PieceType ChessGame::getPieceType(const sf::Vector2i coords)
+
+void ChessGame::generateOrthogonalMoves(std::vector<sf::Vector2i>* validMovesPtr)
+{
+	auto validateMove = [&](const sf::Vector2i& target)
+	{
+		if (!this->isPieceExists(target))
+		{
+			validMovesPtr->push_back(target);
+		}
+		else
+		{
+			if (this->isPieceCanTake(m_selectedCoords, target))
+			{
+				validMovesPtr->push_back(target); 
+			}
+			return true;
+		}
+		return false;
+	};
+
+	// 	// check for base to top
+	for (int y = m_selectedCoords.y - 1; y > 0; y--)
+	{
+		if (validateMove({m_selectedCoords.x, y })) break;
+	}
+
+	// check for base to down                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+	for (int y = m_selectedCoords.y + 1; y < 8; y++)
+	{
+		if (validateMove({ m_selectedCoords.x, y })) break;
+	}
+
+	// check for base to left
+	for (int x = m_selectedCoords.x - 1; x > 0; x--)
+	{
+		if (validateMove({ x, m_selectedCoords.y })) break;
+	}
+
+	// check for base to right
+	for (int x = m_selectedCoords.x + 1; x < 8; x++)
+	{
+		if (validateMove({ x, m_selectedCoords.y })) break;
+	}
+}
+
+void ChessGame::applyValidOffsets(std::vector<sf::Vector2i>* offsetsPtr, std::vector<sf::Vector2i>* validMovesPtr)
+{
+	for (auto& offset: *offsetsPtr)
+	{
+		sf::Vector2i target = m_selectedCoords + offset;
+
+		if (this->isPieceInBounds(target))
+		{
+			if (this->isPieceCanTake(m_selectedCoords, target)
+				|| !this->isPieceExists(target))
+			{
+				validMovesPtr->emplace_back(target);
+			}
+		}
+	}
+}
+
+bool ChessGame::processValidMoves(std::vector<sf::Vector2i>* validMovesPtr)
+{
+	bool colorFlag = (this->getPieceColor(m_selectedCoords) == PieceColor::Black);
+
+	PieceType pieceType = this->getPieceType(m_selectedCoords);
+
+	if (pieceType == B_PAWN || pieceType == W_PAWN)
+	{
+		// check if pawn can move forward 1x
+		sf::Vector2i target { m_selectedCoords.x, m_selectedCoords.y + (colorFlag ? 1 : -1) };
+
+		if (not this->isPieceExists(target) && this->isPieceInBounds(target))
+		{
+			validMovesPtr->emplace_back(target);
+		}
+
+		// check if pawn has ever been moved
+		if (m_selectedCoords.y == (colorFlag ? 1 : 6 ))
+		{ 
+			target = { m_selectedCoords.x, m_selectedCoords.y + (colorFlag ? 2 : -2 ) };
+
+			if (!this->isPieceExists(target))
+			{
+				validMovesPtr->emplace_back(target);
+				m_pieceHighlighter.markAsCanMove(target);
+			}
+		}
+
+		// check if pawn can take left
+		target = m_selectedCoords + sf::Vector2i(-1, (colorFlag ? 1 : -1));
+
+		if (this->isPieceCanTake(m_selectedCoords, target))
+		{
+			validMovesPtr->emplace_back(target);
+			m_pieceHighlighter.markAsCanTake(target);
+		}
+
+		// check if pawn can take right
+		target = m_selectedCoords + sf::Vector2i(1, (colorFlag ? 1 : -1));
+
+		if (this->isPieceCanTake(m_selectedCoords, target))
+		{
+			validMovesPtr->emplace_back(target);
+			m_pieceHighlighter.markAsCanTake(target);
+		}
+	}
+	else if (pieceType == B_KNIGHT || pieceType == W_KNIGHT)
+	{
+		std::vector<sf::Vector2i> knightValidOffsets
+		{
+			{ -1, 2 }, { 1, 2 }, { -1, -2 }, { 1, -2 },
+			{ -2, 1 }, { -2, -1 }, { 2, 1 }, { 2, -1 }
+		};
+		this->applyValidOffsets(&knightValidOffsets, validMovesPtr);
+	}
+	else if (pieceType == B_ROOK || pieceType == W_ROOK)
+	{
+		this->generateOrthogonalMoves(validMovesPtr);
+	}
+	else if (pieceType == B_BISHOP || pieceType == W_BISHOP)
+	{
+		this->generateDiagonalMoves(validMovesPtr);
+	}
+	else if (pieceType == B_QUEEN || pieceType == W_QUEEN)
+	{
+		this->generateOrthogonalMoves(validMovesPtr);
+		this->generateDiagonalMoves(validMovesPtr);
+	}
+	else if (pieceType == B_KING || pieceType == W_KING)
+	{
+		std::vector<sf::Vector2i> kingValidOffsets
+		{
+			{ -1, -1 }, { 0, -1 }, { 1, -1 }, // top 
+			{ -1, 0 }, { 1, 0 }, // mid
+			{ -1, 1 }, { 0, 1 }, { 1, 1 } // bot
+		};
+		this->applyValidOffsets(&kingValidOffsets, validMovesPtr);
+
+		// // check for castling
+		// PieceColor pieceColor = this->getPieceColor(pieceType);
+
+		// if (pieceColor == PieceColor::Black && m_isBlackKingMoved)
+		// {
+		// 	// check for base to left
+		// 	for (int x = m_selectedCoords.x - 1; x > 0; x--)
+		// 	{
+		// 		sf::Vector2i target = { x, m_selectedCoords.y };
+
+		// 		if (this->isPieceExists(target))
+		// 		{
+		// 			if (this->getPieceType(target) == PieceType::W_ROOK)
+		// 			{
+						
+		// 			}
+		// 		}
+		// 		else break;
+		// 	}
+
+		// 	// check for base to right
+		// 	for (int x = m_selectedCoords.x + 1; x < 8; x++)
+		// 	{
+		// 		if (validateMove({ x, m_selectedCoords.y })) break;
+		// 	}
+		// }
+		// else if (pieceColor == PieceColor::White && m_isWhiteKingMoved)
+		// {
+
+		// }
+	}
+	return validMovesPtr->size();
+}
+
+bool ChessGame::processAfterMove() 
+{
+	
+}
+
+PieceType ChessGame::getPieceType(const sf::Vector2i coords)
 {
 	return PieceType(m_chessPieces_TlMap.getCell(coords));
 }
@@ -425,7 +479,7 @@ sf::Vector2i ChessGame::getMouseHoveringPiece()
 
 sf::Vector2i ChessGame::getSelectedPiece()
 {
-	return m_selectedPieceCoords;
+	return m_selectedCoords;
 }
 
 const std::vector<sf::Vector2i>& ChessGame::getValidMoves()
@@ -433,7 +487,7 @@ const std::vector<sf::Vector2i>& ChessGame::getValidMoves()
 	return m_validMoves;
 }
 
-ChessGame::PieceColor ChessGame::getPieceColor(const sf::Vector2i& coords)
+PieceColor ChessGame::getPieceColor(const sf::Vector2i& coords)
 {
 	PieceType pieceType = this->getPieceType(coords);
 
@@ -454,7 +508,7 @@ ChessGame::PieceColor ChessGame::getPieceColor(const sf::Vector2i& coords)
 	}
 }
 
-ChessGame::PieceColor ChessGame::getPieceColor(const PieceType pieceType)
+PieceColor ChessGame::getPieceColor(const PieceType pieceType)
 {
 	if (pieceType % 2 == 0)
 	{
@@ -466,8 +520,7 @@ ChessGame::PieceColor ChessGame::getPieceColor(const PieceType pieceType)
 	}
 }
 
-
-ChessGame::PieceColor ChessGame::getPlayerTurn()
+PieceColor ChessGame::getPlayerTurn()
 {
 	return m_playerTurn;
 }

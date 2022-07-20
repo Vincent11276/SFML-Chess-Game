@@ -1,4 +1,5 @@
 // Copy-pasted from https://stackoverflow.com/questions/22372032/resource-manager
+// Logger class inspired by https://github.com/ThiccTheo
 
 #pragma once
 

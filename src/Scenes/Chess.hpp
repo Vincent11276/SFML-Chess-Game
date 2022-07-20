@@ -15,7 +15,8 @@
 #include "../Engine/ResourceManager.hpp"
 #include "../Engine/PieceType.hpp"
 #include "../Scenes/MoveablePiece.hpp"
-#include "../Engine/ValidMoves.hpp"
+#include "../Engine/PieceColor.hpp"
+#include "../Scenes/PieceHighlighter.hpp"
 
 
 typedef std::vector<std::pair<std::string, std::string>> MoveHistory;
@@ -23,71 +24,38 @@ typedef std::vector<std::pair<std::string, std::string>> MoveHistory;
 class ChessGame: public sf::Drawable, public sf::Transformable
 {
 public:
-	enum PieceColor
-	{
-		Black,
-		White,
-		Neutral
-	};
-
-	enum PieceType
-	{
-		B_PAWN = 6,
-		B_ROOK = 10,
-		B_KNIGHT = 4,
-		B_BISHOP = 0,
-		B_QUEEN = 2,
-		B_KING = 8,
-		W_PAWN = 7,
-		W_ROOK = 11,
-		W_KNIGHT = 5,
-		W_BISHOP = 1,
-		W_QUEEN = 3,
-		W_KING = 9,
-
-		None = -1
-	};
-
 	ChessGame();
 
 	void init();
-
 	void handleEvents(const sf::Event& e);
-
 	void update([[maybe_unused]] float delta);
-
 	void cleanUp();
 
 	bool selectPiece(const sf::Vector2i& selectedPiece);
-
 	bool moveSelectedPiece(const sf::Vector2i& target);
 
-	bool isPieceExists(const sf::Vector2i& coords);
-
-	bool isPieceInBounds(const sf::Vector2i& coords);
-
-	sf::Vector2i getMouseHoveringPiece();
-
+	bool processAfterMove();
 	bool isCheckMate();
-
-	sf::Vector2i getSelectedPiece();
-
-	bool processValidMoves();
 
 	const std::vector<sf::Vector2i>& getValidMoves();
 
+	sf::Vector2i getMouseHoveringPiece();
 
 private:
+	void applyValidOffsets(std::vector<sf::Vector2i>* offsetsPtr, std::vector<sf::Vector2i>* validMovesPtr);
+	void generateDiagonalMoves(std::vector<sf::Vector2i>* validMovesPtr);
+	void generateOrthogonalMoves(std::vector<sf::Vector2i>* validMovesPtr);
+
+	bool processValidMoves(std::vector<sf::Vector2i>* validMovesPtr);
+	bool isPieceExists(const sf::Vector2i& coords);
+	bool isPieceInBounds(const sf::Vector2i& coords);
+
+	sf::Vector2i getSelectedPiece();
 	PieceColor getPieceColor(const sf::Vector2i& coords);
-
 	PieceColor getPieceColor(const PieceType pieceType);
-
 	PieceType getPieceType(const sf::Vector2i coords);
-
 	std::string getPieceTypeStr(const sf::Vector2i coords);
-
 	PieceColor getPlayerTurn();
-
 	std::string getPlayerTurnStr();
 
 	bool isPieceCanTake(const sf::Vector2i& selected, const sf::Vector2i& target);
@@ -95,16 +63,30 @@ private:
 	void switchPlayerTurn();
 
 	sf::Sprite m_chessBoard_Spr;
-	// sf::Sprite m_moveableChessPiece_Spr;
-	MoveablePiece m_moveablePiece;
+	PieceHighlighter m_pieceHighlighter;
 	TileMap m_chessPieces_TlMap;
+	MoveablePiece m_moveablePiece;
 	MoveHistory m_moveHistory;
 	PieceColor m_playerTurn;
-	sf::Vector2i m_selectedPieceCoords;
+	sf::Vector2i m_selectedCoords;
 	PieceType m_selectedPieceType;
 	std::vector<sf::Vector2i> m_validMoves;
 
+	// flags
+	bool m_isBlackKingMoved = 0;
+	bool m_isWhiteKingMoved = 0;
+
+	bool m_isWhiteRookMoved1 = 0;
+	bool m_isWhiteRookMoved2 = 0;
+
+	bool m_isBlackRookMoved1 = 0;
+	bool m_isBlackRookMoved2 = 0;
+
+	bool m_isBlackChecked = 0;
+	bool m_isWhiteChecked = 0;
+	
 	bool m_isCheckMate = 0;
+
 
 	enum State
 	{

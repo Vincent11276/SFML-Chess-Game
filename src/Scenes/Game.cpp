@@ -63,6 +63,10 @@ void Game::run()
 
 void Game::loadResources()
 {
+	ResourceManager::addTexture(ResourceKey::ActionMark, "../Assets/action_mark.png");
+	ResourceManager::addTexture(ResourceKey::CanMoveMark, "../Assets/can_move_mark.png");
+	ResourceManager::addTexture(ResourceKey::CanTakeMark, "../Assets/can_take_mark.png");
+
 	ResourceManager::addTexture(ResourceKey::WoodChessBoard, "../Assets/Chess_Artwork/Chess_Artwork/Chess Board/Wood/Chess_Board.png");
 
 	ResourceManager::addTexture(ResourceKey::WoodPieceBishopB, "../Assets/Chess_Artwork/Chess_Artwork/Chess Pieces/Wood/BishopB.png");

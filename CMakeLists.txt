@@ -8,15 +8,12 @@ FetchContent_Declare(SFML
     GIT_TAG 2.6.x
 )
 
-FetchContent_Declare(EnTT
-    GIT_REPOSITORY https://github.com/skypjack/entt.git
-    GIT_TAG v3.9.0
-)
-FetchContent_MakeAvailable(SFML EnTT)
+FetchContent_MakeAvailable(SFML)
 
 add_executable(CMakeSFMLProject 
                 "src/main.cpp" 
                 "src/Utility/Logger.cpp"
+                "src/Utility/ScopedTimer.cpp"
                 "src/Engine/TileMap.cpp"
                 "src/Engine/ResourceManager.cpp"
                 "src/Inputs/Mouse.cpp"
@@ -27,6 +24,7 @@ add_executable(CMakeSFMLProject
                 "src/Scenes/MoveablePiece.cpp"
                 "src/States/InGameState.cpp"
                 "src/States/GameStateManager.cpp"
+            
                 
 )
 

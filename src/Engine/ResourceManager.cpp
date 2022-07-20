@@ -10,6 +10,9 @@ bool ResourceManager::addTexture(uint32_t key, std::string filePath)
 
     if (!newTexture->loadFromFile(filePath))
     {
+        Logger::getInstance().log(LogLevel::ERROR,
+            "Failed to load \"" + filePath + "\" for texture resource");
+            
         return LoadResult::Failure;
     }
     m_textures.emplace(std::make_pair(key, std::move(newTexture)));

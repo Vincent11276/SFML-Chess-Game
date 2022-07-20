@@ -99,13 +99,15 @@ void TileMap::setTileVertices(int id, sf::Vector2i p_coords)
 
     // check if request for remove
     if (id == -1) {
-        // clear its texture by setting all to coords to nil
-        quad[0].texCoords = sf::Vector2f(0, 0);
-        quad[1].texCoords = sf::Vector2f(0, 0);
-        quad[3].texCoords = sf::Vector2f(0, 0);
-        quad[2].texCoords = sf::Vector2f(0, 0);
+        int lastTile = m_tileSet->getTileCount();
+
+        quad[0].texCoords = sf::Vector2f(lastTile * cellSize.x, 0);
+        quad[1].texCoords = sf::Vector2f(lastTile * cellSize.x + cellSize.x, 0);
+        quad[3].texCoords = sf::Vector2f(lastTile * cellSize.x, cellSize.y);
+        quad[2].texCoords = sf::Vector2f(lastTile * cellSize.x + cellSize.x, cellSize.y);
     }
     else {
+    
         // define its 4 texture coordinates
         quad[0].texCoords = sf::Vector2f(id * cellSize.x, 0);
         quad[1].texCoords = sf::Vector2f(id * cellSize.x + cellSize.x, 0);

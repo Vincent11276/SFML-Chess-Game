@@ -2,6 +2,7 @@
 
 #include <string>
 #include <SFML/Graphics.hpp>
+#include <filesystem>
 
 #include "../Engine/LoadResult.hpp"
 
@@ -19,6 +20,8 @@ public:
 
 	bool create(const sf::Vector2f& tileSize, sf::Uint32 tileCount)
 	{
+		tileCount += 1; // for the new transparent tile
+
 		if (this->m_tileSet_rendTex.create(tileSize.x * tileCount, tileSize.y))
 		{
 			return 1;
@@ -81,7 +84,9 @@ public:
 		}
 
 		for (auto &file: filesInDirectory) {
-			if (file.extension() == ".png")
+			std::string ext = file.extension().string();
+
+			if (ext == ".png" || ext == ".jpg") // feel free to add more ext
 			{
 				this->loadFromFile(file.string(), LoadType::Single);
 			}

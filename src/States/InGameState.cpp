@@ -27,28 +27,23 @@ void InGameState::update(GameStateManager* game, float deltaTime)
 	if (MouseInput::isButtonJustPressed(sf::Mouse::Button::Left))
 	{
 		sf::Vector2i selected = m_chessGame.getMouseHoveringPiece();
-		
-		if (m_chessGame.isPieceInBounds(selected))
-		{			
-			if (m_chessGame.selectPiece(selected))
-			{
-				auto& validMoves = m_chessGame.getValidMoves();
 
-				Logger::getInstance().log(LogLevel::INFO, 
-					"Valid moves for the selected piece are: " + Helper::ToString(validMoves));
-			}
+		if (m_chessGame.selectPiece(selected))
+		{
+			auto& validMoves = m_chessGame.getValidMoves();
+
+			Logger::getInstance().log(LogLevel::INFO, 
+				"Valid moves for the selected piece are: " + Helper::ToString(validMoves));
 		}
 	}
 	else if (MouseInput::isButtonJustReleased(sf::Mouse::Button::Left))
 	{
 		sf::Vector2i target = m_chessGame.getMouseHoveringPiece();
-		sf::Vector2i selected = m_chessGame.getSelectedPiece();
 
 		if (m_chessGame.moveSelectedPiece(target)) {
 			if (m_chessGame.isCheckMate())
 			{
-				Logger::getInstance().log(LogLevel::INFO,
-					"Check Mate!");
+				Logger::getInstance().log(LogLevel::INFO, "Check Mate!");
 			}
 		}
 	}
@@ -72,7 +67,5 @@ InGameState* InGameState::getInstance()
 	return &m_inGameState;
 }
 
-InGameState::InGameState() 
-{ 
+InGameState::InGameState() = default;
 	// amogus
-}

@@ -17,7 +17,7 @@ public:
     ChessPieces()
         : m_chessPieces_TlMap(sf::Vector2i(8, 8), sf::Vector2f(80, 80))
     {
-        // default..
+        this->m_chessPieces_Data.resize(8, std::vector<Piece>(8, Piece()));
     }
 
     void initialize(const PieceColor playerSide)
@@ -77,7 +77,6 @@ public:
                     .color = pieceColor,
                 };
                 m_chessPieces_Data[y][x] = piece;
-
             }
         }
 
@@ -115,6 +114,10 @@ public:
 
     const Piece& getPiece(const sf::Vector2i& coords)
     {
+        std::cout << "check" << std::endl;
+
+        std::cout << m_chessPieces_Data.size() << std::endl;
+
         return m_chessPieces_Data[coords.y][coords.x];
     }
 
@@ -141,7 +144,7 @@ public:
 
     PieceType getType(const sf::Vector2i& coords)
     {
-        return this->getPiece(coords).type;
+        return this->getPiece(coords).type;    
     }
 
     PieceColor getColor(const sf::Vector2i& coords)

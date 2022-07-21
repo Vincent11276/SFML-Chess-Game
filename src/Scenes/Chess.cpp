@@ -104,6 +104,8 @@ bool ChessGame::selectPiece(const sf::Vector2i& selected)
 		// generate new valid moves for the newly selected piece
 		m_moveGenerator.processValidMoves(selected);
 
+		std::cout << "done processing valid moves" << std::endl;
+
 		// mark new valid moves after deleting old one and new moves are generated
 		m_pieceHighlighter.markValidMoves(m_moveGenerator.getValidMoves());
 
@@ -185,7 +187,7 @@ bool ChessGame::processAfterMove()
 	return false;
 }
 
-bool ChessGame::isPieceInBounds(const sf::Vector2i & location)
+bool ChessGame::isPieceInBounds(const sf::Vector2i& location)
 {
 	return location.x >= 0 && location.y >= 0 && location.x < 8 && location.y < 8;
 }

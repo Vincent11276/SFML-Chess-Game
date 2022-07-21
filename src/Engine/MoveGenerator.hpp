@@ -42,7 +42,7 @@ public:
         // default..
     }
 
-    void setPiecesToAnalyze(std::shared_ptr<ChessPieces> pieces)
+    void setPiecesToAnalyze(const std::shared_ptr<ChessPieces>& pieces)
     {
         this->m_pieces = pieces;
     }
@@ -52,81 +52,83 @@ public:
         return m_validMoves;
     }
 
-    bool processValidMoves(sf::Vector2i selected)
+    bool processValidMoves(const sf::Vector2i& selected)
     {
+        std::cout << "pls print" << std::endl;
         PieceType pieceType = m_pieces->getType(selected);
+        std::cout << "amogus" << std::endl; // not printing
 
-        if (pieceType == B_PAWN || pieceType == W_PAWN)
-        {
-            bool colorFlag = (m_pieces->getColor(selected) == PieceColor::Black);
+        // if (pieceType == B_PAWN || pieceType == W_PAWN)
+        // {
+        //     bool colorFlag = (m_pieces->getColor(selected) == PieceColor::Black);
 
-            // check if pawn can move ONE tiles forward
-            sf::Vector2i target { selected.x, selected.y + (colorFlag ? 1 : -1) };
+        //     // check if pawn can move ONE tiles forward
+        //     sf::Vector2i target { selected.x, selected.y + (colorFlag ? 1 : -1) };
 
-            if (not m_pieces->isPieceExists(target) && this->isPieceInBounds(target))
-            {
-                m_validMoves.emplace_back(PieceMovement(PieceAction::Move, target));
-            }
+        //     if (not m_pieces->isPieceExists(target) && this->isPieceInBounds(target))
+        //     {
+        //         m_validMoves.emplace_back(PieceMovement(PieceAction::Move, target));
+        //     }
 
-            // check if pawn can move TWO tiles forward
-            if (selected.y == (colorFlag ? 1 : 6 ))
-            { 
-                target = { selected.x, selected.y + (colorFlag ? 2 : -2 ) };
+        //     // check if pawn can move TWO tiles forward
+        //     if (selected.y == (colorFlag ? 1 : 6 ))
+        //     { 
+        //         target = { selected.x, selected.y + (colorFlag ? 2 : -2 ) };
 
-                if (!m_pieces->isPieceExists(target))
-                {
-                    m_validMoves.emplace_back(PieceMovement(PieceAction::Move, target));
-                }
-            }
+        //         if (!m_pieces->isPieceExists(target))
+        //         {
+        //             m_validMoves.emplace_back(PieceMovement(PieceAction::Move, target));
+        //         }
+        //     }
 
-            // check if pawn can take left
-            target = selected + sf::Vector2i(-1, (colorFlag ? 1 : -1));
+        //     // check if pawn can take left
+        //     target = selected + sf::Vector2i(-1, (colorFlag ? 1 : -1));
 
-            if (this->isPieceCanTake(selected, target))
-            {
-                m_validMoves.emplace_back(PieceMovement(PieceAction::Take, target));
-            }
-            // check if pawn can take right
-            target = selected + sf::Vector2i(1, (colorFlag ? 1 : -1));
+        //     if (this->isPieceCanTake(selected, target))
+        //     {
+        //         m_validMoves.emplace_back(PieceMovement(PieceAction::Take, target));
+        //     }
+        //     // check if pawn can take right
+        //     target = selected + sf::Vector2i(1, (colorFlag ? 1 : -1));
 
-            if (this->isPieceCanTake(selected, target))
-            {
-                m_validMoves.emplace_back(PieceMovement(PieceAction::Take, target));
-            }
+        //     if (this->isPieceCanTake(selected, target))
+        //     {
+        //         m_validMoves.emplace_back(PieceMovement(PieceAction::Take, target));
+        //     }
 
-        }
-        else if (pieceType == B_KNIGHT || pieceType == W_KNIGHT)
-        {
-            std::vector<sf::Vector2i> knightValidOffsets
-            {
-                { -1, 2 }, { 1, 2 }, { -1, -2 }, { 1, -2 },
-                { -2, 1 }, { -2, -1 }, { 2, 1 }, { 2, -1 }
-            };
-            this->applyValidOffsets(selected, knightValidOffsets);
-        }
-        else if (pieceType == B_ROOK || pieceType == W_ROOK)
-        {
-            this->generateOrthogonalMoves(selected);
-        }
-        else if (pieceType == B_BISHOP || pieceType == W_BISHOP)
-        {
-            this->generateDiagonalMoves(selected);
-        }
-        else if (pieceType == B_QUEEN || pieceType == W_QUEEN)
-        {
-            this->generateOrthogonalMoves(selected);
-            this->generateDiagonalMoves(selected);
-        }
-        else if (pieceType == B_KING || pieceType == W_KING)
-        {
-            std::vector<sf::Vector2i> kingValidOffsets
-            {
-                { -1, -1 }, { 0, -1 }, { 1, -1 }, // top 
-                { -1, 0 }, { 1, 0 }, // mid
-                { -1, 1 }, { 0, 1 }, { 1, 1 } // bot
-            };
-            this->applyValidOffsets(selected, kingValidOffsets);
-        }
+        // }
+        // else if (pieceType == B_KNIGHT || pieceType == W_KNIGHT)
+        // {
+        //     std::vector<sf::Vector2i> knightValidOffsets
+        //     {
+        //         { -1, 2 }, { 1, 2 }, { -1, -2 }, { 1, -2 },
+        //         { -2, 1 }, { -2, -1 }, { 2, 1 }, { 2, -1 }
+        //     };
+        //     this->applyValidOffsets(selected, knightValidOffsets);
+        // }
+        // else if (pieceType == B_ROOK || pieceType == W_ROOK)
+        // {
+        //     this->generateOrthogonalMoves(selected);
+        // }
+        // else if (pieceType == B_BISHOP || pieceType == W_BISHOP)
+        // {
+        //     this->generateDiagonalMoves(selected);
+        // }
+        // else if (pieceType == B_QUEEN || pieceType == W_QUEEN)
+        // {
+        //     this->generateOrthogonalMoves(selected);
+        //     this->generateDiagonalMoves(selected);
+        // }
+        // else if (pieceType == B_KING || pieceType == W_KING)
+        // {
+        //     std::vector<sf::Vector2i> kingValidOffsets
+        //     {
+        //         { -1, -1 }, { 0, -1 }, { 1, -1 }, // top 
+        //         { -1, 0 }, { 1, 0 }, // mid
+        //         { -1, 1 }, { 0, 1 }, { 1, 1 } // bot
+        //     };
+        //     this->applyValidOffsets(selected, kingValidOffsets);
+        // }
         return m_validMoves.size();
     }
 

@@ -9,8 +9,8 @@
 struct Piece
 {
     sf::Vector2i coords;
-    PieceType type;
-    PieceColor color;
+    PieceType type = PieceType::None;
+    PieceColor color = PieceColor::Neutral;
 
     bool isEverMoved = 0;
 };

@@ -6,6 +6,7 @@
 #include <unordered_set>
 #include <string>
 #include <iostream>
+#include <memory>
 
 #include "../Engine/TileMap.hpp"
 #include "../Inputs/Mouse.hpp"

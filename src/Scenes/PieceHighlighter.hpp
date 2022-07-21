@@ -44,7 +44,7 @@ public:
                 m_tilemap.setCell(1, validMove.coords);
                 break;
 
-            case PieceAction::Take:
+            case PieceAction::Capture:
                 m_tilemap.setCell(2, validMove.coords);
                 break;
 

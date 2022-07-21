@@ -6,6 +6,8 @@ ChessGame::ChessGame()
 {
 	m_playerTurn = PieceColor::White;
 	m_state = State::SelectingPiece;
+
+	
 }
 
 void ChessGame::init()
@@ -16,9 +18,12 @@ void ChessGame::init()
 	
 	m_chessPieces.initialize(PieceColor::White);
 
+	m_moveGenerator.setPiecesToAnalyze(m_chessPieces);
+
 	Logger::getInstance().log(LogLevel::INFO, "Chess Game Match Started!");
 
-	Logger::getInstance().log(LogLevel::INFO, this->getPlayerTurnStr() + "'s turn to make a move!");
+	Logger::getInstance().log(LogLevel::INFO, 
+		this->getPlayerTurnStr() + "'s turn to make a move!");
 
 }
 
@@ -95,19 +100,19 @@ bool ChessGame::selectPiece(const sf::Vector2i& selected)
 {
 	if (this->isPieceCanSelect(selected))
 	{
+		// delete previously marked valid moves
+		m_pieceHighlighter.unmarkValidMoves(m_moveGenerator.getValidMoves());
+		m_pieceHighlighter.unmark(m_selectedPiece.coords);
+
 		// important to update the values before quering for valid moves
 		m_selectedPiece = m_chessPieces.getPiece(selected);
 
-		// delete previously marked valid moves
-		m_pieceHighlighter.unmarkValidMoves(m_moveGenerator.getValidMoves());
-
 		// generate new valid moves for the newly selected piece
-		m_moveGenerator.processValidMoves(selected);
-
-		std::cout << "done processing valid moves" << std::endl;
+		m_moveGenerator.processValidMoves(m_selectedPiece.coords);
 
 		// mark new valid moves after deleting old one and new moves are generated
 		m_pieceHighlighter.markValidMoves(m_moveGenerator.getValidMoves());
+		m_pieceHighlighter.markAsSelected(m_selectedPiece.coords);
 
 		// remove selected piece from tile map
 		m_chessPieces.removePiece(m_selectedPiece.coords);
@@ -141,14 +146,17 @@ bool ChessGame::moveSelectedPiece(const sf::Vector2i& target)
 
 	if (m_selectedPiece.color == m_playerTurn)
 	{
-		m_chessPieces.setPiece(m_selectedPiece, m_selectedCoords);
+		m_chessPieces.setPiece(m_selectedPiece, m_selectedPiece.coords);
 
 		if (m_moveGenerator.isCoordsValidMove(target))
 		{
-			m_chessPieces.movePiece(m_selectedCoords, target);
+			m_chessPieces.movePiece(m_selectedPiece.coords, target);
 		
 			// delete previously marked valid moves
 			m_pieceHighlighter.unmarkValidMoves(m_moveGenerator.getValidMoves());
+			m_pieceHighlighter.unmark(m_selectedPiece.coords);
+
+			// m_pieceHighlighter.markAsPreviousMove(m_selectedPiece.coords, target);
 
 			// play piece touch down sound
 			

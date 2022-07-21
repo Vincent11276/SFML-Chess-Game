@@ -114,10 +114,6 @@ public:
 
     const Piece& getPiece(const sf::Vector2i& coords)
     {
-        std::cout << "check" << std::endl;
-
-        std::cout << m_chessPieces_Data.size() << std::endl;
-
         return m_chessPieces_Data[coords.y][coords.x];
     }
 
@@ -132,6 +128,7 @@ public:
     {
         Piece selectedPiece = this->getPiece(selected);
         selectedPiece.isEverMoved = true;
+        selectedPiece.coords = target;
 
         this->setPiece(selectedPiece, target);
         this->removePiece(selected);

@@ -15,6 +15,6 @@ enum PieceType
     W_BISHOP = 1,
     W_QUEEN = 3,
     W_KING = 9,
-
+    
     None = -1
 };

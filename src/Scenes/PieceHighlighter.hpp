@@ -3,11 +3,12 @@
 #include "../Engine/TileMap.hpp"
 #include "../Utility/Logger.hpp"
 #include "../Engine/ResourceManager.hpp"
-#include "SFML/Graphics/RenderStates.hpp"
-#include "SFML/Graphics/Transformable.hpp"
-#include "SFML/System/Vector2.hpp"
+#include "../Engine/MoveGenerator.hpp"
 
-#include <iostream>
+#include <SFML/Graphics/RenderStates.hpp>
+#include <SFML/Graphics/Transformable.hpp>
+#include <SFML/System/Vector2.hpp>
+
 
 
 class PieceHighlighter : public sf::Drawable, public sf::Transformable
@@ -31,21 +32,48 @@ public:
     void clear()
     {
         m_tilemap.clear();
+    }    
+
+    void markValidMoves(const std::vector<PieceMovement> &validMoves)
+    {
+        for (auto& validMove: validMoves)
+		{
+            switch (validMove.action)
+            {
+            case PieceAction::Move:
+                m_tilemap.setCell(1, validMove.coords);
+                break;
+
+            case PieceAction::Take:
+                m_tilemap.setCell(2, validMove.coords);
+                break;
+
+            case PieceAction::Castle:
+                m_tilemap.setCell(1, validMove.coords);
+                break;
+
+            case PieceAction::EnPessant:
+                m_tilemap.setCell(1, validMove.coords);
+                break;
+
+            default:
+                break;
+            }
+		}
+    }
+
+
+    void unmarkValidMoves(const std::vector<PieceMovement> &validMoves)
+    {
+        for (auto& validMove: validMoves)
+        {
+            m_tilemap.remove(validMove.coords);
+        }
     }
 
     void unmark(const sf::Vector2i& coords)
     {
         m_tilemap.setCell(-1, coords);
-    }
-
-    void markAsCanMove(const sf::Vector2i& coords)
-    {
-        m_tilemap.setCell(1, coords);
-    }
-
-    void markAsCanTake(const sf::Vector2i& coords)
-    {
-        m_tilemap.setCell(2, coords);
     }
 
     void markAsSelected(const sf::Vector2i& coords)

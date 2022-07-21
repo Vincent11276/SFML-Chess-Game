@@ -30,10 +30,10 @@ void InGameState::update(GameStateManager* game, float deltaTime)
 
 		if (m_chessGame.selectPiece(selected))
 		{
-			auto& validMoves = m_chessGame.getValidMoves();
+			// auto& validMoves = m_chessGame.getValidMoves();
 
-			Logger::getInstance().log(LogLevel::INFO, 
-				"Valid moves for the selected piece are: " + Helper::ToString(validMoves));
+			// Logger::getInstance().log(LogLevel::INFO, 
+			// 	"Valid moves for the selected piece are: " + Helper::ToString(validMoves));
 		}
 	}
 	else if (MouseInput::isButtonJustReleased(sf::Mouse::Button::Left))
@@ -41,10 +41,10 @@ void InGameState::update(GameStateManager* game, float deltaTime)
 		sf::Vector2i target = m_chessGame.getMouseHoveringPiece();
 
 		if (m_chessGame.moveSelectedPiece(target)) {
-			if (m_chessGame.isCheckMate())
-			{
-				Logger::getInstance().log(LogLevel::INFO, "Check Mate!");
-			}
+			// if (m_chessGame.isCheckMate())
+			// {
+			// 	Logger::getInstance().log(LogLevel::INFO, "Check Mate!");
+			// }
 		}
 	}
 

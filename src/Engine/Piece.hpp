@@ -1,21 +1,16 @@
 #pragma once
 
+#include <SFML/System/Vector2.hpp>
+
 #include "../Engine/PieceType.hpp"
 
+#include "../Engine/PieceColor.hpp"
 
 struct Piece
 {
-    Piece()
-    {
-        // default..
-    }
-
-    Piece(PieceType p_type)
-    {
-        type = p_type;
-    }
-    
-    PieceType type = PieceType::None;
+    sf::Vector2i coords;
+    PieceType type;
+    PieceColor color;
 
     bool isEverMoved = 0;
 };

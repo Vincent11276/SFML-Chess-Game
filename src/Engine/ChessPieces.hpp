@@ -14,43 +14,11 @@
 class ChessPieces : public sf::Drawable, public sf::Transformable
 {
 public:
-    ChessPieces(const PieceColor playerSide)
+    ChessPieces()
+        : m_chessPieces_TlMap(sf::Vector2i(8, 8), sf::Vector2f(80, 80))
     {
-        this->initialize(playerSide);
+        // default..
     }
-
-    const void setPiece(Piece piece, const sf::Vector2i& coords)
-    {
-        m_chessPieces_TlMap.setCell(piece.type, coords);
-
-        m_chessPieces_Data[coords.y][coords.x] = piece;
-    }
-
-    const Piece& getPiece(const sf::Vector2i& coords)
-    {
-        return m_chessPieces_Data[coords.y][coords.x];
-    }
-
-    void removePiece(const sf::Vector2i& coords)
-    {
-       m_chessPieces_TlMap.remove(coords);
-
-       m_chessPieces_Data[coords.y][coords.x] = Piece();
-    }
-
-    void movePiece(const sf::Vector2i& selected, const sf::Vector2i& target)
-    {
-        Piece selectedPiece = this->getPiece(selected);
-
-        this->setPiece(selectedPiece, target);
-
-        this->removePiece(selected);
-    }
-
-private:
-    std::vector<std::vector<Piece>> m_chessPieces_Data;
-
-    TileMap m_chessPieces_TlMap;
 
     void initialize(const PieceColor playerSide)
     {
@@ -84,13 +52,32 @@ private:
         }
 
         // start populating pieces from the layout
-        for (int i = 0; i < 8; i++)
+        for (int y = 0; y < 8; y++)
         {
-            for (int j = 0; j < 8; i++)
+            for (int x = 0; x < 8; x++)
             {
-                m_chessPieces_Data[j][i] = { 
-                    PieceType(chessLayout[j][i]) 
+                PieceColor pieceColor;
+
+                if (chessLayout[y][x] == -1)
+                {
+                    pieceColor = PieceColor::Neutral;
+                }
+                else if (chessLayout[y][x] % 2)
+                {
+                    pieceColor = PieceColor::White;
+                }
+                else
+                {
+                    pieceColor = PieceColor::Black;
+                }
+                
+                Piece piece {
+                    .coords = sf::Vector2i(x, y),
+                    .type = PieceType(chessLayout[y][x]),
+                    .color = pieceColor,
                 };
+                m_chessPieces_Data[y][x] = piece;
+
             }
         }
 
@@ -118,6 +105,54 @@ private:
 
         m_chessPieces_TlMap.mapCellsFrom(chessLayout);
     }
+
+    const void setPiece(Piece piece, const sf::Vector2i& coords)
+    {
+        m_chessPieces_TlMap.setCell(piece.type, coords);
+
+        m_chessPieces_Data[coords.y][coords.x] = piece;
+    }
+
+    const Piece& getPiece(const sf::Vector2i& coords)
+    {
+        return m_chessPieces_Data[coords.y][coords.x];
+    }
+
+    void removePiece(const sf::Vector2i& coords)
+    {
+       m_chessPieces_TlMap.remove(coords);
+
+       m_chessPieces_Data[coords.y][coords.x] = Piece();
+    }
+
+    void movePiece(const sf::Vector2i& selected, const sf::Vector2i& target)
+    {
+        Piece selectedPiece = this->getPiece(selected);
+        selectedPiece.isEverMoved = true;
+
+        this->setPiece(selectedPiece, target);
+        this->removePiece(selected);
+    }
+
+    bool isPieceExists(const sf::Vector2i& coords)
+    {
+        return m_chessPieces_Data[coords.y][coords.x].type != PieceType::None;
+    }
+
+    PieceType getType(const sf::Vector2i& coords)
+    {
+        return this->getPiece(coords).type;
+    }
+
+    PieceColor getColor(const sf::Vector2i& coords)
+    {
+        return this->getPiece(coords).color;
+    }
+  
+private:
+    std::vector<std::vector<Piece>> m_chessPieces_Data;
+
+    TileMap m_chessPieces_TlMap;
 
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override
     {

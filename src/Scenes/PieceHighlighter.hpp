@@ -71,21 +71,16 @@ public:
         }
     }
 
-    void unmark(const sf::Vector2i& coords)
-    {
-        m_tilemap.setCell(-1, coords);
-    }
-
-    void markAsSelected(const sf::Vector2i& coords)
+    void markAsHighlighted(const sf::Vector2i& coords)
     {
         m_tilemap.setCell(0, coords);
     }
 
-    void markAsPreviousMove(const sf::Vector2i& selected, const sf::Vector2i& target)
+    void remove(const sf::Vector2i& coords)
     {
-        m_tilemap.setCell(0, selected);
-        m_tilemap.setCell(0, target);
+        m_tilemap.setCell(-1, coords);
     }
+
 
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override
     {

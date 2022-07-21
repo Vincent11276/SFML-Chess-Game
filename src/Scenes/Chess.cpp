@@ -102,7 +102,7 @@ bool ChessGame::selectPiece(const sf::Vector2i& selected)
 	{
 		// delete previously marked valid moves
 		m_pieceHighlighter.unmarkValidMoves(m_moveGenerator.getValidMoves());
-		m_pieceHighlighter.unmark(m_selectedPiece.coords);
+		m_pieceHighlighter.remove(m_selectedPiece.coords);
 
 		// important to update the values before quering for valid moves
 		m_selectedPiece = m_chessPieces.getPiece(selected);
@@ -112,7 +112,11 @@ bool ChessGame::selectPiece(const sf::Vector2i& selected)
 
 		// mark new valid moves after deleting old one and new moves are generated
 		m_pieceHighlighter.markValidMoves(m_moveGenerator.getValidMoves());
-		m_pieceHighlighter.markAsSelected(m_selectedPiece.coords);
+		m_pieceHighlighter.markAsHighlighted(m_selectedPiece.coords);
+		
+		// highlight the previous move back as it has been deleted
+		m_pieceHighlighter.markAsHighlighted(previousMove.first);
+		m_pieceHighlighter.markAsHighlighted(previousMove.second);
 
 		// remove selected piece from tile map
 		m_chessPieces.removePiece(m_selectedPiece.coords);
@@ -149,12 +153,19 @@ bool ChessGame::moveSelectedPiece(const sf::Vector2i& target)
 		m_chessPieces.setPiece(m_selectedPiece, m_selectedPiece.coords);
 
 		if (m_moveGenerator.isCoordsValidMove(target))
-		{
-			m_chessPieces.movePiece(m_selectedPiece.coords, target);
-		
-			// delete previously marked valid moves
+		{		
+			// delete previously set marks
 			m_pieceHighlighter.unmarkValidMoves(m_moveGenerator.getValidMoves());
-			m_pieceHighlighter.unmark(m_selectedPiece.coords);
+			m_pieceHighlighter.remove(previousMove.first);
+			m_pieceHighlighter.remove(previousMove.second);
+
+			previousMove = std::make_pair(m_selectedPiece.coords, target);
+			
+			m_chessPieces.movePiece(m_selectedPiece.coords, target);
+			
+			// highlight previous move
+			m_pieceHighlighter.markAsHighlighted(previousMove.first);
+			m_pieceHighlighter.markAsHighlighted(previousMove.second);
 
 			// m_pieceHighlighter.markAsPreviousMove(m_selectedPiece.coords, target);
 

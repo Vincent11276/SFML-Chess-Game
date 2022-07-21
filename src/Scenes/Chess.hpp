@@ -71,6 +71,8 @@ private:
 	Piece m_selectedPiece;
 	MoveGenerator m_moveGenerator;
 	MoveHistory m_moveHistory;
+	// (first = selected, second = target) bad design ye
+	std::pair<sf::Vector2i, sf::Vector2i> previousMove; 
 	
 	sf::Sprite m_chessBoard_Spr;
 	PieceHighlighter m_pieceHighlighter;

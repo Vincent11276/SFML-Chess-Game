@@ -92,7 +92,7 @@ public:
                     m_validMoves.emplace_back(PieceMovement(PieceAction::Capture, target));
                 }
             }
-            
+
             // check if pawn can take right
             target = selected + sf::Vector2i(1, (colorFlag ? 1 : -1));
 
@@ -248,7 +248,7 @@ private:
         };
 
         // check for base to top
-        for (int y = selected.y - 1; y > 0; y--)
+        for (int y = selected.y - 1; y >= 0; y--)
         {
             if (validateMove({ selected.x, y })) break;
         }
@@ -260,7 +260,7 @@ private:
         }
 
         // check for base to left
-        for (int x = selected.x - 1; x > 0; x--)
+        for (int x = selected.x - 1; x >= 0; x--)
         {
             if (validateMove({ x, selected.y })) break;
         }

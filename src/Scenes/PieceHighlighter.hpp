@@ -40,7 +40,11 @@ public:
 		{
             switch (validMove.action)
             {
-            case PieceAction::Move:
+            case PieceAction::Relocate:
+                m_tilemap.setCell(1, validMove.coords);
+                break;
+
+             case PieceAction::TwoSquaresForward:
                 m_tilemap.setCell(1, validMove.coords);
                 break;
 
@@ -55,7 +59,6 @@ public:
 
             case PieceAction::EnPessantUp:
             case PieceAction::EnPessantDown:
-
                 m_tilemap.setCell(1, validMove.coords);
                 break;
 

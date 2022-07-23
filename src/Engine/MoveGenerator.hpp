@@ -1,39 +1,15 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include <cstddef>
 #include <functional>
 
 #include "../Engine/Piece.hpp"
 #include "../Engine/ChessPieces.hpp"
 #include "../Utility/Helper.hpp"
-
-enum class PieceAction
-{
-    None,
-    Move,
-    Capture,
-    CastleLeft,
-    CastleRight,
-    EnPessantDown,
-    EnPessantUp
-};
-
-struct PieceMovement
-{
-    PieceMovement()
-    {
-        // default..
-    }
-
-    PieceMovement(PieceAction p_action, sf::Vector2i p_target)
-    {
-        action = p_action;
-        coords = p_target;
-    }
-
-    PieceAction action;
-    sf::Vector2i coords;   
-};
+#include "../Engine/PieceAction.hpp"
+#include "../Engine/PieceMovement.hpp"
+#include "SFML/System/Vector2.hpp"
 
 
 class MoveGenerator
@@ -47,30 +23,79 @@ public:
     void setPiecesToAnalyze(ChessPieces& chessPieces)
     {
         m_pieces = &chessPieces;
-        //this->m_pieces = std::make_unique<ChessPieces>(chessPieces);
     }
 
-    const std::vector<PieceMovement>& getValidMoves()
+    PieceMovement findValidMoveByCoords(const sf::Vector2i& coords)
+    {
+        for (auto& validMove: m_validMoves)
+        {
+            if (validMove.coords == coords)
+            {
+                return validMove;
+            }
+        }
+        return PieceMovement();
+    }
+
+    const std::vector<PieceMovement>& getAllValidMoves()
     {
         return m_validMoves;
     }
 
-    bool processValidMoves(const sf::Vector2i& selected, const sf::Vector2i& previousMoveCoords = sf::Vector2i { -1, -1 })
+    void processEnPessantViability(const Piece& selectedPiece, const std::pair<Piece, PieceMovement>& previousMove, const sf::Vector2i& target)
     {
-        m_validMoves.clear();
+        // check if there is no piece on the target tile
+        if (m_pieces->getType(target) != PieceType::None)
+        {
+            return;
+        }
+
+        // if (previousMove.first.type == PieceType::B_PAWN || previousMove.first.type == PieceType::W_PAWN)
+
+        // check if the piece is a pawn and it has moved two squares forwards
+        if (previousMove.second.action != PieceAction::TwoSquaresForward)
+        {
+            return;
+        }
+        
+        if (selectedPiece.color == PieceColor::White) 
+        {
+            if (target + sf::Vector2i { 0, 1 } == previousMove.second.coords)
+            {
+                m_validMoves.emplace_back(PieceMovement(PieceAction::EnPessantDown, target));
+            }
+        }
+        else
+        {
+            if (target + sf::Vector2i { 0, -1 } == previousMove.second.coords)
+            {
+                m_validMoves.emplace_back(PieceMovement(PieceAction::EnPessantDown, target));
+            }
+        }
+    }
+
+    bool processValidMoves(const sf::Vector2i& selected, const std::pair<Piece, PieceMovement>& previousMove = std::pair<Piece, PieceMovement>())
+    {
+        if (m_pieces == nullptr)
+        {
+            std::cout << "You did not specify which pieces to analyze. Please call MoveGenerator::setPiecesToAnalyze() first!" << std::endl;
+
+            return false;
+        }
+        else m_validMoves.clear();
 
         Piece selectedPiece = m_pieces->getPiece(selected);
 
         if (selectedPiece.type == B_PAWN || selectedPiece.type == W_PAWN)
         {
-            bool colorFlag = (m_pieces->getColor(selected) == PieceColor::White);
+            bool colorFlag = !(m_pieces->getColor(selected) == m_pieces->getLayoutColor());
 
             // check if pawn can move ONE tiles forward
             sf::Vector2i target { selected.x, selected.y + (colorFlag ? 1 : -1) };
 
             if (not m_pieces->isPieceExists(target) && this->isCoordsInBounds(target))
             {
-                m_validMoves.emplace_back(PieceMovement(PieceAction::Move, target));
+                m_validMoves.emplace_back(PieceMovement(PieceAction::Relocate, target));
             }
 
             // check if pawn can move TWO tiles forward
@@ -80,7 +105,7 @@ public:
 
                 if (!m_pieces->isPieceExists(target))
                 {
-                    m_validMoves.emplace_back(PieceMovement(PieceAction::Move, target));
+                    m_validMoves.emplace_back(PieceMovement(PieceAction::TwoSquaresForward, target));
                 }
             }
 
@@ -93,24 +118,7 @@ public:
                 {
                     m_validMoves.emplace_back(PieceMovement(PieceAction::Capture, target));
                 }
-
-                // check if `previousMoveCoords` was specified otherwise it's first move in the game
-                else if ((previousMoveCoords.x * previousMoveCoords.y) > 0)
-                {
-                    // check if can do En Passant
-                    if (selectedPiece.isEverMoved && selected.y == (colorFlag ? 3 : 4))
-                    {
-                        // if black, do En Pessant down otherwise up
-                        if (colorFlag) 
-                        {
-                            m_validMoves.emplace_back(PieceMovement(PieceAction::EnPessantDown, target));
-                        }
-                        else // if white, en pessant up
-                        {
-                            m_validMoves.emplace_back(PieceMovement(PieceAction::EnPessantUp, target));
-                        }
-                    }    
-                }
+                this->processEnPessantViability(selectedPiece, previousMove, target);               
             }
 
             // check if pawn can take right
@@ -122,8 +130,8 @@ public:
                 {
                     m_validMoves.emplace_back(PieceMovement(PieceAction::Capture, target));
                 }
+                this->processEnPessantViability(selectedPiece, previousMove, target);     
             }
-
         }
         else if (selectedPiece.type == B_KNIGHT || selectedPiece.type == W_KNIGHT)
         {
@@ -157,7 +165,7 @@ public:
             };
             this->applyValidOffsets(selected, kingValidOffsets);
         
-            // Check if king has not ever been moved
+            // only allow castling if the king has not ever been moved
             if (!selectedPiece.isEverMoved)
             {
                 if (this->isCastlingLeftClear(selectedPiece))
@@ -189,7 +197,6 @@ public:
 
 private:
     std::vector<PieceMovement> m_validMoves;
-    // std::unique_ptr<ChessPieces> m_pieces;
 
     ChessPieces* m_pieces;
 
@@ -258,7 +265,7 @@ private:
             moveGenerator.setPiecesToAnalyze(*m_pieces);
             moveGenerator.processValidMoves(coords);
             
-            for (const auto& validMove: moveGenerator.getValidMoves())
+            for (const auto& validMove: moveGenerator.getAllValidMoves())
             {
                 if (validMove.action == PieceAction::Capture)
                 {                             
@@ -327,7 +334,7 @@ private:
             {
                 if (!m_pieces->isPieceExists(target))
                 {
-                    m_validMoves.emplace_back(PieceMovement(PieceAction::Move, target));
+                    m_validMoves.emplace_back(PieceMovement(PieceAction::Relocate, target));
                 }
                 else if (this->isPieceCanTake(selected, target))
                 {
@@ -343,7 +350,7 @@ private:
         {
             if (!m_pieces->isPieceExists(target))
             {
-                m_validMoves.emplace_back(PieceMovement(PieceAction::Move, target));
+                m_validMoves.emplace_back(PieceMovement(PieceAction::Relocate, target));
             }
             else
             {
@@ -379,7 +386,7 @@ private:
         {
             if (!m_pieces->isPieceExists(target))
             {
-                m_validMoves.emplace_back(PieceMovement(PieceAction::Move, target));
+                m_validMoves.emplace_back(PieceMovement(PieceAction::Relocate, target));
             }
             else
             {

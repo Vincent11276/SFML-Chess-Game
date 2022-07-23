@@ -8,7 +8,8 @@
 #include "../Engine/TileMap.hpp"
 #include "../Engine/Piece.hpp"
 #include "../Utility/Logger.hpp"
-
+#include "../Engine/PieceAction.hpp"
+#include "../Engine/PieceMovement.hpp"
 
 
 class ChessPieces : public sf::Drawable, public sf::Transformable
@@ -20,11 +21,11 @@ public:
         this->m_chessPieces_Data.resize(8, std::vector<Piece>(8, Piece()));
     }
 
-    void initialize(const PieceColor playerSide)
+    void initialize(const PieceColor layoutColor)
     {
         std::vector<std::vector<int>> chessLayout;
 
-        if (playerSide == PieceColor::White)
+        if (layoutColor == PieceColor::White)
         {
             chessLayout = {
                 {10, 4, 0, 8, 2, 0, 4, 10},
@@ -37,7 +38,7 @@ public:
                 {11, 5, 1, 9, 3, 1, 5, 11}
             };
         }
-        else if (playerSide == PieceColor::Black)
+        else if (layoutColor == PieceColor::Black)
         {
             chessLayout = {
                 {11, 5, 1, 9, 3, 1, 5, 11},
@@ -78,6 +79,7 @@ public:
                 };
                 m_chessPieces_Data[y][x] = piece;
             }
+            m_layoutColor = layoutColor;
         }
 
         static TileSet tileSet;
@@ -105,7 +107,7 @@ public:
         m_chessPieces_TlMap.mapCellsFrom(chessLayout);
     }
 
-    const void setPiece(Piece piece, const sf::Vector2i& coords)
+    const void setPiece(const Piece& piece, const sf::Vector2i& coords)
     {
         m_chessPieces_TlMap.setCell(piece.type, coords);
 
@@ -124,12 +126,56 @@ public:
        m_chessPieces_Data[coords.y][coords.x] = Piece();
     }
 
+    const Piece& executeMovement(const Piece& selectedPiece, const PieceMovement& targetMove)
+    {
+        //m_moveGenerator.findValidMoveByCoords(movement.coords).action
+	    switch (targetMove.action)
+        {
+        case PieceAction::Relocate:
+            this->movePiece(selectedPiece.coords, targetMove.coords);
+            break;
+
+        case PieceAction::TwoSquaresForward:
+            this->movePiece(selectedPiece.coords, targetMove.coords);
+            break;
+
+        case PieceAction::Capture:
+            this->movePiece(selectedPiece.coords, targetMove.coords);
+            break;
+            
+        case PieceAction::CastleLeft:
+            this->castleLeft(selectedPiece.coords, targetMove.coords);
+            break;
+
+        case PieceAction::CastleRight:
+            this->castleRight(selectedPiece.coords, targetMove.coords);
+            break;
+
+        case PieceAction::EnPessantDown:
+            this->enPessantDown(selectedPiece.coords, targetMove.coords);
+            break;
+        
+        case PieceAction::EnPessantUp:
+            this->EnPessantUp(selectedPiece.coords, targetMove.coords);
+            break;
+        
+        default:
+            break;
+        }
+        return this->getPiece(targetMove.coords);
+    }
+
     void movePiece(const sf::Vector2i& selected, const sf::Vector2i& target)
     {
         Piece selectedPiece = this->getPiece(selected);
         
-        selectedPiece.isEverMoved = true;
         selectedPiece.coords = target;
+
+        selectedPiece.isFirstMove = !selectedPiece.isEverMoved;     
+
+        std::cout << "dddd " << selectedPiece.isFirstMove << std::endl;
+
+        selectedPiece.isEverMoved = true;
 
         this->setPiece(selectedPiece, target);
         this->removePiece(selected);
@@ -183,8 +229,15 @@ public:
     {
         return this->getPiece(coords).color;
     }
+
+    PieceColor getLayoutColor()
+    {
+        return m_layoutColor;
+    }
   
 private:
+    PieceColor m_layoutColor = PieceColor::Neutral;
+
     std::vector<std::vector<Piece>> m_chessPieces_Data;
 
     TileMap m_chessPieces_TlMap;

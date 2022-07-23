@@ -37,7 +37,7 @@ public:
 	bool selectPiece(const sf::Vector2i& selectedPiece);
 	bool moveSelectedPiece(const sf::Vector2i& target);
 
-	bool processAfterMove();
+	void processAfterMove();
 	bool isCheckMate();
 
 	const std::vector<sf::Vector2i>& getValidMoves();
@@ -72,7 +72,7 @@ private:
 	MoveGenerator m_moveGenerator;
 	MoveHistory m_moveHistory;
 	// (first = selected, second = target) bad design ye
-	std::pair<sf::Vector2i, sf::Vector2i> previousMove; 
+	std::pair<Piece, PieceMovement> m_previousMove; 
 	
 	sf::Sprite m_chessBoard_Spr;
 	PieceHighlighter m_pieceHighlighter;

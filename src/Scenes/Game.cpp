@@ -2,7 +2,7 @@
 
 
 Game::Game()
-	: m_window(sf::VideoMode(800, 600), "f")
+	: m_window(sf::VideoMode(650, 650), "Chess Game")
 {
 	// m_window.setTitle("Chess Game");
 	// m_window.setSize({ 800, 600 });

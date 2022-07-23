@@ -27,14 +27,14 @@ public:
         if (playerSide == PieceColor::White)
         {
             chessLayout = {
-                {10, 4, 0, 2, 8, 0, 4, 10},
+                {10, 4, 0, 8, 2, 0, 4, 10},
                 { 6, 6, 6, 6, 6, 6, 6, 6 },
                 {-1,-1,-1,-1,-1,-1,-1,-1 },
                 {-1,-1,-1,-1,-1,-1,-1,-1 },
                 {-1,-1,-1,-1,-1,-1,-1,-1 },
                 {-1,-1,-1,-1,-1,-1,-1,-1 },
                 { 7, 7, 7, 7, 7, 7, 7, 7 },
-                {11, 5, 1, 3, 9, 1, 5, 11}
+                {11, 5, 1, 9, 3, 1, 5, 11}
             };
         }
         else if (playerSide == PieceColor::Black)
@@ -47,7 +47,7 @@ public:
                 {-1,-1,-1,-1,-1,-1,-1,-1 },
                 {-1,-1,-1,-1,-1,-1,-1,-1 },
                 { 6, 6, 6, 6, 6, 6, 6, 6 },
-                {10, 4, 0, 8, 2, 0, 4, 10}
+                {10, 4, 0, 2, 8, 0, 4, 10}
             };
         }
 
@@ -89,14 +89,14 @@ public:
 
         tileSet.loadFromTexture(ResourceManager::getTexture(ResourceKey::WoodPieceBishopB));
         tileSet.loadFromTexture(ResourceManager::getTexture(ResourceKey::WoodPieceBishopW));
-        tileSet.loadFromTexture(ResourceManager::getTexture(ResourceKey::WoodPieceKingB));
-        tileSet.loadFromTexture(ResourceManager::getTexture(ResourceKey::WoodPieceKingW));
+        tileSet.loadFromTexture(ResourceManager::getTexture(ResourceKey::WoodPieceQueenB));
+        tileSet.loadFromTexture(ResourceManager::getTexture(ResourceKey::WoodPieceQueenW));
         tileSet.loadFromTexture(ResourceManager::getTexture(ResourceKey::WoodPieceKnightB));
         tileSet.loadFromTexture(ResourceManager::getTexture(ResourceKey::WoodPieceKnightW));
         tileSet.loadFromTexture(ResourceManager::getTexture(ResourceKey::WoodPiecePawnB));
         tileSet.loadFromTexture(ResourceManager::getTexture(ResourceKey::WoodPiecePawnW));
-        tileSet.loadFromTexture(ResourceManager::getTexture(ResourceKey::WoodPieceQueenB));
-        tileSet.loadFromTexture(ResourceManager::getTexture(ResourceKey::WoodPieceQueenW));
+        tileSet.loadFromTexture(ResourceManager::getTexture(ResourceKey::WoodPieceKingB));
+        tileSet.loadFromTexture(ResourceManager::getTexture(ResourceKey::WoodPieceKingW));
         tileSet.loadFromTexture(ResourceManager::getTexture(ResourceKey::WoodPieceRookB));
         tileSet.loadFromTexture(ResourceManager::getTexture(ResourceKey::WoodPieceRookW));
 
@@ -127,11 +127,46 @@ public:
     void movePiece(const sf::Vector2i& selected, const sf::Vector2i& target)
     {
         Piece selectedPiece = this->getPiece(selected);
+        
         selectedPiece.isEverMoved = true;
         selectedPiece.coords = target;
 
         this->setPiece(selectedPiece, target);
         this->removePiece(selected);
+    }
+
+    void castleLeft(const sf::Vector2i& selected, const sf::Vector2i& target)
+    {
+        // move king to designated target coords
+        this->movePiece(selected, target);
+
+        // move rook to opposite side of the king
+        this->movePiece({ 0, selected.y}, { target.x + 1, selected.y } );
+    }
+
+    void castleRight(const sf::Vector2i& selected, const sf::Vector2i& target)
+    {
+        // move king to designated target coords
+        this->movePiece(selected, target);
+
+        // move rook to opposite side of the king
+        this->movePiece({ 7, selected.y}, { target.x - 1, selected.y } );
+    }
+
+    void EnPessantUp(const sf::Vector2i& selected, const sf::Vector2i& target)
+    {
+        this->movePiece(selected, target);
+
+        // capture the pawn by en pessant
+        this->movePiece(selected, { target.x, target.y + 1 });
+    }
+
+    void enPessantDown(const sf::Vector2i& selected, const sf::Vector2i& target)
+    {
+        this->movePiece(selected, target);
+
+        // capture the pawn by en pessant
+        this->movePiece(selected, { target.x, target.y - 1 });
     }
 
     bool isPieceExists(const sf::Vector2i& coords)

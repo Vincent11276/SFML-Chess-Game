@@ -48,11 +48,14 @@ public:
                 m_tilemap.setCell(2, validMove.coords);
                 break;
 
-            case PieceAction::Castle:
+            case PieceAction::CastleLeft:
+            case PieceAction::CastleRight:
                 m_tilemap.setCell(1, validMove.coords);
                 break;
 
-            case PieceAction::EnPessant:
+            case PieceAction::EnPessantUp:
+            case PieceAction::EnPessantDown:
+
                 m_tilemap.setCell(1, validMove.coords);
                 break;
 

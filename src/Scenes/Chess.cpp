@@ -16,7 +16,7 @@ void ChessGame::init()
 	m_chessBoard_Spr.setTexture(chessBoardTex);
 	m_chessBoard_Spr.setOrigin(20, 22);
 	
-	m_chessPieces.initialize(PieceColor::White);
+	m_chessPieces.initialize(PieceColor::Black);
 
 	m_moveGenerator.setPiecesToAnalyze(m_chessPieces);
 
@@ -161,7 +161,41 @@ bool ChessGame::moveSelectedPiece(const sf::Vector2i& target)
 
 			previousMove = std::make_pair(m_selectedPiece.coords, target);
 			
-			m_chessPieces.movePiece(m_selectedPiece.coords, target);
+			for (auto& validMove: m_moveGenerator.getValidMoves())
+			{
+				if (validMove.coords == target)
+				{
+					switch (validMove.action)
+					{
+					case PieceAction::Move:
+						m_chessPieces.movePiece(m_selectedPiece.coords, target);
+						break;
+
+					case PieceAction::Capture:
+						m_chessPieces.movePiece(m_selectedPiece.coords, target);
+						break;
+						
+					case PieceAction::CastleLeft:
+						m_chessPieces.castleLeft(m_selectedPiece.coords, target);
+						break;
+
+					case PieceAction::CastleRight:
+						m_chessPieces.castleRight(m_selectedPiece.coords, target);
+						break;
+
+					case PieceAction::EnPessantDown:
+						m_chessPieces.enPessantDown(m_selectedPiece.coords, target);
+						break;
+					
+					case PieceAction::EnPessantUp:
+						m_chessPieces.EnPessantUp(m_selectedPiece.coords, target);
+						break;
+					
+					default:
+						break;
+					}
+				}
+			}
 			
 			// highlight previous move
 			m_pieceHighlighter.markAsHighlighted(previousMove.first);

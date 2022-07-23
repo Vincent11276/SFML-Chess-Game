@@ -9,12 +9,12 @@ std::unordered_map<int, ResourceKey> MoveablePiece::m_resourceKeys
     { PieceType::B_BISHOP, ResourceKey::WoodPieceBishopB },
     { PieceType::B_QUEEN, ResourceKey::WoodPieceQueenB },
     { PieceType::B_KING, ResourceKey::WoodPieceKingB },
-    { PieceType::W_PAWN, ResourceKey:: WoodPiecePawnW},
+    { PieceType::W_PAWN, ResourceKey::WoodPiecePawnW },
     { PieceType::W_ROOK, ResourceKey::WoodPieceRookW },
     { PieceType::W_KNIGHT, ResourceKey::WoodPieceKnightW },
     { PieceType::W_BISHOP, ResourceKey::WoodPieceBishopW },
-    { PieceType::W_QUEEN, ResourceKey::WoodPieceKingW },
-    { PieceType::W_KING, ResourceKey::WoodPieceQueenW },
+    { PieceType::W_QUEEN, ResourceKey::WoodPieceQueenW },
+    { PieceType::W_KING, ResourceKey::WoodPieceKingW },
 };
 
 MoveablePiece::MoveablePiece()

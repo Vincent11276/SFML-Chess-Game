@@ -2,7 +2,6 @@
 
 
 std::array<bool, sf::Keyboard::Key::KeyCount> KeyboardInput::m_keyStates { };
-std::array<bool, sf::Keyboard::Key::KeyCount> KeyboardInput::m_releasedKeys { };
 std::array<bool, sf::Keyboard::Key::KeyCount> KeyboardInput::m_pressedKeys { };
 
 bool KeyboardInput::isKeyPressed(Key key)
@@ -17,14 +16,11 @@ bool KeyboardInput::isKeyJustPressed(Key key)
 
 bool KeyboardInput::isKeyReleased(Key key)
 {
-	return m_releasedKeys[key];
+	return !m_pressedKeys[key];
 }
 
 void KeyboardInput::handleEvent(sf::Event &e)
 {
-	std::memset(&m_releasedKeys, false, sizeof(bool) * Key::KeyCount);
-	std::memset(&m_pressedKeys, false, sizeof(bool) * Key::KeyCount);
-
 	switch (e.type)
 	{
 	case sf::Event::KeyPressed:
@@ -34,10 +30,14 @@ void KeyboardInput::handleEvent(sf::Event &e)
 
 	case sf::Event::KeyReleased:
 		m_keyStates[e.key.code] = false;
-		m_releasedKeys[e.key.code] = true;
 		break;
 
 	default:
 		break;
 	}
+}
+
+void KeyboardInput::resetStates()
+{
+	std::memset(&m_pressedKeys, false, sizeof(bool) * Key::KeyCount);
 }

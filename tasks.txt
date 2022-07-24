@@ -1,12 +1,8 @@
-[[To Fix]]
-1. Fix input system
-
 [[To Add]]
 1. Checkmate detection
 2. Move generator when king is checked
-3. Side variability
-4. Add sounds to the game
-5. Add user interface
-6. Ability to change texture packs
-7. Multiplayer feature
-8. Cross-platform viability
+3. Add sounds to the game
+4. Add user interface
+5. Ability to change texture packs
+6. Multiplayer feature
+7. Cross-platform viability

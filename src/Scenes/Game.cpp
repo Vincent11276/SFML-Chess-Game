@@ -29,6 +29,9 @@ void Game::run()
 		sf::Time elapsed = timer.restart();
 		lag += elapsed;
 
+		KeyboardInput::resetStates();
+		MouseInput::resetStates();
+
 		for (sf::Event event; m_window.pollEvent(event); )
 		{
 			KeyboardInput::handleEvent(event);
@@ -44,8 +47,9 @@ void Game::run()
 				break;
 			}
 			m_gameStateManager.handleEvent(event);
-			
 		}
+		
+
 		m_gameStateManager.update(elapsed.asSeconds());
 
 		while (lag >= fixedUpdateInterval)

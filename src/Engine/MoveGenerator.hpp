@@ -93,7 +93,7 @@ public:
             // check if pawn can move ONE tiles forward
             sf::Vector2i target { selected.x, selected.y + (colorFlag ? 1 : -1) };
 
-            if (not m_pieces->isPieceExists(target) && this->isCoordsInBounds(target))
+            if (!m_pieces->isPieceExists(target) && this->isCoordsInBounds(target))
             {
                 m_validMoves.emplace_back(PieceMovement(PieceAction::Relocate, target));
            
@@ -108,7 +108,7 @@ public:
                     }
                 }
             }
-            
+
             // check if pawn can take left
             target = selected + sf::Vector2i(-1, (colorFlag ? 1 : -1));
 

@@ -19,12 +19,16 @@ public:
 private:
 	static sf::RenderWindow* m_window;
 
-	static std::array<bool, Button::ButtonCount> m_releasedBtns;
-	static std::array<bool, Button::ButtonCount> m_pressedBtns;
+	static std::array<bool, Button::ButtonCount> m_buttonStates;
+
+	static std::array<bool, Button::ButtonCount> m_justPressedBtns;
+	static std::array<bool, Button::ButtonCount> m_justReleasedBtns;
 
 	static void setWindow(sf::RenderWindow& window);
 
 	static void handleEvent(sf::Event& e);
+
+	static void resetStates();
 
 	friend class Game;
 };

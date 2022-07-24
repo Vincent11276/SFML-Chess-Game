@@ -96,19 +96,19 @@ public:
             if (not m_pieces->isPieceExists(target) && this->isCoordsInBounds(target))
             {
                 m_validMoves.emplace_back(PieceMovement(PieceAction::Relocate, target));
-            }
+           
+                // check if pawn can move TWO tiles forward
+                if (!selectedPiece.isEverMoved)
+                { 
+                    target = { selected.x, selected.y + (colorFlag ? 2 : -2 ) };
 
-            // check if pawn can move TWO tiles forward
-            if (!selectedPiece.isEverMoved)
-            { 
-                target = { selected.x, selected.y + (colorFlag ? 2 : -2 ) };
-
-                if (!m_pieces->isPieceExists(target))
-                {
-                    m_validMoves.emplace_back(PieceMovement(PieceAction::TwoSquaresForward, target));
+                    if (!m_pieces->isPieceExists(target))
+                    {
+                        m_validMoves.emplace_back(PieceMovement(PieceAction::TwoSquaresForward, target));
+                    }
                 }
             }
-
+            
             // check if pawn can take left
             target = selected + sf::Vector2i(-1, (colorFlag ? 1 : -1));
 
@@ -366,9 +366,9 @@ private:
         std::vector<std::pair<sf::Vector2i, std::function<bool(sf::Vector2i target)>>> registers
         {
             { sf::Vector2i(-1, -1), [](const sf::Vector2i& target) { return target.x >= 0 && target.y >= 0; } },
-            { sf::Vector2i(1, -1), [](const sf::Vector2i& target) { return target.x < 7 && target.y >= 0; } },
-            { sf::Vector2i(-1, 1), [](const sf::Vector2i& target) { return target.x >= 0 && target.y < 7; } },
-            { sf::Vector2i(1, 1), [](const sf::Vector2i& target) { return target.x < 7 && target.y < 7; } },
+            { sf::Vector2i(1, -1), [](const sf::Vector2i& target) { return target.x < 8 && target.y >= 0; } },
+            { sf::Vector2i(-1, 1), [](const sf::Vector2i& target) { return target.x >= 0 && target.y < 8; } },
+            { sf::Vector2i(1, 1), [](const sf::Vector2i& target) { return target.x < 8 && target.y < 8; } },
         };
 
         for (auto& reg: registers)

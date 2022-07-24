@@ -16,7 +16,7 @@ void ChessGame::init()
 	m_chessBoard_Spr.setTexture(chessBoardTex);
 	m_chessBoard_Spr.setOrigin(20, 22);
 	
-	m_chessPieces.initialize(PieceColor::White);
+	m_chessPieces.initialize(PieceColor::Black);
 
 	m_moveGenerator.setPiecesToAnalyze(m_chessPieces);
 

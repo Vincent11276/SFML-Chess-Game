@@ -1,12 +1,12 @@
 [[To Fix]]
 1. Fix input system
-2. Fix move generator for bishop
-3. Fix En Pessant move
 
 [[To Add]]
-1. Side variability
-2. Add user interface
-3. Add sounds to the game
-4. Multiplayer feature
-5. Ability to change texture packs
-5. Cross-platform viability
+1. Checkmate detection
+2. Move generator when king is checked
+3. Side variability
+4. Add sounds to the game
+5. Add user interface
+6. Ability to change texture packs
+7. Multiplayer feature
+8. Cross-platform viability

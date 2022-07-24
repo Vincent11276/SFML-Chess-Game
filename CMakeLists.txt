@@ -11,24 +11,27 @@ FetchContent_Declare(SFML
 FetchContent_MakeAvailable(SFML)
 
 add_executable(CMakeSFMLProject 
-                "src/main.cpp" 
-                "src/Utility/Logger.cpp"
-                "src/Utility/ScopedTimer.cpp"
-                "src/Engine/TileMap.cpp"
-                "src/Engine/ResourceManager.cpp"
-                "src/Inputs/Mouse.cpp"
-                "src/Inputs/Keyboard.cpp"
-                "src/Scenes/Game.cpp"
-                "src/Scenes/Chess.cpp"
-                "src/Scenes/PieceHighlighter.cpp"
-                "src/Scenes/MoveablePiece.cpp"
-                "src/States/InGameState.cpp"
-                "src/States/GameStateManager.cpp"
-            
-                
+    "Core/Utility/Logger.cpp"
+    "Core/Utility/ScopedTimer.cpp" 
+    "Core/Engine/TileMap.cpp"
+    "Core/Engine/ResourceManager.cpp"
+    "Core/Inputs/Mouse.cpp"
+    "Core/Inputs/Keyboard.cpp"
+
+    "Client/main.cpp" 
+    "Client/Scenes/Game.cpp"
+    "Client/Scenes/Chess.cpp"
+    "Client/Scenes/PieceHighlighter.cpp"
+    "Client/Scenes/MoveablePiece.cpp"
+    "Client/States/InGameState.cpp"
+    "Client/States/GameStateManager.cpp"      
 )
 
+include_directories("${PROJECT_SOURCE_DIR}")
+
 target_link_libraries(CMakeSFMLProject PRIVATE sfml-graphics sfml-audio)
+
+
 target_compile_features(CMakeSFMLProject PRIVATE cxx_std_20)
 if (WIN32 AND BUILD_SHARED_LIBS)
     add_custom_command(TARGET CMakeSFMLProject POST_BUILD

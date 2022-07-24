@@ -2,7 +2,11 @@
 1. Checkmate detection
 2. Move generator when king is checked
 3. Add sounds to the game
-4. Add user interface
-5. Ability to change texture packs
+4. Piece moving animation
+5. Add user interface
 6. Multiplayer feature
-7. Cross-platform viability
+7. Ability to change texture packs
+8. Game configuration
+9. Move history
+10. Game analysis
+11. Cross-platform support

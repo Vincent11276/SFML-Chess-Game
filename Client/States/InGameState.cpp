@@ -1,14 +1,14 @@
 #include "InGameState.hpp"
 
 
-void InGameState::init()
+void InGameState::init(GameStateManager* game)
 {
 	m_chessGame.init();
 }
 
-void InGameState::cleanup() {}
-void InGameState::pause() {}
-void InGameState::resume() {}
+void InGameState::cleanup(GameStateManager* game) {}
+void InGameState::pause(GameStateManager* game) {}
+void InGameState::resume(GameStateManager* game) {}
 
 void InGameState::handleEvent(GameStateManager* game, sf::Event& e)
 {

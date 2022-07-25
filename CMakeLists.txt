@@ -8,7 +8,13 @@ FetchContent_Declare(SFML
     GIT_TAG 2.6.x
 )
 
+FetchContent_Declare(TGUI
+    GIT_REPOSITORY https://github.com/texus/TGUI.git
+    GIT_TAG v0.9.5
+)
+
 FetchContent_MakeAvailable(SFML)
+FetchContent_MakeAvailable(TGUI)
 
 add_executable(CMakeSFMLProject 
     "Core/Utility/Logger.cpp"
@@ -23,14 +29,19 @@ add_executable(CMakeSFMLProject
     "Client/Scenes/Chess.cpp"
     "Client/Scenes/PieceHighlighter.cpp"
     "Client/Scenes/MoveablePiece.cpp"
+    "Client/States/MainMenuState.cpp"
     "Client/States/InGameState.cpp"
     "Client/States/GameStateManager.cpp"      
 )
 
 include_directories("${PROJECT_SOURCE_DIR}")
 
-target_link_libraries(CMakeSFMLProject PRIVATE sfml-graphics sfml-audio)
-
+target_link_libraries(CMakeSFMLProject  PRIVATE
+    sfml-system
+    sfml-graphics 
+    sfml-audio 
+    tgui
+)
 
 target_compile_features(CMakeSFMLProject PRIVATE cxx_std_20)
 if (WIN32 AND BUILD_SHARED_LIBS)

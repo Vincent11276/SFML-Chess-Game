@@ -9,18 +9,18 @@ GameStateManager::GameStateManager()
 void GameStateManager::changeState(GameState* state)
 {
 	if (!m_states.empty()) {
-		m_states.back()->cleanup();
+		m_states.back()->cleanup(this);
 		m_states.pop_back();
 	}
 	m_states.push_back(state);
-	m_states.back()->init();
+	m_states.back()->init(this);
 }
 
 void GameStateManager::cleanUp()
 {
 	// cleanup the all states
 	while (!m_states.empty()) {
-		m_states.back()->cleanup();
+		m_states.back()->cleanup(this);
 		m_states.pop_back();
 	}
 }
@@ -29,25 +29,25 @@ void GameStateManager::pushState(GameState* state)
 {
 	// pause current state
 	if (!m_states.empty()) {
-		m_states.back()->pause();
+		m_states.back()->pause(this);
 	}
 
 	// store and init the new state
 	m_states.push_back(state);
-	m_states.back()->init();
+	m_states.back()->init(this);
 }
 
 void GameStateManager::popState()
 {
 	// cleanup the current state
 	if (!m_states.empty()) {
-		m_states.back()->cleanup();
+		m_states.back()->cleanup(this);
 		m_states.pop_back();
 	}
 
 	// resume previous state
 	if (!m_states.empty()) {
-		m_states.back()->resume();
+		m_states.back()->resume(this);
 	}
 }
 

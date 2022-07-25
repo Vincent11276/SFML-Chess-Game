@@ -12,10 +12,10 @@
 class InGameState : public GameState
 {
 public:
-	void init() override;
-	void cleanup() override;
-	void pause() override;
-	void resume() override;
+	void init(GameStateManager* game) override;
+	void cleanup(GameStateManager* game) override;
+	void pause(GameStateManager* game) override;
+	void resume(GameStateManager* game) override;
 
 	void handleEvent(GameStateManager* manager, sf::Event& e) override;
 	void update(GameStateManager* manager, float deltaTime) override;

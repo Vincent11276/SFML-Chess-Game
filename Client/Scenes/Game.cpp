@@ -1,8 +1,10 @@
 #include "Game.hpp"
 
+#include "Client/States/MainMenuState.hpp"
+
 
 Game::Game()
-	: m_window(sf::VideoMode(650, 650), "Chess Game")
+	: m_window(sf::VideoMode(854, 480), "Chess Game")
 {
 	// m_window.setTitle("Chess Game");
 	// m_window.setSize({ 800, 600 });
@@ -17,9 +19,10 @@ void Game::run()
 {
 	this->loadResources();
 	
-	m_gameStateManager.changeState(InGameState::getInstance());
+	m_gameStateManager.changeState(MainMenuState::getInstance(&m_window));
 
-	const sf::Time fixedUpdateInterval = sf::seconds(1.0f / 50.0f);
+
+	const sf::Time fixedUpdateInterval = sf::seconds(1.0f / 50.0f); 
 
 	sf::Clock timer;
 	sf::Time lag;
@@ -48,8 +51,6 @@ void Game::run()
 			}
 			m_gameStateManager.handleEvent(event);
 		}
-		
-
 		m_gameStateManager.update(elapsed.asSeconds());
 
 		while (lag >= fixedUpdateInterval)

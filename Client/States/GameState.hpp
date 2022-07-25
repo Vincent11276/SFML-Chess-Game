@@ -8,10 +8,10 @@ class GameState
 public:
 	GameState() {}
 
-	virtual void init() = 0;
-	virtual void cleanup() = 0;
-	virtual void pause() = 0;
-	virtual void resume() = 0;
+	virtual void init(GameStateManager* game) = 0;
+	virtual void cleanup(GameStateManager* game) = 0;
+	virtual void pause(GameStateManager* game) = 0;
+	virtual void resume(GameStateManager* game) = 0;
 
 	virtual void handleEvent(GameStateManager* game, [[maybe_unused]] sf::Event& event) = 0;
 	virtual void update(GameStateManager* game, [[maybe_unused]] float deltaTime) = 0;

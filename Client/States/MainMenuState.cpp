@@ -1,6 +1,10 @@
 #include "MainMenuState.hpp"
 
+#include "Client/States/InGameState.hpp"
+#include "TGUI/Widgets/BitmapButton.hpp"
+#include "TGUI/Widgets/Button.hpp"
 #include "TGUI/Widgets/HorizontalLayout.hpp"
+#include "TGUI/Widgets/Label.hpp"
 #include "TGUI/Widgets/VerticalLayout.hpp"
 
 
@@ -40,31 +44,10 @@ void MainMenuState::initUI()
 
     try
     {
-        auto verticalLayout = tgui::VerticalLayout::create();
-        verticalLayout->setSize(250, 250);
-        verticalLayout->setPosition("50%", "50%");
-        verticalLayout->setOrigin(0.5, 0.5);
-        gui.add(verticalLayout);
+        gui.loadWidgetsFromFile("../Assets/form.txt");
 
-        auto playBtn = tgui::Button::create();
-        playBtn->setText("Play");
+        auto playBtn = gui.get<tgui::Button>("Play Button");
         playBtn->onPress(&MainMenuState::on_PlayBtn_Pressed, this);
-        verticalLayout->add(playBtn, "playBtn");
-
-        auto onlineBtn = tgui::Button::create();
-        onlineBtn->setText("Multiplayer");
-        onlineBtn->onPress(&MainMenuState::on_OnlineBtn_Pressed, this);
-        verticalLayout->add(onlineBtn, "onlineBtn");
-
-        auto settingsBtn = tgui::Button::create();
-        settingsBtn->setText("Settings");
-        settingsBtn->onPress(&MainMenuState::on_SettingsBtn_pressed, this);
-        verticalLayout->add(settingsBtn, "settingsBtn");
-
-        auto exitBtn = tgui::Button::create();
-        exitBtn->setText("Quit");
-        exitBtn->onPress(&MainMenuState::on_ExitBtn_Pressed, this);
-        verticalLayout->add(exitBtn, "exitBtn");
     }
     catch (const tgui::Exception& e)
     {
@@ -75,7 +58,7 @@ void MainMenuState::on_PlayBtn_Pressed()
 {
     std::cout << "You have pressed the play button" << std::endl;
 
-    
+    this->getGameStateManager()->changeState(InGameState::getInstance());
 }
 
 void MainMenuState::on_SettingsBtn_pressed()
@@ -93,4 +76,7 @@ void MainMenuState::on_ExitBtn_Pressed()
 
 }
 
-MainMenuState::MainMenuState() = default;
+MainMenuState::MainMenuState()
+{
+    
+}

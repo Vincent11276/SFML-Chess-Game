@@ -4,6 +4,9 @@
 void InGameState::init(GameStateManager* game)
 {
 	m_chessGame.init();
+
+	m_chessGame.setScale(0.5, 0.5);
+	m_chessGame.setPosition(50, 50);
 }
 
 void InGameState::cleanup(GameStateManager* game) {}

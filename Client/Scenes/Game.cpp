@@ -8,6 +8,7 @@ Game::Game()
 {
 	// m_window.setTitle("Chess Game");
 	// m_window.setSize({ 800, 600 });
+
 	m_window.setKeyRepeatEnabled(false);
 	m_window.setFramerateLimit(60);
 
@@ -20,7 +21,6 @@ void Game::run()
 	this->loadResources();
 	
 	m_gameStateManager.changeState(MainMenuState::getInstance(&m_window));
-
 
 	const sf::Time fixedUpdateInterval = sf::seconds(1.0f / 50.0f); 
 
@@ -68,6 +68,15 @@ void Game::run()
 
 void Game::loadResources()
 {
+	ResourceManager::addTexture(ResourceKey::Background, "../Assets/UI/Background.png");
+	ResourceManager::addTexture(ResourceKey::ExitButton, "../Assets/UI/Background.png");
+	ResourceManager::addTexture(ResourceKey::Logo, "../Assets/UI/Background.png");
+	ResourceManager::addTexture(ResourceKey::OnlineButton, "../Assets/UI/Background.png");
+	ResourceManager::addTexture(ResourceKey::PlayButton, "../Assets/UI/Background.png");
+	ResourceManager::addTexture(ResourceKey::SettingsButton, "../Assets/UI/Background.png");
+
+	
+
 	ResourceManager::addTexture(ResourceKey::ActionMark, "../Assets/action_mark.png");
 	ResourceManager::addTexture(ResourceKey::CanMoveMark, "../Assets/can_move_mark.png");
 	ResourceManager::addTexture(ResourceKey::CanTakeMark, "../Assets/can_take_mark.png");

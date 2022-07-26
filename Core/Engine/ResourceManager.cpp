@@ -15,6 +15,7 @@ bool ResourceManager::addTexture(uint32_t key, std::string filePath)
             
         return LoadResult::Failure;
     }
+    newTexture->setSmooth(1);
     m_textures.emplace(std::make_pair(key, std::move(newTexture)));
 
     return LoadResult::Success;

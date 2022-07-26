@@ -18,7 +18,20 @@ public:
 	virtual void physicsUpdate(GameStateManager* game, [[maybe_unused]] float deltaTime) = 0;
 	virtual void draw(GameStateManager* game, [[maybe_unused]] sf::RenderTarget& target) const = 0;
 
-	void changeState(GameStateManager* game, GameState* state) {
+	GameStateManager* getGameStateManager()
+	{
+		return m_gameStateManager;
+	}
+
+	void changeState(GameStateManager* game, GameState* state) 
+	{
 		game->changeState(state);
 	}
+
+	void setGameStateManager(GameStateManager* gameStateManager) 
+	{
+		m_gameStateManager = gameStateManager;
+	}
+
+	GameStateManager* m_gameStateManager;
 };

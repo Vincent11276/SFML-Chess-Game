@@ -2,6 +2,13 @@
 
 enum ResourceKey
 {
+    Background,
+    ExitButton,
+    Logo,
+    OnlineButton,
+    PlayButton,
+    SettingsButton,
+
     ActionMark,
     CanMoveMark,
     CanTakeMark,

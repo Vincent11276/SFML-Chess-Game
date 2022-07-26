@@ -236,6 +236,11 @@ public:
     {
         return m_layoutColor;
     }
+
+    TileMap* getTileMap()
+    {
+        return &m_chessPieces_TlMap;
+    }
   
 private:
     PieceColor m_layoutColor = PieceColor::Neutral;
@@ -248,6 +253,6 @@ private:
     {
         states.transform *= getTransform();
 
-        target.draw(m_chessPieces_TlMap);
+        target.draw(m_chessPieces_TlMap, states);
     }
 };

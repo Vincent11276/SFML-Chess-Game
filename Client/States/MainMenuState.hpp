@@ -1,12 +1,13 @@
 #pragma once
 
 #include <iostream>
+#include <TGUI/Backends/SFML.hpp>
+#include <TGUI/TGUI.hpp>
 
 #include "GameStateManager.hpp"
-#include "GameState.hpp"
+#include "InGameState.hpp"
+#include "MainMenuState.hpp"
 
-#include "TGUI/Backends/SFML.hpp"
-#include <TGUI/TGUI.hpp>
 
 
 class MainMenuState : public GameState

@@ -8,6 +8,8 @@ GameStateManager::GameStateManager()
 
 void GameStateManager::changeState(GameState* state)
 {
+	state->setGameStateManager(this);
+
 	if (!m_states.empty()) {
 		m_states.back()->cleanup(this);
 		m_states.pop_back();
@@ -27,6 +29,8 @@ void GameStateManager::cleanUp()
 
 void GameStateManager::pushState(GameState* state)
 {
+	state->setGameStateManager(this);
+
 	// pause current state
 	if (!m_states.empty()) {
 		m_states.back()->pause(this);

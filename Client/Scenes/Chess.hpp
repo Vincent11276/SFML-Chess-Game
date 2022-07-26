@@ -47,6 +47,8 @@ public:
 
 	sf::Vector2i getMouseHoveringPiece();
 
+	sf::Vector2i getGlobalMousePosition();
+
 private:
 	void applyValidOffsets(std::vector<sf::Vector2i>* offsetsPtr, std::vector<sf::Vector2i>* validMovesPtr);
 	void generateDiagonalMoves(std::vector<sf::Vector2i>* validMovesPtr);

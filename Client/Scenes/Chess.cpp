@@ -1,4 +1,6 @@
 #include "Chess.hpp"
+#include "Core/Inputs/Mouse.hpp"
+#include "SFML/System/Vector2.hpp"
 
 #include <functional>
 
@@ -23,7 +25,6 @@ void ChessGame::init()
 
 	Logger::getInstance().log(LogLevel::INFO, 
 		this->getPlayerTurnStr() + "'s turn to make a move!");
-
 }
 
 void ChessGame::handleEvents(const sf::Event& e)
@@ -211,9 +212,25 @@ void ChessGame::switchPlayerTurn()
 
 sf::Vector2i ChessGame::getMouseHoveringPiece()
 {
-	sf::Vector2i mouse = MouseInput::getRelativePosition();
+	// sf::Vector2i tile = ;
 
-	return { mouse.x / 80, mouse.y / 80 };
+	// // mouse = sf::Vector2i { sf::Vector2f(mouse.x / (80* getScale().x), mouse.y / (80 * getScale().y)) };
+
+	// std::cout << mouse.x << "	" << mouse.y << std::endl;
+
+	return m_chessPieces.getTileMap()->mapToWorld(MouseInput::getRelativePosition());
+}
+
+sf::Vector2i ChessGame::getGlobalMousePosition()
+{
+	sf::Vector2i position = MouseInput::getRelativePosition();
+
+	return sf::Vector2i { getTransform().transformPoint(position.x, position.y) };
+
+	// apply position
+	// position = sf::Vector2i { sf::Vector2f(position.x + getPosition().x, position.y + getPosition().y) };
+
+	// return position;
 }
 
 sf::Vector2i ChessGame::getSelectedPiece()

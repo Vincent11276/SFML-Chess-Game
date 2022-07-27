@@ -1,7 +1,7 @@
-#include "InGameState.hpp"
+#include "InOfflineGameState.hpp"
 
 
-void InGameState::init(GameStateManager* game)
+void InOfflineGameState::init(GameStateManager* game)
 {
 	m_chessGame.init();
 
@@ -9,11 +9,11 @@ void InGameState::init(GameStateManager* game)
 	m_chessGame.setPosition(50, 50);
 }
 
-void InGameState::cleanup(GameStateManager* game) {}
-void InGameState::pause(GameStateManager* game) {}
-void InGameState::resume(GameStateManager* game) {}
+void InOfflineGameState::cleanup(GameStateManager* game) {}
+void InOfflineGameState::pause(GameStateManager* game) {}
+void InOfflineGameState::resume(GameStateManager* game) {}
 
-void InGameState::handleEvent(GameStateManager* game, sf::Event& e)
+void InOfflineGameState::handleEvent(GameStateManager* game, sf::Event& e)
 {
 	switch (e.type)
 	{
@@ -23,7 +23,7 @@ void InGameState::handleEvent(GameStateManager* game, sf::Event& e)
 	m_chessGame.handleEvents(e);
 }
 
-void InGameState::update(GameStateManager* game, float deltaTime)
+void InOfflineGameState::update(GameStateManager* game, float deltaTime)
 {
 	this->m_chessGame.update(deltaTime);
 
@@ -53,22 +53,22 @@ void InGameState::update(GameStateManager* game, float deltaTime)
 
 }
 
-void InGameState::physicsUpdate(GameStateManager* game, float deltaTime)
+void InOfflineGameState::physicsUpdate(GameStateManager* game, float deltaTime)
 {
 	// std::cout << "Physics Update: " << deltaTime << std::endl;
 }
 
-void InGameState::draw(GameStateManager* game, sf::RenderTarget& target) const
+void InOfflineGameState::draw(GameStateManager* game, sf::RenderTarget& target) const
 {
 	target.draw(m_chessGame);
 }
 
-InGameState* InGameState::getInstance()
+InOfflineGameState* InOfflineGameState::getInstance()
 {
-	static InGameState m_inGameState;
+	static InOfflineGameState m_inGameState;
 
 	return &m_inGameState;
 }
 
-InGameState::InGameState() = default;
+InOfflineGameState::InOfflineGameState() = default;
 	// amogus

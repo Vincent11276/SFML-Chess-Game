@@ -1,6 +1,6 @@
 #include "MainMenuState.hpp"
 
-#include "Client/States/InGameState.hpp"
+#include "Client/States/InOfflineGameState.hpp"
 #include "TGUI/Widgets/BitmapButton.hpp"
 #include "TGUI/Widgets/Button.hpp"
 #include "TGUI/Widgets/HorizontalLayout.hpp"
@@ -61,7 +61,7 @@ void MainMenuState::on_PlayBtn_Pressed()
 {
     std::cout << "You have pressed the play button" << std::endl;
 
-    this->getGameStateManager()->changeState(InGameState::getInstance());
+    this->getGameStateManager()->changeState(InOfflineGameState::getInstance());
 }
 
 void MainMenuState::on_SettingsBtn_pressed()

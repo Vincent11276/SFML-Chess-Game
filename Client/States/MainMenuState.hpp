@@ -5,7 +5,7 @@
 #include <TGUI/TGUI.hpp>
 
 #include "GameStateManager.hpp"
-#include "InGameState.hpp"
+#include "InOfflineGameState.hpp"
 #include "MainMenuState.hpp"
 
 

@@ -7,7 +7,7 @@
 #include "Core/Engine/ResourceManager.hpp"
 
 #include "Client/States/GameStateManager.hpp"
-#include "Client/States/InGameState.hpp"
+#include "Client/States/InOfflineGameState.hpp"
 #include "Core/Engine/ResourceManager.hpp"
 
 class Game

@@ -9,7 +9,7 @@
 #include "Core/Utility/Helper.hpp"
 
 
-class InGameState : public GameState
+class InOfflineGameState : public GameState
 {
 public:
 	void init(GameStateManager* game) override;
@@ -22,10 +22,10 @@ public:
 	void physicsUpdate(GameStateManager* manager, float deltaTime) override;
 	void draw(GameStateManager* manager, sf::RenderTarget& target) const override;
 
-	static InGameState* getInstance();
+	static InOfflineGameState* getInstance();
 
 protected:
-	InGameState();
+	InOfflineGameState();
 
 private:
 	ChessGame m_chessGame;

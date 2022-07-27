@@ -212,13 +212,15 @@ void ChessGame::switchPlayerTurn()
 
 sf::Vector2i ChessGame::getMouseHoveringPiece()
 {
-	// sf::Vector2i tile = ;
+	sf::Vector2i pieceCoords = MouseInput::getRelativePosition();
 
-	// // mouse = sf::Vector2i { sf::Vector2f(mouse.x / (80* getScale().x), mouse.y / (80 * getScale().y)) };
+	pieceCoords.x -= getPosition().x;
+	pieceCoords.y -= getPosition().y;
 
-	// std::cout << mouse.x << "	" << mouse.y << std::endl;
-
-	return m_chessPieces.getTileMap()->mapToWorld(MouseInput::getRelativePosition());
+	pieceCoords.x /= (80.f * getScale().x);
+	pieceCoords.y /= (80.f * getScale().y);
+	
+	return pieceCoords;
 }
 
 sf::Vector2i ChessGame::getGlobalMousePosition()
@@ -226,11 +228,6 @@ sf::Vector2i ChessGame::getGlobalMousePosition()
 	sf::Vector2i position = MouseInput::getRelativePosition();
 
 	return sf::Vector2i { getTransform().transformPoint(position.x, position.y) };
-
-	// apply position
-	// position = sf::Vector2i { sf::Vector2f(position.x + getPosition().x, position.y + getPosition().y) };
-
-	// return position;
 }
 
 sf::Vector2i ChessGame::getSelectedPiece()

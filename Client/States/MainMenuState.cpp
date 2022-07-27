@@ -48,6 +48,9 @@ void MainMenuState::initUI()
 
         auto playBtn = gui.get<tgui::Button>("Play Button");
         playBtn->onPress(&MainMenuState::on_PlayBtn_Pressed, this);
+
+        auto exitBtn = gui.get<tgui::Button>("Exit Button");
+        exitBtn->onPress(&MainMenuState::on_ExitBtn_Pressed, this);
     }
     catch (const tgui::Exception& e)
     {
@@ -73,7 +76,7 @@ void MainMenuState::on_OnlineBtn_Pressed()
 
 void MainMenuState::on_ExitBtn_Pressed()
 {
-
+    
 }
 
 MainMenuState::MainMenuState()

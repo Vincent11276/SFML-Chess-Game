@@ -192,11 +192,6 @@ void ChessGame::processAfterMove()
 	this->switchPlayerTurn();
 }
 
-bool ChessGame::isPieceInBounds(const sf::Vector2i& location)
-{
-	return location.x >= 0 && location.y >= 0 && location.x < 8 && location.y < 8;
-}
-
 void ChessGame::switchPlayerTurn()
 {
 	if (m_playerTurn == PieceColor::Black)

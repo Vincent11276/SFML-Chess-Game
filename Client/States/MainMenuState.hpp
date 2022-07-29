@@ -6,6 +6,8 @@
 
 #include "GameStateManager.hpp"
 #include "InOfflineGameState.hpp"
+#include "SFML/Graphics/RenderWindow.hpp"
+#include "SearchingOnlineState.hpp"
 #include "MainMenuState.hpp"
 
 
@@ -36,6 +38,6 @@ protected:
 	MainMenuState();
 
 private:
-    sf::RenderTarget* m_window;
+    sf::RenderWindow* m_window;
     mutable tgui::Gui gui;
 };

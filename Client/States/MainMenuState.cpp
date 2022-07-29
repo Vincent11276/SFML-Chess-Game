@@ -1,6 +1,7 @@
 #include "MainMenuState.hpp"
 
 #include "Client/States/InOfflineGameState.hpp"
+#include "Client/States/SearchingOnlineState.hpp"
 #include "TGUI/Widgets/BitmapButton.hpp"
 #include "TGUI/Widgets/Button.hpp"
 #include "TGUI/Widgets/HorizontalLayout.hpp"
@@ -49,8 +50,13 @@ void MainMenuState::initUI()
         auto playBtn = gui.get<tgui::Button>("Play Button");
         playBtn->onPress(&MainMenuState::on_PlayBtn_Pressed, this);
 
+        auto onlineBtn = gui.get<tgui::Button>("Online Button");
+        onlineBtn->onPress(&MainMenuState::on_OnlineBtn_Pressed, this);
+
         auto exitBtn = gui.get<tgui::Button>("Exit Button");
         exitBtn->onPress(&MainMenuState::on_ExitBtn_Pressed, this);
+
+
     }
     catch (const tgui::Exception& e)
     {
@@ -71,7 +77,7 @@ void MainMenuState::on_SettingsBtn_pressed()
 
 void MainMenuState::on_OnlineBtn_Pressed()
 {
-
+    this->getGameStateManager()->changeState(SearchingOnlineState::getInstance(m_window));
 }
 
 void MainMenuState::on_ExitBtn_Pressed()

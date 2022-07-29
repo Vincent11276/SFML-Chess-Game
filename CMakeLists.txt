@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.21)
-project(CMakeSFMLProject LANGUAGES CXX)
+
+project(SFMLChessClient LANGUAGES CXX)
 
 include(FetchContent)
 
@@ -16,7 +17,7 @@ FetchContent_Declare(TGUI
 FetchContent_MakeAvailable(SFML)
 FetchContent_MakeAvailable(TGUI)
 
-add_executable(CMakeSFMLProject 
+add_executable(SFMLChessClient 
     "Core/Utility/Logger.cpp"
     "Core/Utility/ScopedTimer.cpp" 
     "Core/Engine/TileMap.cpp"
@@ -30,23 +31,24 @@ add_executable(CMakeSFMLProject
     "Client/Scenes/PieceHighlighter.cpp"
     "Client/Scenes/MoveablePiece.cpp"
     "Client/States/MainMenuState.cpp"
-    "Client/States/InGameState.cpp"
+    "Client/States/InOfflineGameState.cpp"
     "Client/States/GameStateManager.cpp"      
 )
 
 include_directories("${PROJECT_SOURCE_DIR}")
 
-target_link_libraries(CMakeSFMLProject  PRIVATE
+target_link_libraries(SFMLChessClient  PRIVATE
     sfml-system
     sfml-graphics 
-    sfml-audio 
+    sfml-audio
+    sfml-network
     tgui
 )
 
-target_compile_features(CMakeSFMLProject PRIVATE cxx_std_20)
+target_compile_features(SFMLChessClient PRIVATE cxx_std_20)
 if (WIN32 AND BUILD_SHARED_LIBS)
-    add_custom_command(TARGET CMakeSFMLProject POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_RUNTIME_DLLS:CMakeSFMLProject> $<TARGET_FILE_DIR:CMakeSFMLProject> COMMAND_EXPAND_LISTS)
+    add_custom_command(TARGET SFMLChessClient POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_RUNTIME_DLLS:SFMLChessClient> $<TARGET_FILE_DIR:SFMLChessClient> COMMAND_EXPAND_LISTS)
 endif()
 
-install(TARGETS CMakeSFMLProject)
+install(TARGETS SFMLChessClient)

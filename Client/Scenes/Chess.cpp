@@ -38,7 +38,6 @@ void ChessGame::handleEvents(const sf::Event& e)
 		m_moveablePiece.followMouse();
 		break;
 	}
-
 }
 
 void ChessGame::update(float delta)
@@ -221,13 +220,6 @@ sf::Vector2i ChessGame::getMouseHoveringPiece()
 	pieceCoords.y /= (80.f * getScale().y);
 	
 	return pieceCoords;
-}
-
-sf::Vector2i ChessGame::getGlobalMousePosition()
-{
-	sf::Vector2i position = MouseInput::getRelativePosition();
-
-	return sf::Vector2i { getTransform().transformPoint(position.x, position.y) };
 }
 
 sf::Vector2i ChessGame::getSelectedPiece()

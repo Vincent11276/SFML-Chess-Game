@@ -224,25 +224,10 @@ sf::Vector2i ChessGame::getMouseHoveringPiece()
 
 sf::Vector2i ChessGame::getSelectedPiece()
 {
-	return m_selectedCoords;
+	return m_selectedPiece.coords;
 }
 
 PieceColor ChessGame::getPlayerTurn()
 {
 	return m_playerTurn;
-}
-
-std::string ChessGame::getPlayerTurnStr()
-{
-	switch (this->getPlayerTurn())
-	{
-	case PieceColor::Black:
-		return "Black";
-
-	case PieceColor::White:
-		return "White";
-
-	case PieceColor::Neutral:
-		return "Neutral";
-	};
 }

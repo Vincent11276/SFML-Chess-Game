@@ -34,7 +34,7 @@ add_executable(CMakeSFMLProject
     "Client/States/GameStateManager.cpp"      
 )
 
-include_directories("${PROJECT_SOURCE_DIR}")
+include_directories(${PROJECT_SOURCE_DIR})
 
 target_link_libraries(CMakeSFMLProject  PRIVATE
     sfml-system
@@ -48,5 +48,7 @@ if (WIN32 AND BUILD_SHARED_LIBS)
     add_custom_command(TARGET CMakeSFMLProject POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_RUNTIME_DLLS:CMakeSFMLProject> $<TARGET_FILE_DIR:CMakeSFMLProject> COMMAND_EXPAND_LISTS)
 endif()
+
+file(COPY ${PROJECT_SOURCE_DIR}/Assets DESTINATION .)
 
 install(TARGETS CMakeSFMLProject)

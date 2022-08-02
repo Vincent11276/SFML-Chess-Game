@@ -68,31 +68,30 @@ void Game::run()
 
 void Game::loadResources()
 {
-	ResourceManager::addTexture(ResourceKey::Background, "../Assets/UI/Background.png");
-	ResourceManager::addTexture(ResourceKey::ExitButton, "../Assets/UI/Background.png");
-	ResourceManager::addTexture(ResourceKey::Logo, "../Assets/UI/Background.png");
-	ResourceManager::addTexture(ResourceKey::OnlineButton, "../Assets/UI/Background.png");
-	ResourceManager::addTexture(ResourceKey::PlayButton, "../Assets/UI/Background.png");
-	ResourceManager::addTexture(ResourceKey::SettingsButton, "../Assets/UI/Background.png");
+	ResourceManager::addTexture(ResourceKey::Background, "Assets/UI/Background.png");
+	ResourceManager::addTexture(ResourceKey::ExitButton, "Assets/UI/Background.png");
+	ResourceManager::addTexture(ResourceKey::Logo, "Assets/UI/Background.png");
+	ResourceManager::addTexture(ResourceKey::OnlineButton, "Assets/UI/Background.png");
+	ResourceManager::addTexture(ResourceKey::PlayButton, "Assets/UI/Background.png");
+	ResourceManager::addTexture(ResourceKey::SettingsButton, "Assets/UI/Background.png");
 
 	
+	ResourceManager::addTexture(ResourceKey::ActionMark, "Assets/action_mark.png");
+	ResourceManager::addTexture(ResourceKey::CanMoveMark, "Assets/can_move_mark.png");
+	ResourceManager::addTexture(ResourceKey::CanTakeMark, "Assets/can_take_mark.png");
 
-	ResourceManager::addTexture(ResourceKey::ActionMark, "../Assets/action_mark.png");
-	ResourceManager::addTexture(ResourceKey::CanMoveMark, "../Assets/can_move_mark.png");
-	ResourceManager::addTexture(ResourceKey::CanTakeMark, "../Assets/can_take_mark.png");
+	ResourceManager::addTexture(ResourceKey::WoodChessBoard, "Assets/Chess_Artwork/Chess_Artwork/Chess Board/Wood/Chess_Board.png");
 
-	ResourceManager::addTexture(ResourceKey::WoodChessBoard, "../Assets/Chess_Artwork/Chess_Artwork/Chess Board/Wood/Chess_Board.png");
-
-	ResourceManager::addTexture(ResourceKey::WoodPieceBishopB, "../Assets/Chess_Artwork/Chess_Artwork/Chess Pieces/Wood/BishopB.png");
-	ResourceManager::addTexture(ResourceKey::WoodPieceBishopW, "../Assets/Chess_Artwork/Chess_Artwork/Chess Pieces/Wood/BishopW.png");
-	ResourceManager::addTexture(ResourceKey::WoodPieceKingB, "../Assets/Chess_Artwork/Chess_Artwork/Chess Pieces/Wood/KingB.png");
-	ResourceManager::addTexture(ResourceKey::WoodPieceKingW, "../Assets/Chess_Artwork/Chess_Artwork/Chess Pieces/Wood/KingW.png");
-	ResourceManager::addTexture(ResourceKey::WoodPieceKnightB, "../Assets/Chess_Artwork/Chess_Artwork/Chess Pieces/Wood/KnightB.png");
-	ResourceManager::addTexture(ResourceKey::WoodPieceKnightW, "../Assets/Chess_Artwork/Chess_Artwork/Chess Pieces/Wood/KnightW.png");
-	ResourceManager::addTexture(ResourceKey::WoodPiecePawnB, "../Assets/Chess_Artwork/Chess_Artwork/Chess Pieces/Wood/PawnB.png");
-	ResourceManager::addTexture(ResourceKey::WoodPiecePawnW, "../Assets/Chess_Artwork/Chess_Artwork/Chess Pieces/Wood/PawnW.png");
-	ResourceManager::addTexture(ResourceKey::WoodPieceQueenB, "../Assets/Chess_Artwork/Chess_Artwork/Chess Pieces/Wood/QueenB.png");
-	ResourceManager::addTexture(ResourceKey::WoodPieceQueenW, "../Assets/Chess_Artwork/Chess_Artwork/Chess Pieces/Wood/QueenW.png");
-	ResourceManager::addTexture(ResourceKey::WoodPieceRookB, "../Assets/Chess_Artwork/Chess_Artwork/Chess Pieces/Wood/RookB.png");
-	ResourceManager::addTexture(ResourceKey::WoodPieceRookW, "../Assets/Chess_Artwork/Chess_Artwork/Chess Pieces/Wood/RookW.png");
+	ResourceManager::addTexture(ResourceKey::WoodPieceBishopB, "Assets/Chess_Artwork/Chess_Artwork/Chess Pieces/Wood/BishopB.png");
+	ResourceManager::addTexture(ResourceKey::WoodPieceBishopW, "Assets/Chess_Artwork/Chess_Artwork/Chess Pieces/Wood/BishopW.png");
+	ResourceManager::addTexture(ResourceKey::WoodPieceKingB, "Assets/Chess_Artwork/Chess_Artwork/Chess Pieces/Wood/KingB.png");
+	ResourceManager::addTexture(ResourceKey::WoodPieceKingW, "Assets/Chess_Artwork/Chess_Artwork/Chess Pieces/Wood/KingW.png");
+	ResourceManager::addTexture(ResourceKey::WoodPieceKnightB, "Assets/Chess_Artwork/Chess_Artwork/Chess Pieces/Wood/KnightB.png");
+	ResourceManager::addTexture(ResourceKey::WoodPieceKnightW, "Assets/Chess_Artwork/Chess_Artwork/Chess Pieces/Wood/KnightW.png");
+	ResourceManager::addTexture(ResourceKey::WoodPiecePawnB, "Assets/Chess_Artwork/Chess_Artwork/Chess Pieces/Wood/PawnB.png");
+	ResourceManager::addTexture(ResourceKey::WoodPiecePawnW, "Assets/Chess_Artwork/Chess_Artwork/Chess Pieces/Wood/PawnW.png");
+	ResourceManager::addTexture(ResourceKey::WoodPieceQueenB, "Assets/Chess_Artwork/Chess_Artwork/Chess Pieces/Wood/QueenB.png");
+	ResourceManager::addTexture(ResourceKey::WoodPieceQueenW, "Assets/Chess_Artwork/Chess_Artwork/Chess Pieces/Wood/QueenW.png");
+	ResourceManager::addTexture(ResourceKey::WoodPieceRookB, "Assets/Chess_Artwork/Chess_Artwork/Chess Pieces/Wood/RookB.png");
+	ResourceManager::addTexture(ResourceKey::WoodPieceRookW, "Assets/Chess_Artwork/Chess_Artwork/Chess Pieces/Wood/RookW.png");
 }

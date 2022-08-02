@@ -44,7 +44,7 @@ void MainMenuState::initUI()
 
     try
     {
-        gui.loadWidgetsFromFile("../Assets/form.txt");
+        gui.loadWidgetsFromFile("Assets/form.txt");
 
         auto playBtn = gui.get<tgui::Button>("Play Button");
         playBtn->onPress(&MainMenuState::on_PlayBtn_Pressed, this);

@@ -22,9 +22,6 @@ void ChessGame::init()
 	m_moveGenerator.setPiecesToAnalyze(m_chessPieces);
 
 	Logger::getInstance().log(LogLevel::INFO, "Chess Game Match Started!");
-
-	Logger::getInstance().log(LogLevel::INFO, 
-		this->getPlayerTurnStr() + "'s turn to make a move!");
 }
 
 void ChessGame::handleEvents(const sf::Event& e)
@@ -38,7 +35,6 @@ void ChessGame::handleEvents(const sf::Event& e)
 		m_moveablePiece.followMouse();
 		break;
 	}
-
 }
 
 void ChessGame::update(float delta)
@@ -95,6 +91,12 @@ bool ChessGame::isPieceCanSelect(const sf::Vector2i& coords)
 	}
 	return true;
 }
+
+bool ChessGame::isPieceInBounds(const sf::Vector2i& coords)
+{
+	return coords.x >= 0 && coords.y >= 0 && coords.x < 8 && coords.y < 8;
+}
+
 
 bool ChessGame::selectPiece(const sf::Vector2i& selected)
 {
@@ -193,11 +195,6 @@ void ChessGame::processAfterMove()
 	this->switchPlayerTurn();
 }
 
-bool ChessGame::isPieceInBounds(const sf::Vector2i& location)
-{
-	return location.x >= 0 && location.y >= 0 && location.x < 8 && location.y < 8;
-}
-
 void ChessGame::switchPlayerTurn()
 {
 	if (m_playerTurn == PieceColor::Black)
@@ -223,34 +220,12 @@ sf::Vector2i ChessGame::getMouseHoveringPiece()
 	return pieceCoords;
 }
 
-sf::Vector2i ChessGame::getGlobalMousePosition()
-{
-	sf::Vector2i position = MouseInput::getRelativePosition();
-
-	return sf::Vector2i { getTransform().transformPoint(position.x, position.y) };
-}
-
 sf::Vector2i ChessGame::getSelectedPiece()
 {
-	return m_selectedCoords;
+	return m_selectedPiece.coords;
 }
 
 PieceColor ChessGame::getPlayerTurn()
 {
 	return m_playerTurn;
-}
-
-std::string ChessGame::getPlayerTurnStr()
-{
-	switch (this->getPlayerTurn())
-	{
-	case PieceColor::Black:
-		return "Black";
-
-	case PieceColor::White:
-		return "White";
-
-	case PieceColor::Neutral:
-		return "Neutral";
-	};
 }

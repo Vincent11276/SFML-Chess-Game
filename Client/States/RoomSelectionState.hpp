@@ -39,7 +39,7 @@ public:
 
     void initUI()
     {
-        m_gui.loadWidgetsFromFile("../Assets/form1.txt");
+        m_gui.loadWidgetsFromFile("Assets/form1.txt");
     }
     
 private:

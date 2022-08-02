@@ -5,8 +5,6 @@
 
 int main()
 {
-        // Game::getInstance()->run();
-
     std::cout << "Enter" << std::endl;
 
     std::string input;

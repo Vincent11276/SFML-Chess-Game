@@ -76,7 +76,7 @@ public:
 
     void initUI()                
     {
-        m_gui.loadWidgetsFromFile("../Assets/form2.txt");
+        m_gui.loadWidgetsFromFile("Assets/form2.txt");
 
         auto editBox1 = m_gui.get<tgui::EditBox>("EditBox1");
         

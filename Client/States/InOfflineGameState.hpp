@@ -9,23 +9,23 @@
 #include "Core/Utility/Helper.hpp"
 
 
-class InGameState : public GameState
+class InOnlineGameState : public GameState
 {
 public:
 	void init(GameStateManager* game) override;
-	void cleanup(GameStateManager* game) override;
-	void pause(GameStateManager* game) override;
-	void resume(GameStateManager* game) override;
+	void cleanup(GameStateManager* game) override { };
+	void pause(GameStateManager* game) override { };
+	void resume(GameStateManager* game) override { };
 
 	void handleEvent(GameStateManager* manager, sf::Event& e) override;
 	void update(GameStateManager* manager, float deltaTime) override;
 	void physicsUpdate(GameStateManager* manager, float deltaTime) override;
 	void draw(GameStateManager* manager, sf::RenderTarget& target) const override;
 
-	static InGameState* getInstance();
+	static InOnlineGameState* getInstance();
 
 protected:
-	InGameState();
+	InOnlineGameState();
 
 private:
 	ChessGame m_chessGame;

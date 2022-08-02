@@ -1,27 +1,3 @@
-Renderer.1 {
-    BackgroundColor = #F5F5F5;
-    BackgroundColorDisabled = #E6E6E6;
-    BackgroundColorDown = #EBEBEB;
-    BackgroundColorHover = white;
-    BorderColor = #3C3C3C00;
-    BorderColorDisabled = #7D7D7D;
-    BorderColorDown = black;
-    BorderColorFocused = #1E1EB4;
-    BorderColorHover = black;
-    Borders = (1, 1, 1, 1);
-    TextColor = white;
-    TextColorDisabled = #7D7D7D;
-    TextColorDown = black;
-    TextColorHover = black;
-    Texture = "UI/Button.png" Smooth;
-    TextureDisabled = None;
-    TextureDown = None;
-    TextureDownFocused = None;
-    TextureDownHover = None;
-    TextureFocused = None;
-    TextureHover = None;
-}
-
 Picture.Picture1 {
     Size = (854, 480);
 
@@ -33,34 +9,130 @@ Picture.Picture1 {
 
 Button."Play Button" {
     Position = (313, 178);
-    Renderer = &1;
     Size = (228, 43);
     Text = Play;
-    TextSize = 13;
+    TextSize = 18;
+
+    Renderer {
+        BackgroundColor = #F5F5F5;
+        BackgroundColorDisabled = #E6E6E6;
+        BackgroundColorDown = #EBEBEB;
+        BackgroundColorHover = white;
+        BorderColor = #3C3C3C00;
+        BorderColorDisabled = #7D7D7D;
+        BorderColorDown = black;
+        BorderColorFocused = #1E1EB4;
+        BorderColorHover = black;
+        Borders = (1, 1, 1, 1);
+        Font = "Itim-Regular.ttf";
+        TextColor = white;
+        TextColorDisabled = #7D7D7D;
+        TextColorDown = black;
+        TextColorHover = black;
+        Texture = "UI/Button.png" Smooth;
+        TextureDisabled = None;
+        TextureDown = None;
+        TextureDownFocused = None;
+        TextureDownHover = None;
+        TextureFocused = None;
+        TextureHover = None;
+    }
 }
 
 Button."Online Button" {
     Position = (313, 228);
-    Renderer = &1;
     Size = (228, 43);
     Text = Online;
-    TextSize = 13;
+    TextSize = 18;
+
+    Renderer {
+        BackgroundColor = #F5F5F5;
+        BackgroundColorDisabled = #E6E6E6;
+        BackgroundColorDown = #EBEBEB;
+        BackgroundColorHover = white;
+        BorderColor = #3C3C3C00;
+        BorderColorDisabled = #7D7D7D;
+        BorderColorDown = black;
+        BorderColorFocused = #1E1EB4;
+        BorderColorHover = black;
+        Borders = (1, 1, 1, 1);
+        Font = "Itim-Regular.ttf";
+        TextColor = white;
+        TextColorDisabled = #7D7D7D;
+        TextColorDown = black;
+        TextColorHover = black;
+        Texture = "UI/Button.png" Smooth;
+        TextureDisabled = None;
+        TextureDown = None;
+        TextureDownFocused = None;
+        TextureDownHover = None;
+        TextureFocused = None;
+        TextureHover = None;
+    }
 }
 
 Button."Settings Button" {
     Position = (313, 278);
-    Renderer = &1;
     Size = (228, 43);
     Text = Settings;
-    TextSize = 13;
+    TextSize = 18;
+
+    Renderer {
+        BackgroundColor = #F5F5F5;
+        BackgroundColorDisabled = #E6E6E6;
+        BackgroundColorDown = #EBEBEB;
+        BackgroundColorHover = white;
+        BorderColor = #3C3C3C00;
+        BorderColorDisabled = #7D7D7D;
+        BorderColorDown = black;
+        BorderColorFocused = #1E1EB4;
+        BorderColorHover = black;
+        Borders = (1, 1, 1, 1);
+        Font = "Itim-Regular.ttf";
+        TextColor = white;
+        TextColorDisabled = #7D7D7D;
+        TextColorDown = black;
+        TextColorHover = black;
+        Texture = "UI/Button.png" Smooth;
+        TextureDisabled = None;
+        TextureDown = None;
+        TextureDownFocused = None;
+        TextureDownHover = None;
+        TextureFocused = None;
+        TextureHover = None;
+    }
 }
 
 Button."Exit Button" {
     Position = (313, 328);
-    Renderer = &1;
     Size = (228, 43);
     Text = Exit;
-    TextSize = 13;
+    TextSize = 18;
+
+    Renderer {
+        BackgroundColor = #F5F5F5;
+        BackgroundColorDisabled = #E6E6E6;
+        BackgroundColorDown = #EBEBEB;
+        BackgroundColorHover = white;
+        BorderColor = #3C3C3C00;
+        BorderColorDisabled = #7D7D7D;
+        BorderColorDown = black;
+        BorderColorFocused = #1E1EB4;
+        BorderColorHover = black;
+        Borders = (1, 1, 1, 1);
+        Font = "Itim-Regular.ttf";
+        TextColor = white;
+        TextColorDisabled = #7D7D7D;
+        TextColorDown = black;
+        TextColorHover = black;
+        Texture = "UI/Button.png" Smooth;
+        TextureDisabled = None;
+        TextureDown = None;
+        TextureDownFocused = None;
+        TextureDownHover = None;
+        TextureFocused = None;
+        TextureHover = None;
+    }
 }
 
 Picture.Picture2 {

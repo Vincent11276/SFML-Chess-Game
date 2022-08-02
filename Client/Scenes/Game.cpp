@@ -20,7 +20,7 @@ void Game::run()
 {
 	this->loadResources();
 	
-	m_gameStateManager.changeState(MainMenuState::getInstance(&m_window));
+	m_gameStateManager.changeState(MainMenuState::getInstance(&m_window, &m_client));
 
 	const sf::Time fixedUpdateInterval = sf::seconds(1.0f / 50.0f); 
 

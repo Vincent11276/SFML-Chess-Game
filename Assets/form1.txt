@@ -1,3 +1,17 @@
+Renderer.1 {
+    Texture = "resources/DefaultPicture.png" Smooth;
+    TransparentTexture = false;
+}
+
+Renderer.2 {
+    BackgroundColor = transparent;
+    BorderColor = #3C3C3C;
+    Borders = (0, 0, 0, 0);
+    Font = "C:\\Users\\CherryViper42\\Documents\\GitHub\\SFML-Chess-Game\\Assets\\Itim-Regular.ttf";
+    TextColor = #A5A1A5;
+    TextureBackground = None;
+}
+
 Picture.Picture1 {
     Size = (854, 480);
 
@@ -162,5 +176,92 @@ Label.Label1 {
         Font = "C:\\Users\\CherryViper42\\Documents\\GitHub\\SFML-Chess-Game\\Assets\\Itim-Regular.ttf";
         TextColor = #4D4D4D;
         TextureBackground = None;
+    }
+}
+
+ScrollablePanel.ScrollablePanel1 {
+    ContentSize = (0, 0);
+    Position = (40, 120);
+    Size = (700, 240);
+
+    Renderer {
+        BackgroundColor = #FFFFFF00;
+        BorderColor = black;
+        Opacity = 1;
+        TextureBackground = None;
+    }
+
+    Panel.Room {
+        Size = (226, 65);
+
+        Renderer {
+            BackgroundColor = #292229;
+            BorderColor = black;
+            TextureBackground = None;
+        }
+
+        Picture.Picture3 {
+            Position = (12, 11);
+            Renderer = &1;
+            Size = (42, 42);
+        }
+
+        Label.Label2 {
+            AutoSize = true;
+            Position = (75, 10);
+            Renderer = &2;
+            Size = (73, 22);
+            Text = TestRoom;
+            TextSize = 16;
+        }
+
+        Label.Label4 {
+            AutoSize = true;
+            Position = (75, 43);
+            Renderer = &2;
+            Size = (31.4, 13);
+            Text = "Status:";
+            TextSize = 10;
+        }
+
+        Label.Label5 {
+            AutoSize = true;
+            Position = (110, 42);
+            Size = (43, 17);
+            Text = Waiting;
+            TextSize = 12;
+
+            Renderer {
+                BackgroundColor = transparent;
+                BorderColor = #3C3C3C;
+                Borders = (0, 0, 0, 0);
+                Font = "C:\\Users\\CherryViper42\\Documents\\GitHub\\SFML-Chess-Game\\Assets\\Itim-Regular.ttf";
+                TextColor = #3C3C3C;
+                TextureBackground = None;
+            }
+        }
+
+        Label.Label3 {
+            AutoSize = true;
+            Position = (184, 15);
+            Size = (16.4, 13);
+            Text = "1/2";
+            TextSize = 10;
+
+            Renderer {
+                BackgroundColor = transparent;
+                BorderColor = #3C3C3C;
+                Borders = (0, 0, 0, 0);
+                Font = "C:\\Users\\CherryViper42\\Documents\\GitHub\\SFML-Chess-Game\\Assets\\Itim-Regular.ttf";
+                TextColor = #8A888A;
+                TextureBackground = None;
+            }
+        }
+
+        Picture.Picture4 {
+            Position = (201, 12);
+            Renderer = &1;
+            Size = (16, 16);
+        }
     }
 }

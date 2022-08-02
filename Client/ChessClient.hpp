@@ -1,30 +1,21 @@
 #pragma once 
 
+#include <functional>
+#include <string>
+#include <iostream>
+
+#include "Client/ServerMessage.hpp"
+#include "Core/Chess/PieceMovement.hpp"
 #include "SFML/Config.hpp"
 #include "SFML/Network/IpAddress.hpp"
 #include "SFML/Network/Packet.hpp"
 #include "SFML/Network/Socket.hpp"
 #include "SFML/Network/TcpSocket.hpp"
+#include "Client/ChessServer.hpp"
+#include "Client/ClientMessage.hpp"
 
-#include <string>
-#include <iostream>
 
-struct Player
-{
-    std::string id;
-    std::string name;
-};
-
-enum Type
-{
-    Register,
-    CreateNewRoom,
-    JoinExistingRoom,
-    FetchAvailableRooms,
-    PieceMovement,  
-    RequestForDraw,
-    ResignGame
-};
+class ChessServer;
 
 class ChessClient
 {
@@ -32,51 +23,43 @@ public:
     sf::IpAddress remoteAddress = sf::IpAddress::getLocalAddress();
     unsigned short remotePort = 53000;
 
-    ChessClient()
+    ChessClient() = default;
+    ChessClient(const ChessClient&) = delete;
+    ChessClient& operator=(const ChessClient&) = delete;
+
+    void connect();
+
+    void onMessageReceived(std::function<void(ServerMessage*)> callback);
+
+    bool isConnected();
+ 
+    void authenticate(const std::string &name);
+    void createNewRoom(const std::string &roomId, const std::string password);
+    void joinExistingRoom(const std::string &roomId, const std::string password);
+    void sendPieceMovement(PieceMovement& pieceMovement);
+    void resign();
+
+    enum MessageType : sf::Uint8
     {
-        // default..
-    }
-
-    void connect()
-    {
-        m_socket.connect(remoteAddress, remotePort);
-    }
-
-    void createNewRoom()
-    {
-        sf::Packet packet;
-        packet << m_id << Type::CreateNewRoom << "poop";
-
-    }
-
-private:
-    unsigned int m_id;
+        Authenticate,
+        CreateNewRoom,
+        JoinExistingRoom,
+        FetchAvailableRooms,
+        PieceMovement,  
+        RequestForDraw,
+        ResignGame
+    };
     
-    void sendPacket(sf::Packet& packet)
-    {
-        if (m_socket.send(packet) != sf::Socket::Done)
-        {
-            std::cout << "Failed to send packet to the server!" << std::endl;
-        }
-    }
+private:
+    std::thread t1;
 
-    void handleIncomingPacketsAsync()
-    {
-        while (true)
-        {
-            sf::Packet receivedPacket;
-
-            if (m_socket.receive(receivedPacket) != sf::Socket::Done)
-            {
-                std::cout << "Failed to receive data from " << m_socket.getRemoteAddress().getPublicAddress(sf::seconds(5)) << std::endl; 
-            }
-            else this->onPacketReceived(m_socket, receivedPacket);
-        }
-    }
-
-    void onPacketReceived()
-    {
-
-    }
+    sf::Uint32 m_clientId = 0;
+    bool m_isConnected = false;
+    
+    std::function<void(ServerMessage*)> m_onMessageReceived;
     sf::TcpSocket m_socket;
+
+    void sendMessage(ClientMessage& message);
+
+    void handleIncomingPacketsAsync();
 };

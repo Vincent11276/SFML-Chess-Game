@@ -4,12 +4,11 @@
 #include <TGUI/Backends/SFML.hpp>
 #include <TGUI/TGUI.hpp>
 
-#include "GameStateManager.hpp"
-#include "InOfflineGameState.hpp"
-#include "SFML/Graphics/RenderWindow.hpp"
-#include "SearchingOnlineState.hpp"
-#include "MainMenuState.hpp"
-
+#include "Client/States/GameStateManager.hpp"
+#include "Client/States/InOfflineGameState.hpp"
+#include "Client/States/RoomSelectionState.hpp"
+#include "Client/States/MainMenuState.hpp"
+#include "Client/ChessClient.hpp"
 
 
 class MainMenuState : public GameState
@@ -25,7 +24,7 @@ public:
     void physicsUpdate(GameStateManager* manager, float deltaTime) override;
     void draw(GameStateManager* manager, sf::RenderTarget& target) const override;
 
-	static MainMenuState* getInstance(sf::RenderWindow* target);
+	static MainMenuState* getInstance(sf::RenderWindow* target, ChessClient* client);
 
     void initUI();
 
@@ -39,5 +38,6 @@ protected:
 
 private:
     sf::RenderWindow* m_window;
+    ChessClient* m_client;
     mutable tgui::Gui gui;
 };

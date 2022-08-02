@@ -1,56 +1,68 @@
 #pragma once
 
 #include <SFML/Network/Packet.hpp>
+#include <map>
+#include <memory>
 #include <unordered_map>
+#include <iostream>
 #include <list>
 
+#include "SFML/Config.hpp"
 #include "Server.hpp"
+#include "ChessClient.hpp"
+#include "Random.hpp"
+#include "Player.hpp"
+#include "Room.hpp"
+#include "ServerMessage.hpp"
+#include "ClientMessage.hpp"
 
+typedef sf::Uint32 ClientToken;
 
-struct Player
+class ClientSession
 {
-    unsigned int id;
-    std::string name;
-};
+public:
+    s
+    
+    ClientSession()
+    {
+    
+    }
 
-struct Room
-{
-    std::string id;
-    std::string name;
-
-    std::pair<Player, Player> players;
+    
 };
 
 class ChessServer : public Server
 {
 public:
-    ChessServer()
-    {
-        
-    }
+    sf::Uint32 maxPlayers = 100;
 
+    ChessServer();
+    
 private:
-    std::unordered_map<unsigned int, Room> m_rooms;
+    // actual storage of players and rooms bounded to its ID
+    std::unordered_map<sf::Uint32, Player> m_chessPlayers;
+    std::unordered_map<sf::Uint32, Room> m_chessRooms;
 
-    void onNewClientConnection(sf::TcpSocket &client) override
-    {
-        sf::Packet packet;
-        packet << "hello user";
+    // stores which room the player is in by mapping its ID
+    std::unordered_map<sf::Uint32, sf::Uint32> m_playerRoom;
 
-        this->unicast(client, packet);
-    }
 
-    void onClientDisconnect(sf::TcpSocket &client) override
-    {
+    
+    Player* getPlayerById(sf::Uint32 id);
+    Room* getRoomById(sf::Uint32 id);
+    Room* getPlayerRoom(sf::Uint32 id);
 
-    }
+    void onNewClientConnection(sf::TcpSocket &client) override;
+    void onClientDisconnect(sf::TcpSocket &client) override;
+    void onPacketReceived(sf::TcpSocket &client, sf::Packet& packet) override;
 
-    void onPacketReceived(sf::TcpSocket &client, sf::Packet& packet) override
-    {
-        std::cout << "Received: " << packet << std::endl;
+    void sendMessage(sf::TcpSocket &client, ServerMessage& message);
 
-        
-        
-    }
-
+    ServerMessage onAuthenticate(sf::TcpSocket &client, const ClientMessage& message);
+    ServerMessage onCreateNewRoom(sf::TcpSocket &client, const ClientMessage& message);
+    ServerMessage onJoinExistingRoom(sf::TcpSocket &client, const ClientMessage& message);
+    ServerMessage onFetchAvailableRooms(sf::TcpSocket &client, const ClientMessage& message);
+    ServerMessage onPieceMovement(sf::TcpSocket &client, const ClientMessage& message);
+    ServerMessage onRequestForDraw(sf::TcpSocket &client, const ClientMessage& message);
+    ServerMessage onResignGame(sf::TcpSocket &client, const ClientMessage& message);
 };

@@ -20,7 +20,7 @@ void Game::run()
 {
 	this->loadResources();
 	
-	m_gameStateManager.changeState(MainMenuState::getInstance(&m_window));
+	m_gameStateManager.changeState(MainMenuState::getInstance(&m_window, &m_client));
 
 	const sf::Time fixedUpdateInterval = sf::seconds(1.0f / 50.0f); 
 
@@ -74,8 +74,6 @@ void Game::loadResources()
 	ResourceManager::addTexture(ResourceKey::OnlineButton, "../Assets/UI/Background.png");
 	ResourceManager::addTexture(ResourceKey::PlayButton, "../Assets/UI/Background.png");
 	ResourceManager::addTexture(ResourceKey::SettingsButton, "../Assets/UI/Background.png");
-
-	
 
 	ResourceManager::addTexture(ResourceKey::ActionMark, "../Assets/action_mark.png");
 	ResourceManager::addTexture(ResourceKey::CanMoveMark, "../Assets/can_move_mark.png");

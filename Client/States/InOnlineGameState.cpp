@@ -1,10 +1,10 @@
-#include "InOfflineGameState.hpp"
+#include "InOnlineGameState.hpp"
+#include "Client/ChessClient.hpp"
 
 
 void InOnlineGameState::init(GameStateManager* game)
 {
 	m_chessGame.init();
-
 	m_chessGame.setScale(0.5, 0.5);
 	m_chessGame.setPosition(50, 50);
 }
@@ -49,21 +49,19 @@ void InOnlineGameState::update(GameStateManager* game, float deltaTime)
 
 }
 
-void InOnlineGameState::physicsUpdate(GameStateManager* game, float deltaTime)
-{
-	// std::cout << "Physics Update: " << deltaTime << std::endl;
-}
-
 void InOnlineGameState::draw(GameStateManager* game, sf::RenderTarget& target) const
 {
 	target.draw(m_chessGame);
 }
 
-InOnlineGameState* InOnlineGameState::getInstance()
+InOnlineGameState* InOnlineGameState::getInstance(ChessClient* client)
 {
-	static InOnlineGameState m_inGameState;
+	static InOnlineGameState m_inGameState(client);
 
 	return &m_inGameState;
 }
 
-InOnlineGameState::InOnlineGameState() = default;
+InOnlineGameState::InOnlineGameState(ChessClient* client)
+{
+	// amogus
+}

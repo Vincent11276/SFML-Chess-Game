@@ -26,6 +26,10 @@ add_executable(SFMLChessClient
     "Core/Inputs/Keyboard.cpp"
 
     "Client/main.cpp" 
+    "Client/ChessClient.cpp"
+    "Client/ChessServer.cpp"
+    "Client/ServerMessage.cpp"
+    "Client/ClientMessage.cpp"
     "Client/Scenes/Game.cpp"
     "Client/Scenes/Chess.cpp"
     "Client/Scenes/PieceHighlighter.cpp"
@@ -33,6 +37,7 @@ add_executable(SFMLChessClient
     "Client/States/MainMenuState.cpp"
     "Client/States/InOfflineGameState.cpp"
     "Client/States/GameStateManager.cpp"      
+
 )
 
 include_directories("${PROJECT_SOURCE_DIR}")

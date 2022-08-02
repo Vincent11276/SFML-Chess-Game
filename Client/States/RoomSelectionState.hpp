@@ -4,12 +4,12 @@
 #include "TGUI/Backends/SFML.hpp"
 #include "GameStateManager.hpp"
 #include "Client/States/GameState.hpp"
+#include "Client/ChessClient.hpp"
+#include "Client/Scenes/Game.hpp"
 
-
-class SearchingOnlineState : public GameState
+class RoomSelectionState : public GameState
 {
 public:
-
     void init(GameStateManager* game) override 
     { 
         this->initUI();
@@ -30,9 +30,9 @@ public:
         m_gui.draw();
     }
 
-	static SearchingOnlineState* getInstance(sf::RenderWindow* target)
+	static RoomSelectionState* getInstance()
     {
-        static SearchingOnlineState newInstance { target };
+        static RoomSelectionState newInstance;
 
         return &newInstance;
     }
@@ -46,8 +46,8 @@ private:
     mutable tgui::Gui m_gui;
 
 protected:
-    SearchingOnlineState(sf::RenderWindow* target)
+    RoomSelectionState()
     {
-        m_gui.setTarget(*target);
+        m_gui.setTarget(Game::getInstance()->getWindow());
     }
 };

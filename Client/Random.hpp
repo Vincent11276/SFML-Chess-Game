@@ -1,6 +1,7 @@
 #pragma once
 
 #include "SFML/Config.hpp"
+#include <stdint.h>
 #include <string>
 #include <cstdlib>
 #include <limits>
@@ -11,14 +12,20 @@ class Random
 public:
     Random() = delete;
 
-    static int getInt(int min = std::numeric_limits<int>::min(), int max = std::numeric_limits<int>::max())
+    template <typename T>
+    static T getWholeNumber(T min = std::numeric_limits<T>::min(), T max = std::numeric_limits<T>::max())
     {
-        return min + (rand() % (max - min + 1)); 
+        // causes division by 0 problem
+        // return min + (rand() % (max - min + 1)); 
+
+        // temp fix:
+        return min + (rand() % (max - min + 0)); 
     }
 
-    static float getFloat(float min = std::numeric_limits<float>::min(), float max = std::numeric_limits<float>::max())
+    template <typename T>
+    static float getDecimalNumber(T min = std::numeric_limits<T>::min(), T max = std::numeric_limits<T>::max())
     {
-        return min + (float)(rand()) / ((float)(RAND_MAX / (max - min)));
+        return min + (T)(rand()) / ((T)(RAND_MAX / (max - min)));
     }
 
     static bool getBool()
@@ -33,7 +40,7 @@ public:
 
         for (auto& c: randomString)
         {
-            c = (char)(Random::getInt(48, 122));
+            c = (char)(Random::getWholeNumber<uint8_t>(48, 122));
         }
         return randomString;
     }

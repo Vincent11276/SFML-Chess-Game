@@ -22,9 +22,6 @@ void ChessGame::init()
 	m_moveGenerator.setPiecesToAnalyze(m_chessPieces);
 
 	Logger::getInstance().log(LogLevel::INFO, "Chess Game Match Started!");
-
-	Logger::getInstance().log(LogLevel::INFO, 
-		this->getPlayerTurnStr() + "'s turn to make a move!");
 }
 
 void ChessGame::handleEvents(const sf::Event& e)
@@ -94,6 +91,12 @@ bool ChessGame::isPieceCanSelect(const sf::Vector2i& coords)
 	}
 	return true;
 }
+
+bool ChessGame::isPieceInBounds(const sf::Vector2i& coords)
+{
+	return coords.x >= 0 && coords.y >= 0 && coords.x < 8 && coords.y < 8;
+}
+
 
 bool ChessGame::selectPiece(const sf::Vector2i& selected)
 {

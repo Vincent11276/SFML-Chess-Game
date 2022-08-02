@@ -1,11 +1,14 @@
 #include <iostream>
 
 #include "ChessServer.hpp"
-#include "SFML/Network/Packet.hpp"
-
+#include "Client/Scenes/Game.hpp"
 
 int main()
 {
+        // Game::getInstance()->run();
+
+    std::cout << "Enter" << std::endl;
+
     std::string input;
     std::cin >> input;
 
@@ -16,36 +19,7 @@ int main()
     }
     else if (input == "c")
     {
-        std::cout << "Running as Client" << std::endl;
-        
-        std::cout << "Target IP: " << sf::IpAddress::getLocalAddress() << std::endl; 
-        std::cout << "Target Port: 53000" << std::endl; 
-
-
-        sf::TcpSocket socket;
-        sf::Socket::Status status = socket.connect(sf::IpAddress::getLocalAddress(), 53000);
-        if (status != sf::Socket::Done)
-        {
-            // error...
-        }
-
-        while (true)
-        {
-            std::string data;
-
-            std::cout << "Enter message to send: ";
-            std::cin >> data;
-        
-            sf::Packet packet;
-            packet << data;
-
-            // TCP socket:
-            if (socket.send(packet) != sf::Socket::Done)
-            {
-                std::cout << " -- Failed"<< std::endl;
-            }
-            else std::cout << " -- Success"<< std::endl;
-        }   
+        Game::getInstance()->run();
     }
 
     std::cin >> input;

@@ -51,6 +51,9 @@ private:
 	};
 	State m_state;
 
+	bool isPieceCanSelect(const sf::Vector2i& coords);
+	bool isPieceInBounds(const sf::Vector2i& coords);
+
 	void switchPlayerTurn();
 	void processAfterMove();
 

@@ -1,6 +1,0 @@
-Button {
-	Texture = "UI/Button.png";
-	TextColor = rgba(255, 255, 255, 215);
-	TextColorHover = rgba(255, 255, 255, 235);
-	TextColorDown = rgba(255, 255, 255, 235);
-}

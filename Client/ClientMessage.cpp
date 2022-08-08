@@ -3,24 +3,44 @@
 #include <iostream>
 
 
-sf::Packet& operator <<(sf::Packet& packet, const ClientMessage::Authenticate& m)
+sf::Packet& operator <<(sf::Packet& packet, const ClientMessage::RegisterPlayer& m)
 {
     return packet << m.name;
 }
 
-sf::Packet& operator >>(sf::Packet& packet, ClientMessage::Authenticate& m)
+sf::Packet& operator >>(sf::Packet& packet, ClientMessage::RegisterPlayer& m)
 {
     return packet >> m.name;
 }
 
-sf::Packet& operator <<(sf::Packet& packet, const ClientMessage::Room& m)
+sf::Packet& operator <<(sf::Packet& packet, const ClientMessage::CreateNewRoom& m)
 {
-    return packet << m.name << m.password;
+    return packet << m.name << m.password << (sf::Uint8)m.mode << (sf::Uint8)m.duration;
 }
 
-sf::Packet& operator >>(sf::Packet& packet, ClientMessage::Room& m)
+sf::Packet& operator >>(sf::Packet& packet, ClientMessage::CreateNewRoom& m)
 {
-    return packet >> m.name >> m.password;
+    packet >> m.name >> m.password;
+ 
+    sf::Uint8 modeVal;
+    packet >> modeVal;
+    m.mode = GameMode(modeVal);
+
+    sf::Uint8 durationVal;
+    packet >> durationVal;
+    m.duration = MatchDuration(modeVal);
+
+    return packet;
+}
+
+sf::Packet& operator <<(sf::Packet& packet, const ClientMessage::JoinExistingRoom& m)
+{
+    return packet << m.name << m.password << m.link;
+}
+
+sf::Packet& operator >>(sf::Packet& packet, ClientMessage::JoinExistingRoom& m)
+{
+    return packet >> m.name >> m.password >> m.link;
 }
 
 sf::Packet& operator <<(sf::Packet& packet, const ClientMessage::MovePiece& m)
@@ -46,53 +66,71 @@ void ClientMessage::parseFromPacket(sf::Packet &packet)
 
     type = Type(typeVal);
 
+    std::cout << "Size of packet =" << packet.getDataSize() << std::endl;
+
+    // insert content if it has one
     switch (type)
     {
-    case Type::Authenticate:
-        packet >> std::get<Authenticate>(message);
-        break;
+    case Type::RegisterPlayer:
+    {
+        RegisterPlayer registerPlayer;
+        packet >> registerPlayer;
+        message = registerPlayer;
+    }
+    break;
 
     case Type::CreateNewRoom:
-        packet >> std::get<Room>(message);
-        break;
+    {
+        CreateNewRoom createNewRoom;
+        packet >> createNewRoom;
+        message = createNewRoom;
+    }
+    break;
 
     case Type::JoinExistingRoom:
-        packet >> std::get<Room>(message);
-        break;
+    {
+        JoinExistingRoom joinExistingRoom;
+        packet >> joinExistingRoom;
+        message = joinExistingRoom;
+    }
+    break;
 
     case Type::MovePiece:
-        packet >> std::get<MovePiece>(message);
-        break;
+    {
+        MovePiece movePiece;
+        packet >> movePiece;
+        message = movePiece;
+    }
+    break;
 
     default:
         break;
     }
 }
 
-sf::Packet& ClientMessage::getPacket()
+void ClientMessage::getPacket(sf::Packet *packet)
 {
-    m_packet << (sf::Uint8)type;
+    *packet << (sf::Uint8)type;
 
     switch (type)
     {
-    case Type::Authenticate:
-        m_packet << std::get<Authenticate>(message);
+    case Type::RegisterPlayer:
+        *packet << std::get<RegisterPlayer>(message);
         break;
 
     case Type::CreateNewRoom:
-        m_packet << std::get<Room>(message);
+        *packet << std::get<CreateNewRoom>(message);
         break;
 
     case Type::JoinExistingRoom:
-        m_packet << std::get<Room>(message);
+        *packet << std::get<JoinExistingRoom>(message);
         break;
 
     case Type::MovePiece:
-        m_packet << std::get<MovePiece>(message);
+        *packet << std::get<MovePiece>(message);
         break;
 
     default:
         break;
     }
-    return m_packet;
 }

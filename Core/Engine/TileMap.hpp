@@ -7,6 +7,7 @@
 #include "../Utility/Helper.hpp"
 #include "../Engine/TileSet.hpp"
 
+
 class TileMap : public sf::Drawable, public sf::Transformable
 {
 public:
@@ -33,8 +34,9 @@ public:
     bool isInBounds(sf::Vector2i p_coords);
     
     void clear();
+
 private:
-    TileSet* m_tileSet;
+    TileSet* m_tileSet = nullptr;
     
     std::vector<std::vector<int>> mapdata;
     

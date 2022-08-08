@@ -5,7 +5,7 @@
 
 int main()
 {
-    std::cout << "Enter" << std::endl;
+    std::cout << "Enter (s) to start the program as server and (s) for client" << std::endl;
 
     std::string input;
     std::cin >> input;
@@ -17,6 +17,7 @@ int main()
     }
     else if (input == "c")
     {
+        Game::getInstance()->init();
         Game::getInstance()->run();
     }
 

@@ -1,0 +1,231 @@
+Picture.Picture1 {
+    Size = (854, 480);
+
+    Renderer {
+        Texture = "Resources/Background.png" Smooth;
+        TransparentTexture = false;
+    }
+}
+
+Picture.Picture2 {
+    Size = (854, 480);
+
+    Renderer {
+        Texture = "Resources/Server List Frame.png" Smooth;
+        TransparentTexture = false;
+    }
+}
+
+Button.DirectConnect_Btn {
+    Position = (93, 417);
+    Size = (128, 28);
+    Text = "Direct Connect";
+    TextSize = 16;
+
+    Renderer {
+        BackgroundColor = #F5F5F5;
+        BackgroundColorDisabled = #E6E6E6;
+        BackgroundColorDown = #EBEBEB;
+        BackgroundColorHover = white;
+        BorderColor = #3C3C3C;
+        BorderColorDisabled = #7D7D7D;
+        BorderColorDown = black;
+        BorderColorFocused = #1E1EB4;
+        BorderColorHover = black;
+        Borders = (1, 1, 1, 1);
+        Font = "Resources/Itim-Regular.ttf";
+        TextColor = white;
+        TextColorDisabled = #7D7D7D;
+        TextColorDown = black;
+        TextColorHover = black;
+        TextOutlineThickness = 1;
+        Texture = "Resources/Basic Button.png" Middle(5, 5, 118, 18) Smooth;
+        TextureDisabled = None;
+        TextureDown = None;
+        TextureDownFocused = None;
+        TextureDownHover = None;
+        TextureFocused = None;
+        TextureHover = None;
+    }
+}
+
+Button.CreateRoom_Btn {
+    Position = (235, 417);
+    Size = (128, 28);
+    Text = "Create Room";
+    TextSize = 16;
+
+    Renderer {
+        BackgroundColor = #F5F5F5;
+        BackgroundColorDisabled = #E6E6E6;
+        BackgroundColorDown = #EBEBEB;
+        BackgroundColorHover = white;
+        BorderColor = #3C3C3C;
+        BorderColorDisabled = #7D7D7D;
+        BorderColorDown = black;
+        BorderColorFocused = #1E1EB4;
+        BorderColorHover = black;
+        Borders = (1, 1, 1, 1);
+        Font = "Resources/Itim-Regular.ttf";
+        TextColor = white;
+        TextColorDisabled = #7D7D7D;
+        TextColorDown = black;
+        TextColorHover = black;
+        TextOutlineThickness = 1;
+        Texture = "Resources/Basic Button.png" Middle(5, 5, 118, 18) Smooth;
+        TextureDisabled = None;
+        TextureDown = None;
+        TextureDownFocused = None;
+        TextureDownHover = None;
+        TextureFocused = None;
+        TextureHover = None;
+    }
+}
+
+Button.JoinRoom_Btn {
+    Position = (377, 417);
+    Size = (128, 28);
+    Text = "Join Room";
+    TextSize = 16;
+
+    Renderer {
+        BackgroundColor = #F5F5F5;
+        BackgroundColorDisabled = #E6E6E6;
+        BackgroundColorDown = #EBEBEB;
+        BackgroundColorHover = white;
+        BorderColor = #3C3C3C;
+        BorderColorDisabled = #7D7D7D;
+        BorderColorDown = black;
+        BorderColorFocused = #1E1EB4;
+        BorderColorHover = black;
+        Borders = (1, 1, 1, 1);
+        Font = "Resources/Itim-Regular.ttf";
+        TextColor = white;
+        TextColorDisabled = #7D7D7D;
+        TextColorDown = black;
+        TextColorHover = black;
+        TextOutlineThickness = 1;
+        Texture = "Resources/Basic Button.png" Middle(5, 5, 118, 18) Smooth;
+        TextureDisabled = None;
+        TextureDown = None;
+        TextureDownFocused = None;
+        TextureDownHover = None;
+        TextureFocused = None;
+        TextureHover = None;
+    }
+}
+
+Button.Refresh_Btn {
+    Position = (519, 417);
+    Size = (128, 28);
+    Text = Refresh;
+    TextSize = 16;
+
+    Renderer {
+        BackgroundColor = #F5F5F5;
+        BackgroundColorDisabled = #E6E6E6;
+        BackgroundColorDown = #EBEBEB;
+        BackgroundColorHover = white;
+        BorderColor = #3C3C3C;
+        BorderColorDisabled = #7D7D7D;
+        BorderColorDown = black;
+        BorderColorFocused = #1E1EB4;
+        BorderColorHover = black;
+        Borders = (1, 1, 1, 1);
+        Font = "Resources/Itim-Regular.ttf";
+        TextColor = white;
+        TextColorDisabled = #7D7D7D;
+        TextColorDown = black;
+        TextColorHover = black;
+        TextOutlineThickness = 1;
+        Texture = "Resources/Basic Button.png" Middle(5, 5, 118, 18) Smooth;
+        TextureDisabled = None;
+        TextureDown = None;
+        TextureDownFocused = None;
+        TextureDownHover = None;
+        TextureFocused = None;
+        TextureHover = None;
+    }
+}
+
+Label.Status_Lbl {
+    AutoSize = true;
+    Position = (50% - (128 / 2), 220);
+    Size = (128, 22);
+    Text = "No Games Found!";
+    TextSize = 16;
+
+    Renderer {
+        BackgroundColor = transparent;
+        BorderColor = #3C3C3C;
+        Borders = (0, 0, 0, 0);
+        Font = "Resources/Itim-Regular.ttf";
+        TextColor = #4D4D4D;
+        TextureBackground = None;
+    }
+}
+
+Label.Header_Lbl {
+    AutoSize = true;
+    Position = (314, 16);
+    Size = (262.2, 67);
+    Text = Multiplayer;
+    TextSize = 50;
+
+    Renderer {
+        BackgroundColor = transparent;
+        BorderColor = #3C3C3C;
+        Borders = (0, 0, 0, 0);
+        Font = "Resources/Itim-Regular.ttf";
+        TextColor = #B4ACB4;
+        TextureBackground = None;
+    }
+}
+
+ScrollablePanel.ScrollablePanel1 {
+    ContentSize = (720, 240);
+    HorizontalScrollbarPolicy = Never;
+    Position = (74, 106);
+    Size = (700, 260);
+    VerticalScrollbarPolicy = Always;
+
+    Renderer {
+        BackgroundColor = #FFFFFF00;
+        BorderColor = black;
+        Opacity = 1;
+        TextureBackground = None;
+    }
+}
+
+Button.Cancel_Btn {
+    Position = (659, 417);
+    Size = (128, 28);
+    Text = Cancel;
+    TextSize = 16;
+
+    Renderer {
+        BackgroundColor = #F5F5F5;
+        BackgroundColorDisabled = #E6E6E6;
+        BackgroundColorDown = #EBEBEB;
+        BackgroundColorHover = white;
+        BorderColor = #3C3C3C;
+        BorderColorDisabled = #7D7D7D;
+        BorderColorDown = black;
+        BorderColorFocused = #1E1EB4;
+        BorderColorHover = black;
+        Borders = (1, 1, 1, 1);
+        Font = "Resources/Itim-Regular.ttf";
+        TextColor = white;
+        TextColorDisabled = #7D7D7D;
+        TextColorDown = black;
+        TextColorHover = black;
+        TextOutlineThickness = 1;
+        Texture = "Resources/Basic Button.png" Middle(5, 5, 118, 18) Smooth;
+        TextureDisabled = None;
+        TextureDown = None;
+        TextureDownFocused = None;
+        TextureDownHover = None;
+        TextureFocused = None;
+        TextureHover = None;
+    }
+}

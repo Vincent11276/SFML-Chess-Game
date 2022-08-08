@@ -6,23 +6,76 @@
 Game::Game()
 	: m_window(sf::VideoMode(854, 480), "Chess Game")
 {
-	// m_window.setTitle("Chess Game");
-	// m_window.setSize({ 800, 600 });
-
 	m_window.setKeyRepeatEnabled(false);
 	m_window.setFramerateLimit(60);
 
 	MouseInput::setWindow(m_window);
-	Logger::getInstance().setLogLevel(LogLevel::DEBUG);
 }
+
+void Game::init()
+{
+	this->loadResources();
+
+
+	// Wire up callbacks for the client
+	ChessClient::getInstance().onMessageReceived(ServerMessage::Type::AuthenticateSuccess, [&](ServerMessage* message) {
+		auto* content = &message->getContent<ServerMessage::AuthenticateSuccess>();
+		ChessClient::getInstance().session.token = content->assignedToken;
+		ChessClient::getInstance().session.isAuthenticated = true;
+		Logger::info("You have been authenticated and your token is {}", content->assignedToken);
+		});
+
+	ChessClient::getInstance().onMessageReceived(ServerMessage::Type::AuthenticateFailed, [&](ServerMessage* message) {
+		ChessClient::getInstance().session.isAuthenticated = false;
+		Logger::error("Unable to authenticate you from the server");
+	});
+
+	ChessClient::getInstance().onMessageReceived(ServerMessage::Type::RegistrationSuccess, [&](ServerMessage* message) {
+		Logger::info("Succesfully registered!");
+
+		auto& content = message->getContent<ServerMessage::AuthenticateSuccess>();
+		ChessClient::getInstance().session.isRegistered = true;
+	});
+
+	ChessClient::getInstance().onMessageReceived(ServerMessage::Type::RegistrationFailed, [&](ServerMessage* message) {
+		auto& content = message->getContent<ServerMessage::RegistrationFailed>();
+
+		std::cout << "Failed to authenticate. Reason: ";
+
+		switch (content.reason)
+		{
+		case ServerMessage::RegistrationFailed::Reason::ServerFull:
+			std::cout << "Server is full" << std::endl;
+			break;
+
+		case ServerMessage::RegistrationFailed::Reason::NameAlreadyExists:
+			std::cout << "Name is already taken" << std::endl;
+			break;
+
+		case ServerMessage::RegistrationFailed::Reason::AlreadyRegistered:
+			std::cout << "You are already registered" << std::endl;
+			break;
+		}
+	});
+}
+
 
 void Game::run()
 {
-	this->loadResources();
-	
-	m_gameStateManager.changeState(MainMenuState::getInstance(&m_window, &m_client));
+	if (ChessClient::getInstance().connect())
+	{
+		ChessClient::getInstance().authenticate();
+	}
+	// Proceed to starting state when loop starts
+	GameStateManager::getInstance()->changeState(MainMenuState::getInstance());	
 
-	const sf::Time fixedUpdateInterval = sf::seconds(1.0f / 50.0f); 
+	// Start the main loop
+	this->mainLoop();
+}
+
+void Game::mainLoop()
+{
+	const sf::Time fixedUpdateInterval = sf::seconds(1.0f / 50.0f);
 
 	sf::Clock timer;
 	sf::Time lag;
@@ -35,12 +88,12 @@ void Game::run()
 		KeyboardInput::resetStates();
 		MouseInput::resetStates();
 
-		for (sf::Event event; m_window.pollEvent(event); )
+		for (sf::Event e; m_window.pollEvent(e); )
 		{
-			KeyboardInput::handleEvent(event);
-			MouseInput::handleEvent(event);
-			
-			switch (event.type)
+			KeyboardInput::handleEvent(e);
+			MouseInput::handleEvent(e);
+
+			switch (e.type)
 			{
 			case::sf::Event::Closed:
 				m_window.close();
@@ -49,39 +102,29 @@ void Game::run()
 			default:
 				break;
 			}
-			m_gameStateManager.handleEvent(event);
+			GameStateManager::getInstance()->handleEvent(e);
 		}
-		m_gameStateManager.update(elapsed.asSeconds());
+		GameStateManager::getInstance()->update(elapsed.asSeconds());
 
 		while (lag >= fixedUpdateInterval)
 		{
 			lag -= fixedUpdateInterval;
 
-			m_gameStateManager.physicsUpdate(fixedUpdateInterval.asSeconds());
+			GameStateManager::getInstance()->physicsUpdate(fixedUpdateInterval.asSeconds());
 		}
 
 		m_window.clear();
-		m_gameStateManager.render(m_window);
+		GameStateManager::getInstance()->render(m_window);
 		m_window.display();
 	}
 }
 
 void Game::loadResources()
 {
-	ResourceManager::addTexture(ResourceKey::Background, "Assets/UI/Background.png");
-	ResourceManager::addTexture(ResourceKey::ExitButton, "Assets/UI/Background.png");
-	ResourceManager::addTexture(ResourceKey::Logo, "Assets/UI/Background.png");
-	ResourceManager::addTexture(ResourceKey::OnlineButton, "Assets/UI/Background.png");
-	ResourceManager::addTexture(ResourceKey::PlayButton, "Assets/UI/Background.png");
-	ResourceManager::addTexture(ResourceKey::SettingsButton, "Assets/UI/Background.png");
-
-	
 	ResourceManager::addTexture(ResourceKey::ActionMark, "Assets/action_mark.png");
 	ResourceManager::addTexture(ResourceKey::CanMoveMark, "Assets/can_move_mark.png");
 	ResourceManager::addTexture(ResourceKey::CanTakeMark, "Assets/can_take_mark.png");
-
 	ResourceManager::addTexture(ResourceKey::WoodChessBoard, "Assets/Chess_Artwork/Chess_Artwork/Chess Board/Wood/Chess_Board.png");
-
 	ResourceManager::addTexture(ResourceKey::WoodPieceBishopB, "Assets/Chess_Artwork/Chess_Artwork/Chess Pieces/Wood/BishopB.png");
 	ResourceManager::addTexture(ResourceKey::WoodPieceBishopW, "Assets/Chess_Artwork/Chess_Artwork/Chess Pieces/Wood/BishopW.png");
 	ResourceManager::addTexture(ResourceKey::WoodPieceKingB, "Assets/Chess_Artwork/Chess_Artwork/Chess Pieces/Wood/KingB.png");

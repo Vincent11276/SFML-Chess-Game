@@ -6,31 +6,44 @@
 #include "Room.hpp"
 #include "SFML/Config.hpp"
 #include "SFML/Network/Packet.hpp"
+#include "Core/Misc/GameMode.hpp"
+#include "Core/Misc/MatchDuration.hpp"
 
 class ClientMessage
 {
 public:    
     enum class Type : sf::Uint8
     {
+        Undefined,
         Authenticate,
+        RegisterPlayer,
         CreateNewRoom,
         JoinExistingRoom,
         FetchAvailableRooms,
-        MovePiece,  
+        MovePiece,
         RequestForDraw,
-        ResignGame
+        ResignGame,
     };
-    Type type;
+    Type type = Type::Undefined;
 
-    struct Authenticate
+    struct RegisterPlayer
     {
         std::string name;
     };
 
-    struct Room
+    struct CreateNewRoom
     {
-        std::string name;
-        std::string password;
+        std::string     name;
+        std::string     password;
+        GameMode        mode;
+        MatchDuration   duration;
+    };
+
+    struct JoinExistingRoom
+    {
+        std::string     name;
+        std::string     password;
+        std::string     link;
     };
 
     struct MovePiece
@@ -44,16 +57,11 @@ public:
     }
 
     ClientMessage(Type p_type)
-    {
-        type = p_type;
-    }
+        : type(p_type) { }
 
     template <typename T>
     ClientMessage(Type p_type, T m)
-    {
-        type = p_type;
-        message = m;
-    }
+        : type(p_type), message(m) { }
 
     void parseFromPacket(sf::Packet &packet);
 
@@ -63,14 +71,13 @@ public:
         return std::get<T>(message);
     }
 
-    sf::Packet& getPacket();
+    void getPacket(sf::Packet* packet);
 
 private:
-    sf::Packet m_packet;
-
     using Message_t = std::variant<
-        Authenticate,
-        Room,
+        RegisterPlayer,
+        CreateNewRoom,
+        JoinExistingRoom,
         MovePiece
     >;
     Message_t message;

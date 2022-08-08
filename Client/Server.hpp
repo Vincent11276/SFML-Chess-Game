@@ -12,6 +12,7 @@
 #include <stdlib.h>
 #include <vector>
 #include <thread>
+#include "Core/Utility/Logger.hpp"
 
 
 class Server
@@ -27,7 +28,7 @@ public:
 
     void initServer()
     {
-        std::cout << "Server has started at port " << port << std::endl;
+        Logger::info("Server has started at port {}", port);
 
         this->mainLoop();
     }
@@ -43,7 +44,7 @@ public:
 
     unsigned int broadcast(sf::Packet &packet)
     {
-        unsigned int successCount;
+        unsigned int successCount = 0;
 
         for (auto& client: m_clients)
         {
@@ -76,7 +77,7 @@ protected:
 
                         if (socket.receive(receivedPacket) != sf::Socket::Done)
                         {
-                            std::cout << "Failed to receive data from " << socket.getRemoteAddress().getPublicAddress(sf::seconds(5)) << std::endl; 
+                            //Logger::error("Failed to receive data from {}", socket.getRemoteAddress().getPublicAddress(sf::seconds(5)));
                         }
                         else this->onPacketReceived(socket, receivedPacket);
                     }                
@@ -97,7 +98,7 @@ protected:
 
             if (m_listener.accept(m_clients.back()) == sf::Socket::Done)
             {     
-                std::cout << "new connection" << std::endl;
+                //Logger::info("new connection from {}", m_clients.back().getRemoteAddress().getPublicAddress);
                 m_selector.add(m_clients.back());
                 this->onNewClientConnection(m_clients.back());           
             }

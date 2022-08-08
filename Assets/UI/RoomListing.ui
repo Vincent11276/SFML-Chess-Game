@@ -1,0 +1,97 @@
+Panel.Background_Pnl {
+    Size = (225, 65);
+
+    Renderer {
+        BackgroundColor = #292229;
+        BorderColor = black;
+        TextureBackground = None;
+    }
+
+    Picture.Preview_Img {
+        Position = (12.5, 12.5);
+        Size = (40, 40);
+
+        Renderer {
+            Texture = "Resources/DefaultPicture.png" Smooth;
+            TransparentTexture = false;
+        }
+    }
+
+    Label.RoomName_Lbl {
+        AutoSize = true;
+        Position = (75, 10);
+        Size = (89, 22);
+        Text = "Room Name";
+        TextSize = 16;
+
+        Renderer {
+            BackgroundColor = transparent;
+            BorderColor = #3C3C3C;
+            Borders = (0, 0, 0, 0);
+            Font = "Resources/Itim-Regular.ttf";
+            TextColor = #A5A1A5;
+            TextureBackground = None;
+        }
+    }
+
+    Label.PlayerCount_Lbl {
+        AutoSize = true;
+        Position = (184, 15);
+        Size = (16.4, 13);
+        Text = "1/2";
+        TextSize = 10;
+
+        Renderer {
+            BackgroundColor = transparent;
+            BorderColor = #3C3C3C;
+            Borders = (0, 0, 0, 0);
+            Font = "Resources/Itim-Regular.ttf";
+            TextColor = #8A888A;
+            TextureBackground = None;
+        }
+    }
+}
+
+Picture.Signal_Img {
+    Position = (201, 12);
+    Size = (16, 16);
+
+    Renderer {
+        Texture = "Resources/Signal cellular alt 3.png" Smooth;
+        TransparentTexture = false;
+    }
+}
+
+Label.Label {
+    AutoSize = true;
+    Position = (75, 43);
+    Size = (33.4, 13);
+    Text = "Status:";
+    TextSize = 10;
+
+    Renderer {
+        BackgroundColor = transparent;
+        BorderColor = #3C3C3C;
+        Borders = (0, 0, 0, 0);
+        Font = "Resources/Itim-Regular.ttf";
+        TextColor = #A5A1A5;
+        TextureBackground = None;
+    }
+}
+
+Label.Status_Lbl {
+    AutoSize = true;
+    Position = (120, 42);
+    Size = (47.2, 18);
+    Text = Waiting;
+    TextSize = 13;
+
+    Renderer {
+        BackgroundColor = transparent;
+        BorderColor = #3C3C3C;
+        Borders = (0, 0, 0, 0);
+        Font = "Resources/Itim-Regular.ttf";
+        TextColor = #3C3C3C;
+        TextureBackground = None;
+    }
+}

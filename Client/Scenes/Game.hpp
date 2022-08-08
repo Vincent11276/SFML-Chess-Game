@@ -15,10 +15,10 @@
 class Game
 {
 public:
-
-	bool isAuthenticated = false;
-
+	void init();
 	void run();
+	void mainLoop();
+
 	void loadResources();
 
 	static Game* getInstance()
@@ -28,20 +28,13 @@ public:
 		return &instance;
 	}
 
-	ChessClient& getClient()
-	{
-		return m_client;
-	}
-	
 	sf::RenderWindow& getWindow()
 	{
 		return m_window;
 	}
 
 private:
-	ChessClient m_client;
-	GameStateManager m_gameStateManager;
-	sf::RenderWindow m_window;
 	Game();
 
+	sf::RenderWindow m_window;
 };

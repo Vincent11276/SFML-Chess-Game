@@ -10,33 +10,49 @@
 
 sf::Packet& operator <<(sf::Packet& packet, const ServerMessage::AuthenticateSuccess& m)
 {
-    return packet << m.assignedId;
+    return packet << m.assignedToken;
 }
 
 sf::Packet& operator >>(sf::Packet& packet, ServerMessage::AuthenticateSuccess& m)
 {
-    return packet >> m.assignedId;
+    return packet >> m.assignedToken;
 }
 
-sf::Packet& operator <<(sf::Packet& packet, const ServerMessage::AuthenticateFailed& m)
+sf::Packet& operator <<(sf::Packet& packet, const ServerMessage::RegistrationFailed& m)
 {
-    return packet << (sf::Uint8) m.reason;
+    return packet << (sf::Uint8)m.reason;
 }
-sf::Packet& operator >>(sf::Packet& packet, ServerMessage::AuthenticateFailed& m)
+sf::Packet& operator >>(sf::Packet& packet, ServerMessage::RegistrationFailed& m)
 {
     sf::Uint8 reasonVal;
     packet >> reasonVal;
 
-    m.reason = ServerMessage::AuthenticateFailed::Reason(reasonVal);
+    m.reason = ServerMessage::RegistrationFailed::Reason(reasonVal);
+
+    return packet;
+}
+
+inline sf::Packet& operator <<(sf::Packet& packet, const ServerMessage::FetchedAvailableRooms::RoomListing& m)
+{
+    return packet << m.name << m.size << (sf::Uint8)m.status;
+}
+inline sf::Packet& operator >>(sf::Packet& packet, ServerMessage::FetchedAvailableRooms::RoomListing& m)
+{
+    packet >> m.name >> m.size;
+
+    sf::Uint8 statusVal;
+    packet >> statusVal;
+
+    m.status = ServerMessage::FetchedAvailableRooms::RoomListing::Status(statusVal);
 
     return packet;
 }
 
 sf::Packet& operator <<(sf::Packet& packet, const ServerMessage::FetchedAvailableRooms& m)
 {
-    packet << m.rooms.size();
+    packet << m.roomListing.size();
 
-    for (auto& room: m.rooms)
+    for (auto& room: m.roomListing)
     {
         packet << room;
     }
@@ -49,9 +65,9 @@ sf::Packet& operator >>(sf::Packet& packet, ServerMessage::FetchedAvailableRooms
 
     for (std::size_t i = 0; i < arrSize; i++)
     {
-        Room room;
+        ServerMessage::FetchedAvailableRooms::RoomListing room;
         packet >> room;
-        m.rooms.emplace_back(room);
+        m.roomListing.emplace_back(room);
     }
     return packet;
 }
@@ -81,50 +97,65 @@ void ServerMessage::parseFromPacket(sf::Packet &packet)
     switch (type)
     {
     case Type::AuthenticateSuccess:
-        packet >> std::get<AuthenticateSuccess>(message);
-        break;
+    {
+        AuthenticateSuccess authenticateSuccess;
+        packet >> authenticateSuccess;
+        content = authenticateSuccess;
+    }
+    break;
 
-    case Type::AuthenticateFailed:
-        packet >> std::get<AuthenticateFailed>(message);
-        break;
+    case Type::RegistrationFailed:
+    {
+        RegistrationFailed registrationFailed;
+        packet >> registrationFailed;
+        content = registrationFailed;
+    }
+    break;
 
     case Type::FetchedAvailableRooms:
-        packet >> std::get<FetchedAvailableRooms>(message);
-        break;
+    {
+        FetchedAvailableRooms fetchedAvailableRooms;
+        packet >> fetchedAvailableRooms;
+        content = fetchedAvailableRooms;
+    }
+    break;
 
     case Type::PlayerMovedPiece:
-        packet >> std::get<PlayerMovedPiece>(message);
-        break;
+    {
+        PlayerMovedPiece playerMovedPiece;
+        packet >> playerMovedPiece;
+        content = playerMovedPiece;
+    }
+    break;
 
     default:
         break;
     }
 }
 
-sf::Packet& ServerMessage::getPacket()
+void ServerMessage::getPacket(sf::Packet* packet)
 {
-    m_packet << (sf::Uint8)type;
+    *packet << (sf::Uint8)type;
 
     switch (type)
     {
     case Type::AuthenticateSuccess:
-        m_packet << this->getData<AuthenticateSuccess>();
+        *packet << this->getContent<AuthenticateSuccess>();
         break;
 
-    case Type::AuthenticateFailed:
-        m_packet << this->getData<AuthenticateFailed>();
+    case Type::RegistrationFailed:
+        *packet << this->getContent<RegistrationFailed>();
         break;
 
     case Type::FetchedAvailableRooms:
-        m_packet << this->getData<FetchedAvailableRooms>();
+        *packet << this->getContent<FetchedAvailableRooms>();
         break;
 
     case Type::PlayerMovedPiece:
-        m_packet << this->getData<PlayerMovedPiece>();
+        *packet << this->getContent<PlayerMovedPiece>();
         break;
 
     default:
         break;
     }
-    return m_packet;
 }

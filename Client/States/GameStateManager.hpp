@@ -2,14 +2,13 @@
 
 #include <vector>
 #include <SFML/Graphics.hpp>
+#include "Core/Utility/Logger.hpp"
 
 class GameState;
 
 class GameStateManager
 {
 public:
-	GameStateManager();
-
 	void changeState(GameState* state);
 	void cleanUp();
 	void pushState(GameState* state);
@@ -20,7 +19,11 @@ public:
 	void physicsUpdate(float deltaTime);
 	void render(sf::RenderTarget& target);
 
+	static GameStateManager* getInstance();
+
 private:
+	GameStateManager();
+
 	// the stack of states
 	std::vector<GameState*> m_states;
 };

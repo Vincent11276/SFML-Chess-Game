@@ -86,6 +86,7 @@ bool TileMap::isInBounds(sf::Vector2i p_coords)
 
 void TileMap::setTileVertices(int id, sf::Vector2i p_coords)
 {
+
     // get a pointer to the current tile's quad
     sf::Vertex* quad = &tileVertices[(p_coords.x + static_cast<size_t>(p_coords.y) * getDimension().x) * 4];
 
@@ -123,6 +124,7 @@ void TileMap::draw(sf::RenderTarget& target, sf::RenderStates states) const
     states.texture = &this->m_tileSet->getTileSet();
 
     target.draw(this->tileVertices, states);
+    //target.draw(sf::Sprite(this->m_tileSet->getTileSet()));
 }
 
 void TileMap::clear()

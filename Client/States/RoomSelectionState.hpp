@@ -3,51 +3,44 @@
 #include <TGUI/TGUI.hpp>
 #include "TGUI/Backends/SFML.hpp"
 #include "GameStateManager.hpp"
-#include "Client/States/GameState.hpp"
 #include "Client/ChessClient.hpp"
 #include "Client/Scenes/Game.hpp"
+#include "Client/UI/RoomListing.hpp"
+#include "Client/States/MainMenuState.hpp"
+#include "Client/UI/CreateRoomForm.hpp"
+#include "Client/UI/DirectConnectForm.hpp"
+#include "InOnlineGameState.hpp"
+
+
 
 class RoomSelectionState : public GameState
 {
 public:
-    void init(GameStateManager* game) override 
-    { 
-        this->initUI();
-    }
-	void cleanup(GameStateManager* game) override { }
-    void pause(GameStateManager* game) override { }
-    void resume(GameStateManager* game) override { }
+    void init() override;
+	void cleanup() override { }
+    void pause() override { }
+    void resume() override { }
 
-	void handleEvent(GameStateManager* manager, sf::Event& e) override
-    {
-        m_gui.handleEvent(e);
-    }
+    void handleEvent(sf::Event& e) override;
+	void update(float deltaTime) override { }
+    void physicsUpdate(float deltaTime) override { }
+    void draw(sf::RenderTarget& target) const override;
 
-	void update(GameStateManager* manager, float deltaTime) override { }
-    void physicsUpdate(GameStateManager* manager, float deltaTime) override { }
-    void draw(GameStateManager* manager, sf::RenderTarget& target) const override
-    {
-        m_gui.draw();
-    }
+    static RoomSelectionState* getInstance();
 
-	static RoomSelectionState* getInstance()
-    {
-        static RoomSelectionState newInstance;
+    void initUI();
 
-        return &newInstance;
-    }
+    void updateRoomListing(const std::vector<ServerMessage::FetchedAvailableRooms::RoomListing>& listing);
 
-    void initUI()
-    {
-        m_gui.loadWidgetsFromFile("Assets/form1.txt");
-    }
-    
+    void on_directConnect_Btn_Pressed();
+    void on_createRoom_Btn_Pressed();
+    void on_joinRoom_Btn_Pressed();
+    void on_refresh_Btn_Pressed();
+    void on_cancel_Btn_Pressed();
+
 private:
     mutable tgui::Gui m_gui;
 
 protected:
-    RoomSelectionState()
-    {
-        m_gui.setTarget(Game::getInstance()->getWindow());
-    }
+    RoomSelectionState();
 };

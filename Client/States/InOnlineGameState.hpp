@@ -9,30 +9,34 @@
 #include "Core/Utility/Helper.hpp"
 #include "Client/ServerMessage.hpp"
 #include "Client/ChessClient.hpp"
+#include <TGUI/TGUI.hpp>
 
 
 class InOnlineGameState : public GameState
 {
 public:
-	void init(GameStateManager* game) override;
-	void cleanup(GameStateManager* game) override { };
-	void pause(GameStateManager* game) override { };
-	void resume(GameStateManager* game) override { };
+	void init() override;
+	void cleanup() override { };
+	void pause() override { };
+	void resume() override { };
 
-	void handleEvent(GameStateManager* manager, sf::Event& e) override;
-	void update(GameStateManager* manager, float deltaTime) override;
-	void physicsUpdate(GameStateManager* manager, float deltaTime) override { };
-	void draw(GameStateManager* manager, sf::RenderTarget& target) const override;
+	void initUI();
 
-	static InOnlineGameState* getInstance(ChessClient* client);
+	void handleEvent(sf::Event& e) override;
+	void update(float deltaTime) override;
+	void physicsUpdate(float deltaTime) override;
+	void draw(sf::RenderTarget& target) const override;
+
+	static InOnlineGameState* getInstance();
 
 protected:
-	InOnlineGameState(ChessClient* client);
+	InOnlineGameState();
 
 private:
-	void onMessageReceivedCallback();
+	mutable tgui::Gui m_gui;
 
-	ChessClient* m_client;
 	ChessGame m_chessGame;
 };
+
+
 

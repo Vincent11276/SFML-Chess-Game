@@ -1,15 +1,16 @@
 #include "InOfflineGameState.hpp"
 
 
-void InOnlineGameState::init(GameStateManager* game)
+void InOfflineGameState::init()
 {
-	m_chessGame.init();
+	Logger::debug("InOfflineGameState has been initialized");
 
+	m_chessGame.init();
 	m_chessGame.setScale(0.5, 0.5);
 	m_chessGame.setPosition(50, 50);
 }
 
-void InOnlineGameState::handleEvent(GameStateManager* game, sf::Event& e)
+void InOfflineGameState::handleEvent(sf::Event& e)
 {
 	switch (e.type)
 	{
@@ -19,7 +20,7 @@ void InOnlineGameState::handleEvent(GameStateManager* game, sf::Event& e)
 	m_chessGame.handleEvents(e);
 }
 
-void InOnlineGameState::update(GameStateManager* game, float deltaTime)
+void InOfflineGameState::update(float deltaTime)
 {
 	this->m_chessGame.update(deltaTime);
 
@@ -27,43 +28,31 @@ void InOnlineGameState::update(GameStateManager* game, float deltaTime)
 	{
 		sf::Vector2i selected = m_chessGame.getMouseHoveringPiece();
 
-		if (m_chessGame.selectPiece(selected))
-		{
-			// auto& validMoves = m_chessGame.getValidMoves();
-
-			// Logger::getInstance().log(LogLevel::INFO, 
-			// 	"Valid moves for the selected piece are: " + Helper::ToString(validMoves));
-		}
+		m_chessGame.trySelectPiece(selected);
 	}
 	else if (MouseInput::isButtonJustReleased(sf::Mouse::Button::Left))
 	{
 		sf::Vector2i target = m_chessGame.getMouseHoveringPiece();
 
-		if (m_chessGame.moveSelectedPiece(target)) {
-			// if (m_chessGame.isCheckMate())
-			// {
-			// 	Logger::getInstance().log(LogLevel::INFO, "Check Mate!");
-			// }
-		}
+		m_chessGame.tryMoveSelectedPiece(target);	
 	}
-
 }
 
-void InOnlineGameState::physicsUpdate(GameStateManager* game, float deltaTime)
+void InOfflineGameState::physicsUpdate(float deltaTime)
 {
 	// std::cout << "Physics Update: " << deltaTime << std::endl;
 }
 
-void InOnlineGameState::draw(GameStateManager* game, sf::RenderTarget& target) const
+void InOfflineGameState::draw(sf::RenderTarget& target) const
 {
 	target.draw(m_chessGame);
 }
 
-InOnlineGameState* InOnlineGameState::getInstance()
+InOfflineGameState* InOfflineGameState::getInstance()
 {
-	static InOnlineGameState m_inGameState;
+	static InOfflineGameState m_inGameState;
 
 	return &m_inGameState;
 }
 
-InOnlineGameState::InOnlineGameState() = default;
+InOfflineGameState::InOfflineGameState() = default;

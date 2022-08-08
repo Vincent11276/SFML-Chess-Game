@@ -3,21 +3,18 @@
 #include <SFML/Network.hpp>
 
 #include "Player.hpp"
+#include "Core/Misc/RoomStatus.hpp"
 
 
 struct Room
 {
-    std::string id;
-    std::string name;
+    sf::Uint32      id;
+    std::string     name;
+    std::string     password;
+    std::string     joinLink;
+    sf::Uint8       size;
+	RoomStatus      status;
 
-    std::pair<Player, Player> players;
+	std::vector<Player> players;
 };
 
-inline sf::Packet& operator <<(sf::Packet& packet, const Room& m)
-{
-    return packet << m.id << m.name;
-}
-inline sf::Packet& operator >>(sf::Packet& packet, Room& m)
-{
-    return packet >> m.id >> m.name;
-}

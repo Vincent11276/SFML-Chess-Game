@@ -35,11 +35,11 @@ public:
 	void init();
 	void handleEvents(const sf::Event& e);
 	void update([[maybe_unused]] float delta);
-	void cleanUp();
+	void cleanUp() { };
 
-	bool selectPiece(const sf::Vector2i& selectedPiece);
-	bool moveSelectedPiece(const sf::Vector2i& target);
-	bool isCheckMate();
+	bool trySelectPiece(const sf::Vector2i& selectedPiece);
+	bool tryMoveSelectedPiece(const sf::Vector2i& target);
+	bool isCheckMate() { };
 
 	sf::Vector2i getMouseHoveringPiece();
 
@@ -58,10 +58,6 @@ private:
 	void processAfterMove();
 
 	sf::Vector2i getSelectedPiece();
-	PieceColor getPieceColor(const sf::Vector2i& coords);
-	PieceColor getPieceColor(const PieceType pieceType);
-	PieceType getPieceType(const sf::Vector2i coords);
-	std::string getPieceTypeStr(const sf::Vector2i coords);
 	PieceColor getPlayerTurn();
 
 	Piece m_selectedPiece;

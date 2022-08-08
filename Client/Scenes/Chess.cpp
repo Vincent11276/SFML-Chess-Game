@@ -21,7 +21,7 @@ void ChessGame::init()
 
 	m_moveGenerator.setPiecesToAnalyze(m_chessPieces);
 
-	Logger::getInstance().log(LogLevel::INFO, "Chess Game Match Started!");
+	Logger::info("Chess Game Match Started!");
 }
 
 void ChessGame::handleEvents(const sf::Event& e)
@@ -98,7 +98,7 @@ bool ChessGame::isPieceInBounds(const sf::Vector2i& coords)
 }
 
 
-bool ChessGame::selectPiece(const sf::Vector2i& selected)
+bool ChessGame::trySelectPiece(const sf::Vector2i& selected)
 {
 	if (this->isPieceCanSelect(selected))
 	{
@@ -133,20 +133,18 @@ bool ChessGame::selectPiece(const sf::Vector2i& selected)
 		// update current state
 		m_state = State::DraggingPiece;
 
-		Logger::getInstance().log(LogLevel::DEBUG,
-			std::format("You have selected your piece at [{}, {}]!",
-				m_selectedPiece.coords.x, m_selectedPiece.coords.y));
+		Logger::debug("You have selected your piece at [{}, {}]!", 
+			m_selectedPiece.coords.x, m_selectedPiece.coords.y);
 
 		return true;
 	}
 
-	Logger::getInstance().log(LogLevel::DEBUG, 
-		"You cannot selected your enemy's piece!");
+	Logger::debug("You cannot selected your enemy's piece!");
 	
 	return false;
 }
 
-bool ChessGame::moveSelectedPiece(const sf::Vector2i& target)
+bool ChessGame::tryMoveSelectedPiece(const sf::Vector2i& target)
 {
 	// always set the state to selecting regardless if the piece has moved or not
 	m_state = State::SelectingPiece;

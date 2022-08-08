@@ -24,7 +24,6 @@ add_executable(SFMLChessClient
     "Core/Engine/ResourceManager.cpp"
     "Core/Inputs/Mouse.cpp"
     "Core/Inputs/Keyboard.cpp"
-
     "Client/main.cpp" 
     "Client/ChessClient.cpp"
     "Client/ChessServer.cpp"
@@ -36,9 +35,13 @@ add_executable(SFMLChessClient
     "Client/Scenes/MoveablePiece.cpp"
     "Client/States/MainMenuState.cpp"
     "Client/States/InOfflineGameState.cpp"
+    "Client/States/InOnlineGameState.cpp"
     "Client/States/GameStateManager.cpp"      
-
-)
+    "Client/States/RoomSelectionState.cpp" 
+    "Client/UI/RoomListing.cpp" 
+    "Client/States/RegisterState.cpp" 
+    "Client/UI/CreateRoomForm.cpp" 
+    "Client/UI/DirectConnectForm.cpp")
 
 include_directories(${PROJECT_SOURCE_DIR})
 
@@ -56,6 +59,12 @@ if (WIN32 AND BUILD_SHARED_LIBS)
         COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_RUNTIME_DLLS:SFMLChessClient> $<TARGET_FILE_DIR:SFMLChessClient> COMMAND_EXPAND_LISTS)
 endif()
 
-file(COPY ${PROJECT_SOURCE_DIR}/Assets DESTINATION .)
+#file(COPY ${PROJECT_SOURCE_DIR}/Assets DESTINATION .)
+
+add_custom_command(
+        TARGET SFMLChessClient PRE_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+                ${PROJECT_SOURCE_DIR}/Assets
+                ${CMAKE_CURRENT_BINARY_DIR}/Assets)
 
 install(TARGETS SFMLChessClient)

@@ -1,55 +1,38 @@
 #include "MainMenuState.hpp"
 
-#include "Client/ChessClient.hpp"
-#include "Client/Scenes/Game.hpp"
-#include "Client/States/AuthenticateState.hpp"
-#include "Client/States/InOfflineGameState.hpp"
-#include "Client/States/RoomSelectionState.hpp"
-#include "TGUI/Widgets/BitmapButton.hpp"
-#include "TGUI/Widgets/Button.hpp"
-#include "TGUI/Widgets/HorizontalLayout.hpp"
-#include "TGUI/Widgets/Label.hpp"
-#include "TGUI/Widgets/VerticalLayout.hpp"
 
 
-void MainMenuState::init(GameStateManager* game)
+void MainMenuState::init()
 {
+    Logger::debug("MainMenuState has been initialized");
+
     this->initUI();
 }
 
-void MainMenuState::cleanup(GameStateManager* game) { }
-void MainMenuState::pause(GameStateManager* game) { }
-void MainMenuState::resume(GameStateManager* game) { }
-
-void MainMenuState::handleEvent(GameStateManager* manager, sf::Event& e)
+void MainMenuState::handleEvent(sf::Event& e)
 {
     gui.handleEvent(e);
 }
 
-void MainMenuState::update(GameStateManager* manager, float deltaTime) { }
-void MainMenuState::physicsUpdate(GameStateManager* manager, float deltaTime) { }
-
-void MainMenuState::draw(GameStateManager* manager, sf::RenderTarget& target) const 
+void MainMenuState::draw( sf::RenderTarget& target) const 
 { 
     gui.draw();
 }
 
-MainMenuState* MainMenuState::getInstance(sf::RenderWindow *window, ChessClient* client)
+MainMenuState* MainMenuState::getInstance()
 {
     static MainMenuState mainMenuState;
-    mainMenuState.m_window = window;
-    mainMenuState.m_client = client;
 
     return &mainMenuState;
 }
 
 void MainMenuState::initUI()
 {
-    gui.setTarget(*m_window);
+    gui.setTarget(Game::getInstance()->getWindow());
 
     try
     {
-        gui.loadWidgetsFromFile("Assets/form.txt");
+        gui.loadWidgetsFromFile("Assets/UI/MainMenu.ui");
 
         auto playBtn = gui.get<tgui::Button>("Play Button");
         playBtn->onPress(&MainMenuState::on_PlayBtn_Pressed, this);
@@ -58,9 +41,7 @@ void MainMenuState::initUI()
         onlineBtn->onPress(&MainMenuState::on_OnlineBtn_Pressed, this);
 
         auto exitBtn = gui.get<tgui::Button>("Exit Button");
-        exitBtn->onPress(&MainMenuState::on_ExitBtn_Pressed, this);
-
-
+        exitBtn->onPress(&MainMenuState::on_ExitBtn_Pressed, this);  
     }
     catch (const tgui::Exception& e)
     {
@@ -71,42 +52,48 @@ void MainMenuState::on_PlayBtn_Pressed()
 {
     std::cout << "You have pressed the play button" << std::endl;
 
-    this->getGameStateManager()->changeState(InOnlineGameState::getInstance());
+    GameStateManager::getInstance()->changeState(InOfflineGameState::getInstance());
 }
 
 void MainMenuState::on_SettingsBtn_pressed()
 {
-
+    ChessClient::getInstance().session.isRegistered = true;
 }
 
 void MainMenuState::on_OnlineBtn_Pressed()
 {
-    if (!Game::getInstance()->getClient().isConnected())
+    // Check if player is connected to the server
+    if (!ChessClient::getInstance().isConnected())
     {
-        std::cout << "You are not connected to the server! Check your internet connection and try again." << std::endl;
+        Logger::info("You are not connected to the server! Check your internet connection and try again.");
 
-        Game::getInstance()->getClient().connect();
+        // Attempt to reconnect
+        ChessClient::getInstance().connect();
+    }
+    
+    // Check if client is authenticated otherwise try it (By default, program tries to authenticate as it starts)
+    else if (!ChessClient::getInstance().session.isAuthenticated)
+    {
+        std::cout << "You are not yet authenticated! Trying to authenticate you to the server.." << std::endl;
 
-        return;
+        ChessClient::getInstance().authenticate();
     }
 
-    if (!Game::getInstance()->isAuthenticated)
+    // Check if player is registered or not
+    else if (!ChessClient::getInstance().session.isRegistered)
     {
-        std::cout << "You are not yet authenticated! Please identify yourself" << std::endl;
-        
-        this->getGameStateManager()->changeState(AuthenticateState::getInstance());
+        Logger::info("You are not yet registered! Please identify yourself");
 
-        return;
+        GameStateManager::getInstance()->changeState(RegisterState::getInstance());
     }
-    this->getGameStateManager()->changeState(RoomSelectionState::getInstance());
+
+    // If there's no exception, continue to the next game state
+    else GameStateManager::getInstance()->changeState(RoomSelectionState::getInstance());
 }
 
 void MainMenuState::on_ExitBtn_Pressed()
 {
-    
+    Game::getInstance()->getWindow().close();
 }
 
-MainMenuState::MainMenuState()
-{
-    
-}
+MainMenuState::MainMenuState() = default;

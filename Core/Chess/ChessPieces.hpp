@@ -12,6 +12,7 @@
 #include "Core/Engine/TileMap.hpp"
 
 #include "Core/Utility/Logger.hpp"
+#include <iostream>
 
 
 class ChessPieces : public sf::Drawable, public sf::Transformable
@@ -88,7 +89,7 @@ public:
 
         if (!tileSet.create(sf::Vector2f(80.0f, 80.0f), 12))
         {
-            Logger::getInstance().log(LogLevel::ERROR, "Failed to create tileset!");
+            Logger::error("Failed to create tileset!");
         }
 
         tileSet.loadFromTexture(ResourceManager::getTexture(ResourceKey::WoodPieceBishopB));
@@ -107,8 +108,10 @@ public:
         m_chessPieces_TlMap.setTileSet(tileSet);
 
         m_chessPieces_TlMap.mapCellsFrom(chessLayout);
-    }
 
+        
+    }
+    
     const void setPiece(const Piece& piece, const sf::Vector2i& coords)
     {
         m_chessPieces_TlMap.setCell(piece.type, coords);
@@ -174,8 +177,6 @@ public:
         selectedPiece.coords = target;
 
         selectedPiece.isFirstMove = !selectedPiece.isEverMoved;     
-
-        std::cout << "dddd " << selectedPiece.isFirstMove << std::endl;
 
         selectedPiece.isEverMoved = true;
 

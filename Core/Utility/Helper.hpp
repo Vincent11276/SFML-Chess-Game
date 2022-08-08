@@ -3,9 +3,22 @@
 #include <string>
 #include <sstream>
 #include <SFML/Graphics.hpp>
+#include "Client/Random.hpp"
 
 namespace Helper
 {
+    template <typename T>
+    inline uint32_t makeUniqueId(T hashes)
+    {
+        uint32_t uniqueId = Random::getWholeNumber<uint32_t>();
+        // ugly way to generate unique id ikik
+        while (hashes.find(uniqueId) != hashes.end())
+        {
+            uniqueId = Random::getWholeNumber<uint32_t>();
+
+        }
+        return uniqueId;
+    }
     inline std::string extractFileFormat(const std::string& path)
     {
         for (int32_t i = path.size(); i >= 0; i--)
@@ -49,7 +62,6 @@ namespace Helper
     {    
         sprite->setOrigin(sprite->getGlobalBounds().getSize() / 2.f);
     }
-
    // lol
 
 

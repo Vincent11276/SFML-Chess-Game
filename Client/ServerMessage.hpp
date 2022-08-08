@@ -2,33 +2,58 @@
 
 #include <SFML/Network.hpp>
 #include "Core/Chess/PieceMovement.hpp"
-#include "Room.hpp"
 #include "SFML/Config.hpp"
 #include "SFML/Network/Packet.hpp"
 #include <variant>
+
+
 
 class ServerMessage
 {
 public:
     struct AuthenticateSuccess
     {
-        sf::Uint32 assignedId;
+        sf::Uint32 assignedToken;
     };
 
-    struct AuthenticateFailed
+    struct RegistrationFailed
     {
-        enum Reason : sf::Uint8
+        enum class Reason
         {
             ServerFull,
             NameAlreadyExists,
-            AlreadyAuthenticated
-        };     
+            AlreadyRegistered,
+        };
+        Reason reason;
+    };
+
+    struct CreateRoomFailed
+    {
+        enum class Reason : sf::Uint8
+        {
+            NameAlreadyExists,
+            NotYetRegistered,
+            IsInRoomAlready
+        };
         Reason reason;
     };
 
     struct FetchedAvailableRooms
     {
-        std::vector<Room> rooms;
+        struct RoomListing
+        {
+            enum class Status : sf::Uint8
+            {
+                Waiting,
+                Full,
+                InGame
+            };
+
+            std::string name;
+            uint8_t	size;
+            Status status = Status::Waiting;
+        };
+        std::vector<RoomListing> roomListing;
     };
 
     struct PlayerMovedPiece
@@ -38,12 +63,15 @@ public:
 
     enum class Type : sf::Uint8
     {
+        NotSet,
         AuthenticateSuccess,
         AuthenticateFailed,
+        RegistrationSuccess,
+        RegistrationFailed,
         CreateRoomSuccess,
         CreateRoomFailed,
-        JoinRoomSuccess,
-        JoinRoomFailed,
+        JoinExistingRoomSuccess,
+        JoinExistingRoomFailed,
         FetchedAvailableRooms,
         HostLeftRoom,
         PlayerLeftRoom,
@@ -53,41 +81,40 @@ public:
         PlayerHasDisconnected,
         PlayerHasReconnected
     };
-    Type type;
+    Type type = Type::NotSet;
 
-    ServerMessage() {}
+    ServerMessage() = default;
 
-    ServerMessage(Type p_type)
+    ServerMessage(Type type_)
     {
-        type = p_type;
+        type = type_;
     }
 
     template <typename T>
-    ServerMessage(Type p_type, T m)
+    ServerMessage(Type type_, T m)
     {
-        type = p_type;
-        message = m;
+        type = type_;
+        content = m;
+    }
+
+    template <typename T>
+    T& getContent()
+    {
+        return std::get<T>(content);
     }
 
     void parseFromPacket(sf::Packet &packet);
 
-    template <typename T>
-    T& getData()
-    {
-        return std::get<T>(message);
-    }
-
-    sf::Packet& getPacket();
+    void getPacket(sf::Packet* packet);
     
 private:
-    sf::Packet m_packet;
-
-    using Message_t = std::variant<
+    using Content_t = std::variant<
         AuthenticateSuccess,
-        AuthenticateFailed,
+        RegistrationFailed,
+        CreateRoomFailed,
         FetchedAvailableRooms,
         PlayerMovedPiece
     >;
     
-    Message_t message;
+    Content_t content;
 };

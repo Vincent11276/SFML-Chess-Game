@@ -31,8 +31,7 @@ void MoveablePiece::changeType(int pieceType)
     }
     else
     {
-        Logger::getInstance().log(LogLevel::DEBUG,
-            "Unknown piece type enum value received for setting moveable chess piece sprite");
+        Logger::error("Unknown piece type enum value received for setting moveable chess piece sprite");
     }
     Helper::centerSprite(&moveablePiece_Spr);
 }

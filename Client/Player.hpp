@@ -2,20 +2,18 @@
 
 
 #include <SFML/Network.hpp>
+#include "ClientSession.hpp"
+
 
 struct Player
 {
-    Player()
-    {
-        // default..
-    }
+    ClientSession* session;
 
-    Player(sf::Uint32 p_id, const std::string& p_name)
+    enum class Color : sf::Uint8
     {
-        id = p_id;
-        name = p_name;
-    }
-
-    sf::Uint32 id;
-    std::string name;
+        NotSet,
+        Black,
+        White
+    };
+    Color color;
 };

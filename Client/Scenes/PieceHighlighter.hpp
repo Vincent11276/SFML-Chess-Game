@@ -18,8 +18,7 @@ public:
     {
         if (!m_tileSet.create({ 80.f, 80.f }, 3))
         {
-            Logger::getInstance().log(LogLevel::ERROR,
-                "Unable to create tileset object for PieceHighlighter class");
+            Logger::error("Unable to create tileset object for PieceHighlighter class");
         }
         m_tileSet.loadFromTexture(ResourceManager::getTexture(ResourceKey::ActionMark));
         m_tileSet.loadFromTexture(ResourceManager::getTexture(ResourceKey::CanMoveMark));

@@ -13,53 +13,65 @@
 #include "SFML/Network/TcpSocket.hpp"
 #include "Client/ChessServer.hpp"
 #include "Client/ClientMessage.hpp"
-
+#include "Client/Scenes/Game.hpp"
+#include "ClientSession.hpp"
 
 class ChessServer;
 
 class ChessClient
 {
 public:
+    ClientSession session;
     sf::IpAddress remoteAddress = sf::IpAddress::getLocalAddress();
-    unsigned short remotePort = 53000;
+    uint16_t remotePort = 53000;
+    bool isAcceptingPackets = true;
+
+    bool connect();
+    bool isConnected();
+    void onMessageReceived(ServerMessage::Type type, std::function<void(ServerMessage*)> callback);
+    void sendMessage(ClientMessage& message);
+
+    void authenticate();
+    void registerPlayer(const std::string& name);
+    void createNewRoom(const ClientMessage::CreateNewRoom& room);
+    void joinExistingRoom(const std::string &roomId, const std::string password);
+    void fetchAvailableRooms();
+    void movePiece(PieceMovement& pieceMovement);
+    void resign();
 
     ChessClient() = default;
     ChessClient(const ChessClient&) = delete;
     ChessClient& operator=(const ChessClient&) = delete;
 
-    void connect();
-
-    void onMessageReceived(std::function<void(ServerMessage*)> callback);
-
-    bool isConnected();
- 
-    void authenticate(const std::string &name);
-    void createNewRoom(const std::string &roomId, const std::string password);
-    void joinExistingRoom(const std::string &roomId, const std::string password);
-    void sendPieceMovement(PieceMovement& pieceMovement);
-    void resign();
-
-    enum MessageType : sf::Uint8
+    static ChessClient& getInstance()
     {
-        Authenticate,
-        CreateNewRoom,
-        JoinExistingRoom,
-        FetchAvailableRooms,
-        PieceMovement,  
-        RequestForDraw,
-        ResignGame
-    };
-    
-private:
-    std::thread t1;
+        static ChessClient instance;
+        return instance;
+    }
 
-    sf::Uint32 m_clientId = 0;
+private:
     bool m_isConnected = false;
-    
-    std::function<void(ServerMessage*)> m_onMessageReceived;
+
+    std::thread t1;
     sf::TcpSocket m_socket;
 
-    void sendMessage(ClientMessage& message);
-
     void handleIncomingPacketsAsync();
+
+    std::function<void(ServerMessage*)> m_onAuthenticateSuccess;
+    std::function<void(ServerMessage*)> m_onAuthenticateFailed;
+    std::function<void(ServerMessage*)> m_onRegistrationSuccess;
+    std::function<void(ServerMessage*)> m_onRegistrationFailed;
+    std::function<void(ServerMessage*)> m_onCreateRoomSuccess;
+    std::function<void(ServerMessage*)> m_onCreateRoomFailed;
+    std::function<void(ServerMessage*)> m_onJoinRoomSuccess;
+    std::function<void(ServerMessage*)> m_onJoinRoomFailed;
+    std::function<void(ServerMessage*)> m_onFetchedAvailableRooms;
+    std::function<void(ServerMessage*)> m_onHostLeftRoom;
+    std::function<void(ServerMessage*)> m_onPlayerLeftRoom;
+    std::function<void(ServerMessage*)> m_onPlayerMovedPiece;
+    std::function<void(ServerMessage*)> m_onPlayerRequestsForDraw;
+    std::function<void(ServerMessage*)> m_onPlayerHasResigned;
+    std::function<void(ServerMessage*)> m_onPlayerHasDisconnected;
+    std::function<void(ServerMessage*)> m_onPlayerHasReconnected;
+
 };

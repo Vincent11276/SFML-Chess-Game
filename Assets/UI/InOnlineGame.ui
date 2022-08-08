@@ -1,0 +1,81 @@
+Renderer.1 {
+    BackgroundColor = white;
+    BorderColor = black;
+    TextureBackground = None;
+}
+
+Picture.Background_Img {
+    Size = (854, 480);
+
+    Renderer {
+        Texture = "Resources/Background.png" Smooth;
+        TransparentTexture = false;
+    }
+}
+
+Panel.ChessGame_Pnl {
+    Position = (217, 50% - (380 / 2));
+    Renderer = &1;
+    Size = (380, 380);
+}
+
+ChatBox.ChatBox_Chtb {
+    LinesStartFromTop = false;
+    NewLinesBelowOthers = true;
+    Position = (620, 248.228);
+    Size = (208, 174.937);
+    TextColor = black;
+    TextSize = 13;
+
+    Renderer {
+        BackgroundColor = #F5F5F5;
+        BorderColor = black;
+        Borders = (1, 1, 1, 1);
+        Padding = (0, 0, 0, 0);
+        TextureBackground = None;
+    }
+}
+
+ListView.MoveHistory_LstV {
+    ExpandLastColumn = 0;
+    HeaderHeight = 0;
+    HeaderSeparatorHeight = 0;
+    HeaderVisible = true;
+    ItemHeight = 20;
+    Position = (620, 58.9048);
+    ResizableColumns = false;
+    SeparatorWidth = 1;
+    ShowVerticalGridLines = 1;
+    Size = (210, 178.095);
+    TextSize = 13;
+
+    Renderer {
+        BackgroundColor = #F5F5F5;
+        BackgroundColorHover = white;
+        BorderColor = black;
+        Borders = (1, 1, 1, 1);
+        HeaderBackgroundColor = #E6E6E6;
+        HeaderTextColor = black;
+        Padding = (0, 0, 0, 0);
+        SelectedBackgroundColor = #006EFF;
+        SelectedBackgroundColorHover = #1E96FF;
+        SelectedTextColor = white;
+        SeparatorColor = #C8C8C8;
+        TextColor = #3C3C3C;
+        TextColorHover = black;
+        //TextureBackground = None;
+        TextureHeaderBackground = None;
+    }
+}
+
+Panel.EnemyProfile_Pnl {
+    Position = (40, 80);
+    Renderer = &1;
+    Size = (150, 150);
+}
+
+Panel.YourProfile_Pnl {
+    Position = (40, 250);
+    Renderer = &1;
+    Size = (150, 150);
+}

@@ -1,64 +1,55 @@
-// Copy-pasted from https://stackoverflow.com/questions/22372032/resource-manager
-// Logger class inspired by https://github.com/ThiccTheo
+// Credits to https://github.com/ThiccTheo
 
 #include "Logger.hpp"
 
-Logger::Logger()
+FmtString::FmtString() = default;
+
+FmtString::FmtString(const char* message, const std::source_location& location)
+	: message{ message },
+	location{ location }
 {
-    // default..
 }
 
-Logger::~Logger()
+FmtString::FmtString(const std::string& message, const std::source_location& location)
+	: message{ message },
+	location{ location }
 {
-    // default..
 }
 
-void Logger::setPrefix(const LogLevel& messageLevel)
+void Logger::print(const LogLevel logLevel, std::string message, const std::source_location& location)
 {
-    switch (messageLevel)
-    {
-    case LogLevel::DEBUG:
-        logPrefix_ = "[DEBUG] ";
-        break;
-    case LogLevel::INFO:
-        logPrefix_ = "[INFO] ";
-        break;
-    case LogLevel::ERROR:
-        logPrefix_ = "[ERROR] ";
-        break;
-    default:
-        break;
-    }
+	switch (logLevel)
+	{
+	case LogLevel::debug:
+		message.insert(0, "[Debug] ");
+		break;
+	case LogLevel::info:
+		message.insert(0, "[Info] ");
+		break;
+	case LogLevel::warning:
+		message.insert(0, "[Warning] ");
+		break;
+	case LogLevel::error:
+		message.insert(0, "[Error] ");
+		break;
+	case LogLevel::critical:
+		message.insert(0, "[Critical] ");
+		break;
+	}
+
+	message += std::format(" [{}:{}:{}]\n", strrchr(location.file_name(), '\\') ? strrchr(location.file_name(), '\\') + 1 : location.file_name(), location.line(), location.column());
+
+	if (static_cast<int>(logLevel) >= static_cast<int>(LogLevel::warning))
+	{
+		std::cerr << message;
+	}
+	else
+	{
+		std::cout << message;
+	}
 }
 
-Logger& Logger::getInstance()
+void Logger::clear()
 {
-    static Logger instance;
-    return instance;
-}
-
-void Logger::setLogLevel(const LogLevel& logLevel)
-{
-    currentLogLevel_ = logLevel;
-}
-
-
-void Logger::log(const LogLevel& messageLevel, const std::string& message)
-{
-    if (messageLevel == LogLevel::NO)
-        return;
-
-    if (currentLogLevel_ != LogLevel::DEBUG)
-    {
-        if (messageLevel == LogLevel::ERROR && currentLogLevel_ !=
-            LogLevel::ERROR)
-            return;
-        if (messageLevel == LogLevel::INFO && currentLogLevel_ !=
-            LogLevel::INFO)
-            return;
-    }
-
-    setPrefix(messageLevel);
-
-    std::cout << logPrefix_ << message << std::endl;
+	std::cout << "\033[H\033[J";
 }

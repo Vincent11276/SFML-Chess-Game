@@ -68,8 +68,8 @@ void InOnlineGameState::initUI()
 		auto chatBox_Chtb = m_gui.get<tgui::ChatBox>("ChatBox_Chtb");
 		auto moveHistory_LstV = m_gui.get<tgui::ListView>("MoveHistory_LstV");
 
-		chatBox_Chtb->addLine("You: fuckk u", tgui::Color::Blue);
-		chatBox_Chtb->addLine("Oponent: fuckk you too : )", tgui::Color::Yellow);
+		chatBox_Chtb->addLine("You: dasd", tgui::Color::Blue);
+		chatBox_Chtb->addLine("Oponent: ada", tgui::Color::Yellow);
 	}
 	catch (const tgui::Exception& e)
 	{

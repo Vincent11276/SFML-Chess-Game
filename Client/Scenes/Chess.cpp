@@ -10,12 +10,12 @@ ChessGame::ChessGame()
 	// default..
 }
 
-void ChessGame::init(PieceColor pieceColor)
+void ChessGame::init(chess::PieceColor pieceColor)
 {
 	m_side = pieceColor;
-	m_playerTurn = PieceColor::White;
+	m_playerTurn = chess::PieceColor::White;
 
-	if (pieceColor == PieceColor::White)
+	if (pieceColor == chess::PieceColor::White)
 	{
 		m_state = State::SelectingPiece;
 	}
@@ -83,7 +83,7 @@ bool ChessGame::isPieceCanSelect(const sf::Vector2i& coords)
 	}
 
 	// check if selected "piece" is empty
-	if (m_chessPieces.getColor(coords) == PieceColor::Neutral)
+	if (m_chessPieces.getColor(coords) == chess::PieceColor::Neutral)
 	{
 		return false;
 	}
@@ -170,7 +170,7 @@ bool ChessGame::tryMoveSelectedPiece(const sf::Vector2i& target)
 			m_pieceHighlighter.remove(m_previousMove.second.coords);
 
 			// find the right piece movement on the generator based on the selected target param
-			PieceMovement targetMove = m_moveGenerator.findValidMoveByCoords(target);
+			chess::PieceMovement targetMove = m_moveGenerator.findValidMoveByCoords(target);
 			
 			// store previous selected piece and the move taken
 			m_previousMove = std::make_pair(m_selectedPiece, targetMove);
@@ -212,13 +212,13 @@ void ChessGame::processAfterMove()
 
 void ChessGame::switchPlayerTurn()
 {
-	if (m_playerTurn == PieceColor::Black)
+	if (m_playerTurn == chess::PieceColor::Black)
 	{
-		m_playerTurn = PieceColor::White;
+		m_playerTurn = chess::PieceColor::White;
 	}
 	else
 	{
-		m_playerTurn = PieceColor::Black;
+		m_playerTurn = chess::PieceColor::Black;
 	}
 }
 
@@ -246,7 +246,7 @@ void ChessGame::flipCoords(sf::Vector2i* coords)
 	coords->y = 8 - coords->y;
 }
 
-PieceColor ChessGame::getPlayerTurn()
+chess::PieceColor ChessGame::getPlayerTurn()
 {
 	return m_playerTurn;
 }

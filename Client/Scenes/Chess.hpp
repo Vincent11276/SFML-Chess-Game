@@ -32,7 +32,7 @@ class ChessGame: public sf::Drawable, public sf::Transformable
 public:
 	ChessGame();
 
-	void init(PieceColor pieceColor);
+	void init(chess::PieceColor pieceColor);
 	void handleEvents(const sf::Event& e);
 	void update([[maybe_unused]] float delta);
 	void cleanUp() { };
@@ -48,7 +48,7 @@ public:
 	void flipCoords(sf::Vector2i* coords);
 
 private:
-	PieceColor m_side;
+	chess::PieceColor m_side;
 
 	enum State
 	{
@@ -64,17 +64,17 @@ private:
 	void switchPlayerTurn();
 	void processAfterMove();
 
-	PieceColor getPlayerTurn();
+	chess::PieceColor getPlayerTurn();
 
-	Piece m_selectedPiece;
-	PieceColor m_playerTurn;
-	MoveGenerator m_moveGenerator;
+	chess::Piece m_selectedPiece;
+	chess::PieceColor m_playerTurn;
+	chess::MoveGenerator m_moveGenerator;
 	MoveHistory m_moveHistory;
 
-	std::pair<Piece, PieceMovement> m_previousMove; 
+	std::pair<chess::Piece, chess::PieceMovement> m_previousMove;
 	sf::Sprite m_chessBoard_Spr;
 	PieceHighlighter m_pieceHighlighter;
-	ChessPieces m_chessPieces;
+	chess::ChessPieces m_chessPieces;
 	MoveablePiece m_moveablePiece;
 
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;

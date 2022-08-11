@@ -7,7 +7,7 @@ namespace states
 	{
 		Logger::debug("InOfflineGameState has been initialized");
 
-		m_chessGame.init(PieceColor::White);
+		m_chessGame.init(chess::PieceColor::White);
 		m_chessGame.setScale(0.5, 0.5);
 		m_chessGame.setPosition(50, 50);
 	}

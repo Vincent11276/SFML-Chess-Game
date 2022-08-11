@@ -1,14 +1,17 @@
 #pragma once
 
 
-enum class PieceAction
+namespace chess
 {
-    None,
-    Relocate,
-    TwoSquaresForward,
-    Capture,
-    CastleLeft,
-    CastleRight,
-    EnPessantDown,
-    EnPessantUp
-};
+    enum class PieceAction
+    {
+        None,
+        Relocate,
+        TwoSquaresForward,
+        Capture,
+        CastleLeft,
+        CastleRight,
+        EnPessantDown,
+        EnPessantUp
+    };
+}

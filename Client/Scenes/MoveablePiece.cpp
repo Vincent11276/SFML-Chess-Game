@@ -3,18 +3,18 @@
 
 std::unordered_map<int, egn::ResourceKey> MoveablePiece::m_resourceKeys
 {
-    { PieceType::B_PAWN, egn::ResourceKey::WoodPiecePawnB },
-    { PieceType::B_ROOK, egn::ResourceKey::WoodPieceRookB },
-    { PieceType::B_KNIGHT, egn::ResourceKey::WoodPieceKnightB },
-    { PieceType::B_BISHOP, egn::ResourceKey::WoodPieceBishopB },
-    { PieceType::B_QUEEN, egn::ResourceKey::WoodPieceQueenB },
-    { PieceType::B_KING, egn::ResourceKey::WoodPieceKingB },
-    { PieceType::W_PAWN, egn::ResourceKey::WoodPiecePawnW },
-    { PieceType::W_ROOK, egn::ResourceKey::WoodPieceRookW },
-    { PieceType::W_KNIGHT, egn::ResourceKey::WoodPieceKnightW },
-    { PieceType::W_BISHOP, egn::ResourceKey::WoodPieceBishopW },
-    { PieceType::W_QUEEN, egn::ResourceKey::WoodPieceQueenW },
-    { PieceType::W_KING, egn::ResourceKey::WoodPieceKingW },
+    { chess::PieceType::B_PAWN, egn::ResourceKey::WoodPiecePawnB },
+    { chess::PieceType::B_ROOK, egn::ResourceKey::WoodPieceRookB },
+    { chess::PieceType::B_KNIGHT, egn::ResourceKey::WoodPieceKnightB },
+    { chess::PieceType::B_BISHOP, egn::ResourceKey::WoodPieceBishopB },
+    { chess::PieceType::B_QUEEN, egn::ResourceKey::WoodPieceQueenB },
+    { chess::PieceType::B_KING, egn::ResourceKey::WoodPieceKingB },
+    { chess::PieceType::W_PAWN, egn::ResourceKey::WoodPiecePawnW },
+    { chess::PieceType::W_ROOK, egn::ResourceKey::WoodPieceRookW },
+    { chess::PieceType::W_KNIGHT, egn::ResourceKey::WoodPieceKnightW },
+    { chess::PieceType::W_BISHOP, egn::ResourceKey::WoodPieceBishopW },
+    { chess::PieceType::W_QUEEN, egn::ResourceKey::WoodPieceQueenW },
+    { chess::PieceType::W_KING, egn::ResourceKey::WoodPieceKingW },
 };
 
 MoveablePiece::MoveablePiece()

@@ -5,19 +5,22 @@
 #include "PieceAction.hpp"
 
 
-struct PieceMovement
+namespace chess
 {
-    PieceMovement()
+    struct PieceMovement
     {
-        // default..
-    }
+        PieceMovement()
+        {
+            // default..
+        }
 
-    PieceMovement(PieceAction p_action, sf::Vector2i p_target)
-    {
-        action = p_action;
-        coords = p_target;
-    }
+        PieceMovement(PieceAction p_action, sf::Vector2i p_target)
+        {
+            action = p_action;
+            coords = p_target;
+        }
 
-    PieceAction action = PieceAction::None;
-    sf::Vector2i coords;   
-};
+        PieceAction action = PieceAction::None;
+        sf::Vector2i coords;
+    };
+}

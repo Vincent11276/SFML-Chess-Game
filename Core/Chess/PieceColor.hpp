@@ -1,9 +1,11 @@
 #pragma once
 
-
-enum PieceColor
+namespace chess
 {
-    Black,
-    White,
-    Neutral
-};
+    enum PieceColor
+    {
+        Black,
+        White,
+        Neutral
+    };
+}

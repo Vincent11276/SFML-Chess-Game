@@ -34,31 +34,31 @@ public:
         m_tilemap.clear();
     }    
 
-    void markValidMoves(const std::vector<PieceMovement> &validMoves)
+    void markValidMoves(const std::vector<chess::PieceMovement> &validMoves)
     {
         for (auto& validMove: validMoves)
 		{
             switch (validMove.action)
             {
-            case PieceAction::Relocate:
+            case chess::PieceAction::Relocate:
                 m_tilemap.setCell(1, validMove.coords);
                 break;
 
-             case PieceAction::TwoSquaresForward:
+             case chess::PieceAction::TwoSquaresForward:
                 m_tilemap.setCell(1, validMove.coords);
                 break;
 
-            case PieceAction::Capture:
+            case chess::PieceAction::Capture:
                 m_tilemap.setCell(2, validMove.coords);
                 break;
 
-            case PieceAction::CastleLeft:
-            case PieceAction::CastleRight:
+            case chess::PieceAction::CastleLeft:
+            case chess::PieceAction::CastleRight:
                 m_tilemap.setCell(1, validMove.coords);
                 break;
 
-            case PieceAction::EnPessantUp:
-            case PieceAction::EnPessantDown:
+            case chess::PieceAction::EnPessantUp:
+            case chess::PieceAction::EnPessantDown:
                 m_tilemap.setCell(1, validMove.coords);
                 break;
 
@@ -69,7 +69,7 @@ public:
     }
 
 
-    void unmarkValidMoves(const std::vector<PieceMovement> &validMoves)
+    void unmarkValidMoves(const std::vector<chess::PieceMovement> &validMoves)
     {
         for (auto& validMove: validMoves)
         {

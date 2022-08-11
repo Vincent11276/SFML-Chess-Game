@@ -23,7 +23,7 @@ namespace states
 
 	void InOnlineGameState::initChess()
 	{
-		m_chessGame.init(PieceColor::White);
+		m_chessGame.init(chess::PieceColor::White);
 		m_chessGame.setScale(0.5, 0.5);
 		m_chessGame.setPosition(50, 50);
 	}
@@ -106,12 +106,12 @@ namespace states
 
 				if (content->side == netw::Player::Color::White)
 				{
-					m_chessGame.init(PieceColor::White);
+					m_chessGame.init(chess::PieceColor::White);
 					Logger::info("Game has started! You are White");
 				}
 				else
 				{
-					m_chessGame.init(PieceColor::Black);
+					m_chessGame.init(chess::PieceColor::Black);
 					Logger::info("Game has started! You are Black");
 				}
 			});

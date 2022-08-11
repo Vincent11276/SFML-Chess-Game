@@ -30,7 +30,7 @@ public:
 
     void initUI();
 
-    void updateRoomListing(const std::vector<ServerMessage::FetchedAvailableRooms::RoomListing>& listing);
+    void updateRoomListing(const std::vector<netw::ServerMessage::FetchedAvailableRooms::RoomListing>& listing);
 
     void on_directConnect_Btn_Pressed();
     void on_createRoom_Btn_Pressed();

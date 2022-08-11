@@ -18,41 +18,41 @@ void Game::init()
 
 
 	// Wire up callbacks for the client
-	ChessClient::getInstance().registerCallback(ServerMessage::Type::AuthenticateSuccess, [&](ServerMessage* message) {
-		auto* content = &message->getContent<ServerMessage::AuthenticateSuccess>();
-		ChessClient::getInstance().session.token = content->assignedToken;
-		ChessClient::getInstance().session.isAuthenticated = true;
+	netw::ChessClient::getInstance().registerCallback(netw::ServerMessage::Type::AuthenticateSuccess, [&](netw::ServerMessage* message) {
+		auto* content = &message->getContent<netw::ServerMessage::AuthenticateSuccess>();
+		netw::ChessClient::getInstance().session.token = content->assignedToken;
+		netw::ChessClient::getInstance().session.isAuthenticated = true;
 		Logger::info("You have been authenticated and your token is {}", content->assignedToken);
 		});
 
-	ChessClient::getInstance().registerCallback(ServerMessage::Type::AuthenticateFailed, [&](ServerMessage* message) {
-		ChessClient::getInstance().session.isAuthenticated = false;
+	netw::ChessClient::getInstance().registerCallback(netw::ServerMessage::Type::AuthenticateFailed, [&](netw::ServerMessage* message) {
+		netw::ChessClient::getInstance().session.isAuthenticated = false;
 		Logger::error("Unable to authenticate you from the server");
 	});
 
-	ChessClient::getInstance().registerCallback(ServerMessage::Type::RegistrationSuccess, [&](ServerMessage* message) {
+	netw::ChessClient::getInstance().registerCallback(netw::ServerMessage::Type::RegistrationSuccess, [&](netw::ServerMessage* message) {
 		Logger::info("Succesfully registered!");
 
-		auto& content = message->getContent<ServerMessage::AuthenticateSuccess>();
-		ChessClient::getInstance().session.isRegistered = true;
+		auto& content = message->getContent<netw::ServerMessage::AuthenticateSuccess>();
+		netw::ChessClient::getInstance().session.isRegistered = true;
 	});
 
-	ChessClient::getInstance().registerCallback(ServerMessage::Type::RegistrationFailed, [&](ServerMessage* message) {
-		auto& content = message->getContent<ServerMessage::RegistrationFailed>();
+	netw::ChessClient::getInstance().registerCallback(netw::ServerMessage::Type::RegistrationFailed, [&](netw::ServerMessage* message) {
+		auto& content = message->getContent<netw::ServerMessage::RegistrationFailed>();
 
 		std::cout << "Failed to authenticate. Reason: ";
 
 		switch (content.reason)
 		{
-		case ServerMessage::RegistrationFailed::Reason::ServerFull:
+		case netw::ServerMessage::RegistrationFailed::Reason::ServerFull:
 			std::cout << "Server is full" << std::endl;
 			break;
 
-		case ServerMessage::RegistrationFailed::Reason::NameAlreadyExists:
+		case netw::ServerMessage::RegistrationFailed::Reason::NameAlreadyExists:
 			std::cout << "Name is already taken" << std::endl;
 			break;
 
-		case ServerMessage::RegistrationFailed::Reason::AlreadyRegistered:
+		case netw::ServerMessage::RegistrationFailed::Reason::AlreadyRegistered:
 			std::cout << "You are already registered" << std::endl;
 			break;
 		}
@@ -62,9 +62,9 @@ void Game::init()
 
 void Game::run()
 {
-	if (ChessClient::getInstance().connect())
+	if (netw::ChessClient::getInstance().connect())
 	{
-		ChessClient::getInstance().authenticate();
+		netw::ChessClient::getInstance().authenticate();
 	}
 	// Proceed to starting state when loop starts
 	GameStateManager::getInstance()->changeState(MainMenuState::getInstance());	

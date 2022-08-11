@@ -15,7 +15,7 @@ void RegisterState::handleEvent(sf::Event& e)
 
 void RegisterState::update(float deltaTime)
 {
-    if (ChessClient::getInstance().session.isRegistered)
+    if (netw::ChessClient::getInstance().session.isRegistered)
     {
         // Proceed to next game state
         GameStateManager::getInstance()->changeState(RoomSelectionState::getInstance());
@@ -38,7 +38,7 @@ void RegisterState::initUI()
         m_button = m_gui.get<tgui::Button>("Button1");
 
         m_button->onPress([&] {
-            ChessClient::getInstance().registerPlayer(m_editBox1->getText().toStdString());
+            netw::ChessClient::getInstance().registerPlayer(m_editBox1->getText().toStdString());
         });
     }
     catch (tgui::Exception e)

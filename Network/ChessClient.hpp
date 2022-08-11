@@ -16,48 +16,51 @@
 #include "Client/Scenes/Game.hpp"
 #include "ClientSession.hpp"
 
-class ChessServer;
-
-class ChessClient
+namespace netw
 {
-public:
-    ClientSession session;
-    sf::IpAddress remoteAddress = sf::IpAddress::getLocalAddress();
-    uint16_t remotePort = 53000;
-    bool isAcceptingPackets = true;
+    class ChessServer;
 
-    bool connect();
-    bool isConnected();
-    void registerCallback(ServerMessage::Type type, std::function<void(ServerMessage*)> callback);
-    void sendMessage(ClientMessage& message);
-
-    void authenticate();
-    void registerPlayer(const std::string& name);
-    void createNewRoom(const ClientMessage::CreateNewRoom& room);
-    void joinExistingRoom(const std::string &roomId, const std::string password);
-    void fetchAvailableRooms();
-    void movePiece(const ClientMessage::MovePiece& pieceMovement);
-    void sendChatMessage(const std::string& message);
-    void resign();
-
-    ChessClient() = default;
-    ChessClient(const ChessClient&) = delete;
-    ChessClient& operator=(const ChessClient&) = delete;
-
-    static ChessClient& getInstance()
+    class ChessClient
     {
-        static ChessClient instance;
-        return instance;
-    }
+    public:
+        ClientSession session;
+        sf::IpAddress remoteAddress = sf::IpAddress::getLocalAddress();
+        uint16_t remotePort = 53000;
+        bool isAcceptingPackets = true;
 
-private:
-    bool m_isConnected = false;
+        bool connect();
+        bool isConnected();
+        void registerCallback(ServerMessage::Type type, std::function<void(ServerMessage*)> callback);
+        void sendMessage(ClientMessage& message);
 
-    std::thread t1;
-    sf::TcpSocket m_socket;
+        void authenticate();
+        void registerPlayer(const std::string& name);
+        void createNewRoom(const ClientMessage::CreateNewRoom& room);
+        void joinExistingRoom(const std::string& roomId, const std::string password);
+        void fetchAvailableRooms();
+        void movePiece(const ClientMessage::MovePiece& pieceMovement);
+        void sendChatMessage(const std::string& message);
+        void resign();
 
-    std::map<ServerMessage::Type, 
-        std::function<void(ServerMessage*)>> m_callbacks;
-    
-    void handleIncomingPacketsAsync();
-};
+        ChessClient() = default;
+        ChessClient(const ChessClient&) = delete;
+        ChessClient& operator=(const ChessClient&) = delete;
+
+        static ChessClient& getInstance()
+        {
+            static ChessClient instance;
+            return instance;
+        }
+
+    private:
+        bool m_isConnected = false;
+
+        std::thread t1;
+        sf::TcpSocket m_socket;
+
+        std::map<ServerMessage::Type,
+            std::function<void(ServerMessage*)>> m_callbacks;
+
+        void handleIncomingPacketsAsync();
+    };
+}

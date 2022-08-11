@@ -57,30 +57,30 @@ void MainMenuState::on_PlayBtn_Pressed()
 
 void MainMenuState::on_SettingsBtn_pressed()
 {
-    ChessClient::getInstance().session.isRegistered = true;
+    netw::ChessClient::getInstance().session.isRegistered = true;
 }
 
 void MainMenuState::on_OnlineBtn_Pressed()
 {
     // Check if player is connected to the server
-    if (!ChessClient::getInstance().isConnected())
+    if (!netw::ChessClient::getInstance().isConnected())
     {
         Logger::info("You are not connected to the server! Check your internet connection and try again.");
 
         // Attempt to reconnect
-        ChessClient::getInstance().connect();
+        netw::ChessClient::getInstance().connect();
     }
     
     // Check if client is authenticated otherwise try it (By default, program tries to authenticate as it starts)
-    else if (!ChessClient::getInstance().session.isAuthenticated)
+    else if (!netw::ChessClient::getInstance().session.isAuthenticated)
     {
         std::cout << "You are not yet authenticated! Trying to authenticate you to the server.." << std::endl;
 
-        ChessClient::getInstance().authenticate();
+        netw::ChessClient::getInstance().authenticate();
     }
 
     // Check if player is registered or not
-    else if (!ChessClient::getInstance().session.isRegistered)
+    else if (!netw::ChessClient::getInstance().session.isRegistered)
     {
         Logger::info("You are not yet registered! Please identify yourself");
 

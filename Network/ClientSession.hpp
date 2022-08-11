@@ -3,24 +3,27 @@
 #include <SFML/Network.hpp>
 #include <string>
 
-struct ClientSession
+namespace netw
 {
-    sf::Uint32 token = 0;
-
-    sf::TcpSocket* client = nullptr;
-
-    bool isRegistered = false;
-    bool isAuthenticated = false;
-
-    enum class State : sf::Uint8
+    struct ClientSession
     {
-        Idle,
-        InGame,
-        InRoom
-    };
-    State state = State::Idle;
+        sf::Uint32 token = 0;
 
-    std::string     playerName;
-    sf::Uint32      playerId = 0;
-    sf::Uint32      roomId = 0;
-};
+        sf::TcpSocket* client = nullptr;
+
+        bool isRegistered = false;
+        bool isAuthenticated = false;
+
+        enum class State : sf::Uint8
+        {
+            Idle,
+            InGame,
+            InRoom
+        };
+        State state = State::Idle;
+
+        std::string     playerName;
+        sf::Uint32      playerId = 0;
+        sf::Uint32      roomId = 0;
+    };
+}

@@ -14,8 +14,8 @@ void InOnlineGameState::init()
 	this->initNetworking();
 
 	// temporary only -- Tell the server player is ready to play
-	auto message = ClientMessage(ClientMessage::Type::PlayerReadyToPlay);
-	ChessClient::getInstance().sendMessage(message);
+	auto message = netw::ClientMessage(netw::ClientMessage::Type::PlayerReadyToPlay);
+	netw::ChessClient::getInstance().sendMessage(message);
 }
 
 void InOnlineGameState::initChess()
@@ -40,7 +40,7 @@ void InOnlineGameState::initUI()
 		m_send_Btn = m_gui.get<tgui::Button>("Send_Btn");
 
 		m_send_Btn->onPress([&] {
-			ChessClient::getInstance().sendChatMessage(m_chatBox_Edt->getText().toStdString());
+			netw::ChessClient::getInstance().sendChatMessage(m_chatBox_Edt->getText().toStdString());
 			m_chatBox_Edt->setText("");
 			});
 	}
@@ -52,56 +52,56 @@ void InOnlineGameState::initUI()
 
 void InOnlineGameState::initNetworking()
 {
-	ChessClient::getInstance().registerCallback(ServerMessage::Type::PlayerSentMessage, 
-		[&](ServerMessage* message) {
-			auto content = &message->getContent<ServerMessage::PlayerSentMessage>();
+	netw::ChessClient::getInstance().registerCallback(netw::ServerMessage::Type::PlayerSentMessage,
+		[&](netw::ServerMessage* message) {
+			auto content = &message->getContent<netw::ServerMessage::PlayerSentMessage>();
 			m_chatBox_Chtb->addLine(content->author + ": " + content->text, tgui::Color::Red);
 		});
 
-	ChessClient::getInstance().registerCallback(ServerMessage::Type::PlayerSentMessage, 
-		[&](ServerMessage* message) {
-			auto content = &message->getContent<ServerMessage::PlayerSentMessage>();
+	netw::ChessClient::getInstance().registerCallback(netw::ServerMessage::Type::PlayerSentMessage,
+		[&](netw::ServerMessage* message) {
+			auto content = &message->getContent<netw::ServerMessage::PlayerSentMessage>();
 			m_chatBox_Chtb->addLine(content->author + ": " + content->text, tgui::Color::Red);
 		});
 
-	ChessClient::getInstance().registerCallback(ServerMessage::Type::PlayerMovedPiece,
-		[&](ServerMessage* message) {
-			auto content = &message->getContent<ServerMessage::PlayerMovedPiece>();
+	netw::ChessClient::getInstance().registerCallback(netw::ServerMessage::Type::PlayerMovedPiece,
+		[&](netw::ServerMessage* message) {
+			auto content = &message->getContent<netw::ServerMessage::PlayerMovedPiece>();
 			m_chessGame.trySelectPiece(content->selected);
 			m_chessGame.tryMoveSelectedPiece(content->target);
 		});
 
-	ChessClient::getInstance().registerCallback(ServerMessage::Type::PlayerHasDisconnected,
-		[&](ServerMessage* message) {
+	netw::ChessClient::getInstance().registerCallback(netw::ServerMessage::Type::PlayerHasDisconnected,
+		[&](netw::ServerMessage* message) {
 			Logger::info("Your oponnent has disconnected");
 		});
 
-	ChessClient::getInstance().registerCallback(ServerMessage::Type::PlayerHasReconnected,
-		[&](ServerMessage* message) {
+	netw::ChessClient::getInstance().registerCallback(netw::ServerMessage::Type::PlayerHasReconnected,
+		[&](netw::ServerMessage* message) {
 			Logger::info("Your oponnent has reconnected");
 		});
 
-	ChessClient::getInstance().registerCallback(ServerMessage::Type::PlayerHasResigned,
-		[&](ServerMessage* message) {
+	netw::ChessClient::getInstance().registerCallback(netw::ServerMessage::Type::PlayerHasResigned,
+		[&](netw::ServerMessage* message) {
 			Logger::info("Your oponnent has resigned the game");
 		});
 
-	ChessClient::getInstance().registerCallback(ServerMessage::Type::PlayerRequestsForDraw,
-		[&](ServerMessage* message) {
+	netw::ChessClient::getInstance().registerCallback(netw::ServerMessage::Type::PlayerRequestsForDraw,
+		[&](netw::ServerMessage* message) {
 			Logger::info("Your oponnent has requested for a draw");
 		});
 
-	ChessClient::getInstance().registerCallback(ServerMessage::Type::PlayerJoinedRoom,
-		[&](ServerMessage* message) {
-			auto* content = &message->getContent<ServerMessage::PlayerJoinedRoom>();
+	netw::ChessClient::getInstance().registerCallback(netw::ServerMessage::Type::PlayerJoinedRoom,
+		[&](netw::ServerMessage* message) {
+			auto* content = &message->getContent<netw::ServerMessage::PlayerJoinedRoom>();
 			Logger::info("{} has joined your room", content->name);
 		});
 
-	ChessClient::getInstance().registerCallback(ServerMessage::Type::ChessGameStarted,
-		[&](ServerMessage* message) {
-			auto* content = &message->getContent<ServerMessage::ChessGameStarted>();
+	netw::ChessClient::getInstance().registerCallback(netw::ServerMessage::Type::ChessGameStarted,
+		[&](netw::ServerMessage* message) {
+			auto* content = &message->getContent<netw::ServerMessage::ChessGameStarted>();
 
-			if (content->side == Player::Color::White)
+			if (content->side == netw::Player::Color::White)
 			{
 				m_chessGame.init(PieceColor::White);
 				Logger::info("Game has started! You are White");
@@ -139,11 +139,11 @@ void InOnlineGameState::update(float deltaTime)
 		
 		if (m_chessGame.tryMoveSelectedPiece(targetCoords))
 		{
-			if (m_chessGame)
+		/*	if (m_chessGame)
 			ChessClient::getInstance().movePiece(ClientMessage::MovePiece{
 				.selected = m_chessGame.getSelectedCoords(),
 				.target = targetCoords
-			});
+			});*/
 		}
 	}
 	this->m_chessGame.update(deltaTime);

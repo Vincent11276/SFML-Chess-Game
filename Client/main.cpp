@@ -12,7 +12,7 @@ int main()
 
     if (input == "s")
     {
-        ChessServer chessServer;
+        netw::ChessServer chessServer;
         chessServer.initServer();
     }
     else if (input == "c")

@@ -11,28 +11,28 @@ void RoomSelectionState::init()
 {
     Logger::debug("RoomSelectionState has been initialized");
 
-    ChessClient::getInstance().registerCallback(ServerMessage::Type::FetchedAvailableRooms, [&](ServerMessage* messsage) {
-        auto& content = messsage->getContent<ServerMessage::FetchedAvailableRooms>();
+    netw::ChessClient::getInstance().registerCallback(netw::ServerMessage::Type::FetchedAvailableRooms, [&](netw::ServerMessage* messsage) {
+        auto& content = messsage->getContent<netw::ServerMessage::FetchedAvailableRooms>();
         Logger::info("Fetched {} rooms from the server", content.roomListing.size());
     });
 
-    ChessClient::getInstance().registerCallback(ServerMessage::Type::CreateRoomSuccess, [&](ServerMessage* messsage){
+    netw::ChessClient::getInstance().registerCallback(netw::ServerMessage::Type::CreateRoomSuccess, [&](netw::ServerMessage* messsage){
         Logger::info("Succesfully created room to the server");
 
         GameStateManager::getInstance()->changeState(InOnlineGameState::getInstance());
     });
 
-    ChessClient::getInstance().registerCallback(ServerMessage::Type::CreateRoomFailed, [&](ServerMessage* messsage) {
+    netw::ChessClient::getInstance().registerCallback(netw::ServerMessage::Type::CreateRoomFailed, [&](netw::ServerMessage* messsage) {
         Logger::error("Failed created room to the server");
     });
 
-    ChessClient::getInstance().registerCallback(ServerMessage::Type::JoinExistingRoomSuccess, [&](ServerMessage* messsage) {
+    netw::ChessClient::getInstance().registerCallback(netw::ServerMessage::Type::JoinExistingRoomSuccess, [&](netw::ServerMessage* messsage) {
         Logger::info("Succesfuly joined the designated room");
 
         GameStateManager::getInstance()->changeState(InOnlineGameState::getInstance());
     });
 
-    ChessClient::getInstance().registerCallback(ServerMessage::Type::JoinExistingRoomFailed, [&](ServerMessage* messsage) {
+    netw::ChessClient::getInstance().registerCallback(netw::ServerMessage::Type::JoinExistingRoomFailed, [&](netw::ServerMessage* messsage) {
         Logger::error("Failed to join the designated room");
     });
 }
@@ -110,7 +110,7 @@ void RoomSelectionState::on_directConnect_Btn_Pressed()
                 std::string roomName = form->getRoomName();
                 std::string password = form->getPassword();
 
-                ChessClient::getInstance().joinExistingRoom(roomName, password);
+                netw::ChessClient::getInstance().joinExistingRoom(roomName, password);
             }
             m_gui.remove(m_gui.get<ui::DirectConnectForm>("directConnectForm"));
         });
@@ -128,13 +128,13 @@ void RoomSelectionState::on_createRoom_Btn_Pressed()
         createRoomForm->onFinish([&](ui::CreateRoomForm* form, ui::CreateRoomForm::Status status) {
             if (status == ui::CreateRoomForm::Status::Created)
             {
-                ClientMessage::CreateNewRoom newRoom{
+                netw::ClientMessage::CreateNewRoom newRoom{
                     .name = form->getRoomName(),
                     .password = form->getPassword(),
                     .mode = form->getMode(),
                     .duration = form->getDuration()
                 };
-                ChessClient::getInstance().createNewRoom(newRoom);
+                netw::ChessClient::getInstance().createNewRoom(newRoom);
             }
             m_gui.remove(m_gui.get<ui::CreateRoomForm>("createRoomForm"));
         });
@@ -148,7 +148,7 @@ void RoomSelectionState::on_joinRoom_Btn_Pressed()
 
 void RoomSelectionState::on_refresh_Btn_Pressed()
 {
-    ChessClient::getInstance().fetchAvailableRooms();
+    netw::ChessClient::getInstance().fetchAvailableRooms();
 }
 
 void RoomSelectionState::on_cancel_Btn_Pressed()
@@ -158,7 +158,7 @@ void RoomSelectionState::on_cancel_Btn_Pressed()
     GameStateManager::getInstance()->changeState(MainMenuState::getInstance());
 }
 
-void RoomSelectionState::updateRoomListing(const std::vector<ServerMessage::FetchedAvailableRooms::RoomListing>& listing)
+void RoomSelectionState::updateRoomListing(const std::vector<netw::ServerMessage::FetchedAvailableRooms::RoomListing>& listing)
 {
     auto status_Lbl = m_gui.get<tgui::Label>("Status_Lbl");
 

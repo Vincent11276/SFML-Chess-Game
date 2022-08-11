@@ -4,16 +4,18 @@
 #include <SFML/Network.hpp>
 #include "ClientSession.hpp"
 
-
-struct Player
+namespace netw
 {
-    ClientSession* session;
-
-    enum class Color : sf::Uint8
+    struct Player
     {
-        NotSet,
-        Black,
-        White
+        ClientSession* session;
+
+        enum class Color : sf::Uint8
+        {
+            NotSet,
+            Black,
+            White
+        };
+        Color color;
     };
-    Color color;
-};
+}

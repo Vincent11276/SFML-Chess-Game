@@ -7,21 +7,27 @@
 
 ChessGame::ChessGame()
 {
-	m_playerTurn = PieceColor::White;
-	m_state = State::SelectingPiece;
+	// default..
 }
 
-void ChessGame::init()
+void ChessGame::init(PieceColor pieceColor)
 {
-	auto& chessBoardTex = ResourceManager::getTexture(ResourceKey::WoodChessBoard);
-	m_chessBoard_Spr.setTexture(chessBoardTex);
-	m_chessBoard_Spr.setOrigin(20, 22);
-	
-	m_chessPieces.initialize(PieceColor::White);
+	m_side = pieceColor;
+	m_playerTurn = PieceColor::White;
 
+	if (pieceColor == PieceColor::White)
+	{
+		m_state = State::SelectingPiece;
+	}
+	else m_state = State::Waiting;
+
+	auto chessBoardTex = &ResourceManager::getTexture(ResourceKey::WoodChessBoard);
+	m_chessBoard_Spr.setTexture(*chessBoardTex);
+	m_chessBoard_Spr.setOrigin(20, 22);
+	m_chessPieces.initialize(pieceColor);
 	m_moveGenerator.setPiecesToAnalyze(m_chessPieces);
 
-	Logger::info("Chess Game Match Started!");
+	Logger::debug("Chess Game has been initialized!");
 }
 
 void ChessGame::handleEvents(const sf::Event& e)
@@ -54,7 +60,7 @@ void ChessGame::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	states.transform = this->getTransform();
 
 	target.draw(m_chessBoard_Spr, states);
-	target.draw(m_pieceHighlighter, states);
+	//target.draw(m_pieceHighlighter, states);
 	target.draw(m_chessPieces, states);
 
 	switch (m_state)
@@ -127,9 +133,6 @@ bool ChessGame::trySelectPiece(const sf::Vector2i& selected)
 		m_moveablePiece.changeType(m_selectedPiece.type);
 		m_moveablePiece.followMouse();
 
-		// play grabbing piece sound
-		// amogus
-
 		// update current state
 		m_state = State::DraggingPiece;
 
@@ -142,6 +145,15 @@ bool ChessGame::trySelectPiece(const sf::Vector2i& selected)
 	Logger::debug("You cannot selected your enemy's piece!");
 	
 	return false;
+}
+
+void ChessGame::selectPiece(const sf::Vector2i& selected)
+{
+	// important to update the values before quering for valid moves
+	m_selectedPiece = m_chessPieces.getPiece(selected);
+
+	// generate new valid moves for the newly selected piece
+	m_moveGenerator.processValidMoves(m_selectedPiece.coords, m_previousMove);
 }
 
 bool ChessGame::tryMoveSelectedPiece(const sf::Vector2i& target)
@@ -176,12 +188,24 @@ bool ChessGame::tryMoveSelectedPiece(const sf::Vector2i& target)
 			// process pieces after action
 			this->processAfterMove();
 
-			// tell the controller that the piece succesfully moved
+			// tell the "controller" that the piece succesfully moved
 			return true;
 		}
 	}
 	return false;
 }
+
+void ChessGame::moveSelectedPiece(const sf::Vector2i& target)
+{
+	// unhighlight the previous move
+	m_pieceHighlighter.unmarkValidMoves(m_moveGenerator.getAllValidMoves());
+	m_pieceHighlighter.remove(m_previousMove.first.coords);
+	m_pieceHighlighter.remove(m_previousMove.second.coords);
+
+
+}
+
+
 
 void ChessGame::processAfterMove() 
 {
@@ -205,7 +229,7 @@ void ChessGame::switchPlayerTurn()
 	}
 }
 
-sf::Vector2i ChessGame::getMouseHoveringPiece()
+sf::Vector2i ChessGame::getMouseHoveringCoords()
 {
 	sf::Vector2i pieceCoords = MouseInput::getRelativePosition();
 
@@ -218,9 +242,15 @@ sf::Vector2i ChessGame::getMouseHoveringPiece()
 	return pieceCoords;
 }
 
-sf::Vector2i ChessGame::getSelectedPiece()
+sf::Vector2i ChessGame::getSelectedCoords()
 {
 	return m_selectedPiece.coords;
+}
+
+void ChessGame::flipCoords(sf::Vector2i* coords)
+{
+	coords->x = 8 - coords->x;
+	coords->y = 8 - coords->y;
 }
 
 PieceColor ChessGame::getPlayerTurn()

@@ -32,20 +32,27 @@ class ChessGame: public sf::Drawable, public sf::Transformable
 public:
 	ChessGame();
 
-	void init();
+	void init(PieceColor pieceColor);
 	void handleEvents(const sf::Event& e);
 	void update([[maybe_unused]] float delta);
 	void cleanUp() { };
 
 	bool trySelectPiece(const sf::Vector2i& selectedPiece);
+	void selectPiece(const sf::Vector2i& selectedPiece);
 	bool tryMoveSelectedPiece(const sf::Vector2i& target);
+	void moveSelectedPiece(const sf::Vector2i& target);
 	bool isCheckMate() { };
 
-	sf::Vector2i getMouseHoveringPiece();
+	sf::Vector2i getMouseHoveringCoords();
+	sf::Vector2i getSelectedCoords();
+	void flipCoords(sf::Vector2i* coords);
 
 private:
+	PieceColor m_side;
+
 	enum State
 	{
+		Waiting,
 		SelectingPiece,
 		DraggingPiece
 	};
@@ -57,7 +64,6 @@ private:
 	void switchPlayerTurn();
 	void processAfterMove();
 
-	sf::Vector2i getSelectedPiece();
 	PieceColor getPlayerTurn();
 
 	Piece m_selectedPiece;

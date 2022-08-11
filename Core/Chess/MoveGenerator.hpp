@@ -197,7 +197,7 @@ public:
 private:
     std::vector<PieceMovement> m_validMoves;
 
-    ChessPieces* m_pieces;
+    ChessPieces* m_pieces = nullptr;
 
     bool isCastlingLeftClear(const Piece& kingPiece)
     {

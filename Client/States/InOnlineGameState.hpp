@@ -21,10 +21,12 @@ public:
 	void resume() override { };
 
 	void initUI();
+	void initChess();
+	void initNetworking();
 
 	void handleEvent(sf::Event& e) override;
 	void update(float deltaTime) override;
-	void physicsUpdate(float deltaTime) override;
+	void physicsUpdate(float deltaTime) override { };
 	void draw(sf::RenderTarget& target) const override;
 
 	static InOnlineGameState* getInstance();
@@ -34,6 +36,13 @@ protected:
 
 private:
 	mutable tgui::Gui m_gui;
+
+	tgui::Panel::Ptr m_yourProfile_Pnl; 
+	tgui::Panel::Ptr m_enemyProfile_Pnl; 
+	tgui::ChatBox::Ptr m_chatBox_Chtb; 
+	tgui::ListView::Ptr m_moveHistory_LstV;
+	tgui::EditBox::Ptr m_chatBox_Edt;
+	tgui::Button::Ptr m_send_Btn;
 
 	ChessGame m_chessGame;
 };

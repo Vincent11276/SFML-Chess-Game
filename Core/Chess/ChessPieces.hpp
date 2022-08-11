@@ -85,31 +85,28 @@ public:
             m_layoutColor = layoutColor;
         }
 
-        static TileSet tileSet;
+        m_tileSet = std::make_shared<TileSet>();
 
-        if (!tileSet.create(sf::Vector2f(80.0f, 80.0f), 12))
+        if (!m_tileSet->create(sf::Vector2f(80.0f, 80.0f), 12))
         {
             Logger::error("Failed to create tileset!");
         }
 
-        tileSet.loadFromTexture(ResourceManager::getTexture(ResourceKey::WoodPieceBishopB));
-        tileSet.loadFromTexture(ResourceManager::getTexture(ResourceKey::WoodPieceBishopW));
-        tileSet.loadFromTexture(ResourceManager::getTexture(ResourceKey::WoodPieceQueenB));
-        tileSet.loadFromTexture(ResourceManager::getTexture(ResourceKey::WoodPieceQueenW));
-        tileSet.loadFromTexture(ResourceManager::getTexture(ResourceKey::WoodPieceKnightB));
-        tileSet.loadFromTexture(ResourceManager::getTexture(ResourceKey::WoodPieceKnightW));
-        tileSet.loadFromTexture(ResourceManager::getTexture(ResourceKey::WoodPiecePawnB));
-        tileSet.loadFromTexture(ResourceManager::getTexture(ResourceKey::WoodPiecePawnW));
-        tileSet.loadFromTexture(ResourceManager::getTexture(ResourceKey::WoodPieceKingB));
-        tileSet.loadFromTexture(ResourceManager::getTexture(ResourceKey::WoodPieceKingW));
-        tileSet.loadFromTexture(ResourceManager::getTexture(ResourceKey::WoodPieceRookB));
-        tileSet.loadFromTexture(ResourceManager::getTexture(ResourceKey::WoodPieceRookW));
+        m_tileSet->loadFromTexture(ResourceManager::getTexture(ResourceKey::WoodPieceBishopB));
+        m_tileSet->loadFromTexture(ResourceManager::getTexture(ResourceKey::WoodPieceBishopW));
+        m_tileSet->loadFromTexture(ResourceManager::getTexture(ResourceKey::WoodPieceQueenB));
+        m_tileSet->loadFromTexture(ResourceManager::getTexture(ResourceKey::WoodPieceQueenW));
+        m_tileSet->loadFromTexture(ResourceManager::getTexture(ResourceKey::WoodPieceKnightB));
+        m_tileSet->loadFromTexture(ResourceManager::getTexture(ResourceKey::WoodPieceKnightW));
+        m_tileSet->loadFromTexture(ResourceManager::getTexture(ResourceKey::WoodPiecePawnB));
+        m_tileSet->loadFromTexture(ResourceManager::getTexture(ResourceKey::WoodPiecePawnW));
+        m_tileSet->loadFromTexture(ResourceManager::getTexture(ResourceKey::WoodPieceKingB));
+        m_tileSet->loadFromTexture(ResourceManager::getTexture(ResourceKey::WoodPieceKingW));
+        m_tileSet->loadFromTexture(ResourceManager::getTexture(ResourceKey::WoodPieceRookB));
+        m_tileSet->loadFromTexture(ResourceManager::getTexture(ResourceKey::WoodPieceRookW));
 
-        m_chessPieces_TlMap.setTileSet(tileSet);
-
+        m_chessPieces_TlMap.setTileSet(m_tileSet);
         m_chessPieces_TlMap.mapCellsFrom(chessLayout);
-
-        
     }
     
     const void setPiece(const Piece& piece, const sf::Vector2i& coords)
@@ -244,6 +241,8 @@ public:
     }
   
 private:
+    std::shared_ptr<TileSet> m_tileSet;
+
     PieceColor m_layoutColor = PieceColor::Neutral;
 
     std::vector<std::vector<Piece>> m_chessPieces_Data;
@@ -251,7 +250,7 @@ private:
     TileMap m_chessPieces_TlMap;
 
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override
-    {
+    { 
         states.transform *= getTransform();
 
         target.draw(m_chessPieces_TlMap, states);

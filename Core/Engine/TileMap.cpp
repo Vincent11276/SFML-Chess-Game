@@ -9,13 +9,13 @@ TileMap::TileMap()
 TileMap::TileMap(sf::Vector2i p_mapSize, sf::Vector2f p_cellSize)
 {
     this->mapdata.resize(p_mapSize.y, std::vector<int>(p_mapSize.x, -1));
-    this->tileVertices.resize(p_mapSize.x * p_mapSize.y * 4);
+    this->tileVertices.resize(static_cast<size_t>(p_mapSize.x) * p_mapSize.y * 4);
     this->tileVertices.setPrimitiveType(sf::Quads);
 }
 
-void TileMap::setTileSet(TileSet& tileSet)
+void TileMap::setTileSet(std::shared_ptr<TileSet>& tileSet)
 {
-    this->m_tileSet = &tileSet;
+    this->m_tileSet = tileSet;
 }
 
 void TileMap::mapCellsFrom(const std::vector<std::vector<int>>& p_cells)
@@ -129,9 +129,10 @@ void TileMap::draw(sf::RenderTarget& target, sf::RenderStates states) const
 
 void TileMap::clear()
 {
+
     mapdata.clear();
 
     m_tileSet->clear();
 
     tileVertices.clear();
-}
+} 

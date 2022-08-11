@@ -38,11 +38,11 @@ private:
     // hashes
     std::unordered_map<sf::Uint32, Room> m_rooms;
 
-    void onNewClientConnection(sf::TcpSocket &client) override;
-    void onClientDisconnect(sf::TcpSocket &client) override;
+    void onNewClientConnection(sf::TcpSocket& client) override { };
+    void onClientDisconnect(sf::TcpSocket& client) override { };
     void onPacketReceived(sf::TcpSocket &client, sf::Packet& packet) override;
 
-    void sendMessage(sf::TcpSocket &client, ServerMessage& message);
+    void sendMessage(sf::TcpSocket* client, ServerMessage& message);
 
     ServerMessage onAuthenticate(sf::TcpSocket &client, sf::Uint32 token, const ClientMessage& message);
     ServerMessage onRegisterPlayer(sf::TcpSocket& client, sf::Uint32 token, const ClientMessage& message);
@@ -52,4 +52,6 @@ private:
     ServerMessage onPieceMovement(sf::TcpSocket &client, sf::Uint32 token, const ClientMessage& message);
     ServerMessage onRequestForDraw(sf::TcpSocket &client, sf::Uint32 token, const ClientMessage& message);
     ServerMessage onResignGame(sf::TcpSocket &client, sf::Uint32 token, const ClientMessage& message);
+    ServerMessage onPlayerSendMessage(sf::TcpSocket& client, sf::Uint32 token, const ClientMessage& message);
+    ServerMessage onPlayerReadyToPlay(sf::TcpSocket& client, sf::Uint32 token, const ClientMessage& message);
 };

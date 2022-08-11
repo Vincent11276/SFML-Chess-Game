@@ -15,7 +15,7 @@ public:
 
     TileMap(sf::Vector2i p_mapSize, sf::Vector2f p_cellSize);
 
-    void setTileSet(TileSet& tileSet);
+    void setTileSet(std::shared_ptr<TileSet>& tileSet);
 
     void mapCellsFrom(const std::vector<std::vector<int>>& p_tiledata);
 
@@ -36,7 +36,7 @@ public:
     void clear();
 
 private:
-    TileSet* m_tileSet = nullptr;
+    std::shared_ptr<TileSet> m_tileSet;
     
     std::vector<std::vector<int>> mapdata;
     

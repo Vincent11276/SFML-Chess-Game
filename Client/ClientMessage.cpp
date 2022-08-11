@@ -45,18 +45,28 @@ sf::Packet& operator >>(sf::Packet& packet, ClientMessage::JoinExistingRoom& m)
 
 sf::Packet& operator <<(sf::Packet& packet, const ClientMessage::MovePiece& m)
 {
-    return packet << (sf::Uint8)m.movement.action << m.movement.coords.x << m.movement.coords.y;
+    return packet << m.selected.x << m.selected.y << m.target.x << m.target.y;
 }
 
 sf::Packet& operator >>(sf::Packet& packet, ClientMessage::MovePiece& m)
 {
-    sf::Uint8 actionVal;
-    packet >> actionVal;
-    packet >> m.movement.coords.x;
-    packet >> m.movement.coords.y;
-    m.movement.action = PieceAction(actionVal);
+    packet >> m.selected.x;
+    packet >> m.selected.y;
+
+    packet >> m.target.x;
+    packet >> m.target.y;
     
     return packet;
+}
+
+sf::Packet& operator <<(sf::Packet& packet, const ClientMessage::PlayerSendMessage& m)
+{
+    return packet << m.text;
+}
+
+sf::Packet& operator >>(sf::Packet& packet, ClientMessage::PlayerSendMessage& m)
+{
+    return packet >> m.text;
 }
 
 void ClientMessage::parseFromPacket(sf::Packet &packet)
@@ -66,12 +76,10 @@ void ClientMessage::parseFromPacket(sf::Packet &packet)
 
     type = Type(typeVal);
 
-    std::cout << "Size of packet =" << packet.getDataSize() << std::endl;
-
     // insert content if it has one
     switch (type)
     {
-    case Type::RegisterPlayer:
+    case ClientMessage::Type::RegisterPlayer:
     {
         RegisterPlayer registerPlayer;
         packet >> registerPlayer;
@@ -79,7 +87,7 @@ void ClientMessage::parseFromPacket(sf::Packet &packet)
     }
     break;
 
-    case Type::CreateNewRoom:
+    case ClientMessage::Type::CreateNewRoom:
     {
         CreateNewRoom createNewRoom;
         packet >> createNewRoom;
@@ -87,7 +95,7 @@ void ClientMessage::parseFromPacket(sf::Packet &packet)
     }
     break;
 
-    case Type::JoinExistingRoom:
+    case ClientMessage::Type::JoinExistingRoom:
     {
         JoinExistingRoom joinExistingRoom;
         packet >> joinExistingRoom;
@@ -95,13 +103,20 @@ void ClientMessage::parseFromPacket(sf::Packet &packet)
     }
     break;
 
-    case Type::MovePiece:
+    case ClientMessage::Type::MovePiece:
     {
         MovePiece movePiece;
         packet >> movePiece;
         message = movePiece;
     }
     break;
+
+    case ClientMessage::Type::PlayerSendMessage:
+    {
+        PlayerSendMessage sendMessage;
+        packet >> sendMessage;
+        message = sendMessage;
+    }
 
     default:
         break;
@@ -128,6 +143,10 @@ void ClientMessage::getPacket(sf::Packet *packet)
 
     case Type::MovePiece:
         *packet << std::get<MovePiece>(message);
+        break;
+
+    case Type::PlayerSendMessage:
+        *packet << std::get<PlayerSendMessage>(message);
         break;
 
     default:

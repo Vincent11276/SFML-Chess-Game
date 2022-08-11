@@ -11,26 +11,28 @@ void RoomSelectionState::init()
 {
     Logger::debug("RoomSelectionState has been initialized");
 
-    ChessClient::getInstance().onMessageReceived(ServerMessage::Type::FetchedAvailableRooms, [&](ServerMessage* messsage) {
+    ChessClient::getInstance().registerCallback(ServerMessage::Type::FetchedAvailableRooms, [&](ServerMessage* messsage) {
         auto& content = messsage->getContent<ServerMessage::FetchedAvailableRooms>();
         Logger::info("Fetched {} rooms from the server", content.roomListing.size());
     });
 
-    ChessClient::getInstance().onMessageReceived(ServerMessage::Type::CreateRoomSuccess, [&](ServerMessage* messsage){
+    ChessClient::getInstance().registerCallback(ServerMessage::Type::CreateRoomSuccess, [&](ServerMessage* messsage){
         Logger::info("Succesfully created room to the server");
+
+        GameStateManager::getInstance()->changeState(InOnlineGameState::getInstance());
     });
 
-    ChessClient::getInstance().onMessageReceived(ServerMessage::Type::CreateRoomFailed, [&](ServerMessage* messsage) {
+    ChessClient::getInstance().registerCallback(ServerMessage::Type::CreateRoomFailed, [&](ServerMessage* messsage) {
         Logger::error("Failed created room to the server");
     });
 
-    ChessClient::getInstance().onMessageReceived(ServerMessage::Type::JoinExistingRoomSuccess, [&](ServerMessage* messsage) {
+    ChessClient::getInstance().registerCallback(ServerMessage::Type::JoinExistingRoomSuccess, [&](ServerMessage* messsage) {
         Logger::info("Succesfuly joined the designated room");
 
         GameStateManager::getInstance()->changeState(InOnlineGameState::getInstance());
     });
 
-    ChessClient::getInstance().onMessageReceived(ServerMessage::Type::JoinExistingRoomFailed, [&](ServerMessage* messsage) {
+    ChessClient::getInstance().registerCallback(ServerMessage::Type::JoinExistingRoomFailed, [&](ServerMessage* messsage) {
         Logger::error("Failed to join the designated room");
     });
 }

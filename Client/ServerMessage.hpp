@@ -1,10 +1,11 @@
 #pragma once
 
 #include <SFML/Network.hpp>
+#include <variant>
 #include "Core/Chess/PieceMovement.hpp"
 #include "SFML/Config.hpp"
 #include "SFML/Network/Packet.hpp"
-#include <variant>
+#include "Player.hpp"
 
 
 
@@ -58,7 +59,24 @@ public:
 
     struct PlayerMovedPiece
     {
-        PieceMovement movement;
+        sf::Vector2i selected;
+        sf::Vector2i target;
+    };
+    
+    struct PlayerSentMessage
+    {
+        std::string author;
+        std::string text;
+    };
+
+    struct ChessGameStarted
+    {
+        Player::Color side;
+    };
+
+    struct PlayerJoinedRoom
+    {
+        std::string name;
     };
 
     enum class Type : sf::Uint8
@@ -75,11 +93,14 @@ public:
         FetchedAvailableRooms,
         HostLeftRoom,
         PlayerLeftRoom,
+        PlayerSentMessage,
         PlayerMovedPiece,  
         PlayerRequestsForDraw,
         PlayerHasResigned,
         PlayerHasDisconnected,
-        PlayerHasReconnected
+        PlayerHasReconnected,
+        ChessGameStarted,
+        PlayerJoinedRoom
     };
     Type type = Type::NotSet;
 
@@ -113,8 +134,11 @@ private:
         RegistrationFailed,
         CreateRoomFailed,
         FetchedAvailableRooms,
-        PlayerMovedPiece
+        PlayerMovedPiece,
+        PlayerSentMessage,
+        ChessGameStarted,
+        PlayerJoinedRoom
     >;
-    
+
     Content_t content;
 };

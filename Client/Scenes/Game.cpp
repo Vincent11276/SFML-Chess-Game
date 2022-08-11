@@ -18,26 +18,26 @@ void Game::init()
 
 
 	// Wire up callbacks for the client
-	ChessClient::getInstance().onMessageReceived(ServerMessage::Type::AuthenticateSuccess, [&](ServerMessage* message) {
+	ChessClient::getInstance().registerCallback(ServerMessage::Type::AuthenticateSuccess, [&](ServerMessage* message) {
 		auto* content = &message->getContent<ServerMessage::AuthenticateSuccess>();
 		ChessClient::getInstance().session.token = content->assignedToken;
 		ChessClient::getInstance().session.isAuthenticated = true;
 		Logger::info("You have been authenticated and your token is {}", content->assignedToken);
 		});
 
-	ChessClient::getInstance().onMessageReceived(ServerMessage::Type::AuthenticateFailed, [&](ServerMessage* message) {
+	ChessClient::getInstance().registerCallback(ServerMessage::Type::AuthenticateFailed, [&](ServerMessage* message) {
 		ChessClient::getInstance().session.isAuthenticated = false;
 		Logger::error("Unable to authenticate you from the server");
 	});
 
-	ChessClient::getInstance().onMessageReceived(ServerMessage::Type::RegistrationSuccess, [&](ServerMessage* message) {
+	ChessClient::getInstance().registerCallback(ServerMessage::Type::RegistrationSuccess, [&](ServerMessage* message) {
 		Logger::info("Succesfully registered!");
 
 		auto& content = message->getContent<ServerMessage::AuthenticateSuccess>();
 		ChessClient::getInstance().session.isRegistered = true;
 	});
 
-	ChessClient::getInstance().onMessageReceived(ServerMessage::Type::RegistrationFailed, [&](ServerMessage* message) {
+	ChessClient::getInstance().registerCallback(ServerMessage::Type::RegistrationFailed, [&](ServerMessage* message) {
 		auto& content = message->getContent<ServerMessage::RegistrationFailed>();
 
 		std::cout << "Failed to authenticate. Reason: ";

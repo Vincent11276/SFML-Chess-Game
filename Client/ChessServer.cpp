@@ -6,38 +6,29 @@
 
 ChessServer::ChessServer()
 {
-    
+    // default..   
 }
 
 void ChessServer::addPlayerToRoom(Room* room, sf::Uint32 token)
 {
     room->players.push_back(Player{
         .session = &m_sessions.at(token),
-        .color = Player::Color::White
-        });
+        .color = Player::Color::NotSet
+    });
     m_sessions.at(token).roomId = room->id;
+    m_sessions.at(token).state = ClientSession::State::InRoom;
 }
 
-void ChessServer::sendMessage(sf::TcpSocket &client, ServerMessage& message)
+void ChessServer::sendMessage(sf::TcpSocket* client, ServerMessage& message)
 {
     sf::Packet packet;
     message.getPacket(&packet);
 
-    if (client.send(packet) != sf::Socket::Done)
+    if (client->send(packet) != sf::Socket::Done)
     {
         Logger::error("Failed to send packet to the server!");
     }
     else Logger::info("Sent <Message::Type({})> message to the server", (sf::Uint8)message.type);
-}
-
-void ChessServer::onNewClientConnection(sf::TcpSocket &client)
-{
-
-}
-
-void ChessServer::onClientDisconnect(sf::TcpSocket &client)
-{
-
 }
 
 void ChessServer::onPacketReceived(sf::TcpSocket &client, sf::Packet& packet)
@@ -82,12 +73,24 @@ void ChessServer::onPacketReceived(sf::TcpSocket &client, sf::Packet& packet)
         response = this->onResignGame(client, token, message);
         break;
 
+    case ClientMessage::Type::PlayerSendMessage:
+        response = this->onPlayerSendMessage(client, token, message);
+        break;
+
+    case ClientMessage::Type::PlayerReadyToPlay:
+        response = this->onPlayerReadyToPlay(client, token, message);
+        break;
+
     default:
-        Logger::critical("Unknown message type received from {}. Type=<MessageType::Type({})>", token, (sf::Uint8)message.type);
+        Logger::error("Unknown message type received from {}. Type=<MessageType::Type({})>", token, (sf::Uint8)message.type);
         return;
     }
+
+    if (response.type != ServerMessage::Type::NotSet)
+    {
+        this->sendMessage(&client, response);
+    }
     Logger::info("Received Type=<MessageType::Type({})> from {}", (sf::Uint8)message.type, token);
-    this->sendMessage(client, response);
 }
 
 ServerMessage ChessServer::onAuthenticate(sf::TcpSocket &client, sf::Uint32 token, const ClientMessage& message)
@@ -116,6 +119,7 @@ ServerMessage ChessServer::onRegisterPlayer(sf::TcpSocket& client, sf::Uint32 to
 
     m_sessions.at(token).isRegistered = true;
     m_sessions.at(token).playerName = content.name;
+    m_sessions.at(token).client = &client;
 
     return ServerMessage(ServerMessage::Type::RegistrationSuccess);
 }
@@ -182,20 +186,24 @@ ServerMessage ChessServer::onJoinExistingRoom(sf::TcpSocket &client, sf::Uint32 
         return ServerMessage(ServerMessage::Type::JoinExistingRoomFailed);
     }
 
-    // Check if room exists by iterating through every rooms
-    for (const auto& pair : m_rooms)
+    // Find the right room inside the container by iterating one-by-one
+    for (auto& pair : m_rooms)
     {
-        if (pair.second.name == content.name)
+        Room* room = &pair.second;
+
+        // Check if it matches the name of the given room
+        if (room->name == content.name)
         {
             // Check if the given password matches
-            if (pair.second.password == content.password)
+            if (room->password == content.password)
             {
+                this->addPlayerToRoom(room, token);
+
                 return ServerMessage(ServerMessage::Type::JoinExistingRoomSuccess);
             }
         }
     }
-
-    // Otherwise don't accept the request
+    // Otherwise if it can't find the room, don't accept the request
     return ServerMessage(ServerMessage::Type::JoinExistingRoomFailed);
 }
 
@@ -224,7 +232,7 @@ ServerMessage ChessServer::onFetchAvailableRooms(sf::TcpSocket& client, sf::Uint
 
 ServerMessage ChessServer::onPieceMovement(sf::TcpSocket &client, sf::Uint32 token, const ClientMessage& message)
 {
-    const auto& content = message.getData<ClientMessage::MovePiece>();
+    const auto content = &message.getData<ClientMessage::MovePiece>();
 
     // Echo the movement to every client inside the room
     for (auto& player : m_rooms.at(m_sessions.at(token).roomId).players)
@@ -234,9 +242,10 @@ ServerMessage ChessServer::onPieceMovement(sf::TcpSocket &client, sf::Uint32 tok
        
         auto response = ServerMessage(ServerMessage::Type::PlayerMovedPiece,
             ServerMessage::PlayerMovedPiece{
-                .movement = content.movement
+                .selected = content->selected,
+                .target = content->target
             });
-        this->sendMessage(*player.session->client, response);
+        this->sendMessage(player.session->client, response);
     }
     return ServerMessage();
 }
@@ -253,7 +262,7 @@ ServerMessage ChessServer::onRequestForDraw(sf::TcpSocket &client, sf::Uint32 to
 
         auto response = ServerMessage(ServerMessage::Type::PlayerRequestsForDraw);
 
-        this->sendMessage(*player.session->client, response);
+        this->sendMessage(player.session->client, response);
     }
     return ServerMessage();
 }
@@ -268,7 +277,57 @@ ServerMessage ChessServer::onResignGame(sf::TcpSocket &client, sf::Uint32 token,
 
         auto response = ServerMessage(ServerMessage::Type::PlayerHasResigned);
 
-        this->sendMessage(*player.session->client, response);
+        this->sendMessage(player.session->client, response);
+    }
+    return ServerMessage();
+}
+
+ServerMessage ChessServer::onPlayerSendMessage(sf::TcpSocket& client, sf::Uint32 token, const ClientMessage& message)
+{
+    // Echo the movement to every client inside the room
+    const auto& content = message.getData<ClientMessage::PlayerSendMessage>();
+
+    ClientSession* session = &m_sessions.at(token);
+    Room* room = &m_rooms.at(session->roomId);
+
+    for (auto& player : room->players)
+    {
+        auto response = ServerMessage(ServerMessage::Type::PlayerSentMessage,
+            ServerMessage::PlayerSentMessage{
+                .author = m_sessions.at(token).playerName,
+                .text = content.text
+            });
+        this->sendMessage(player.session->client, response);
+    }
+    return ServerMessage();
+}
+
+ServerMessage ChessServer::onPlayerReadyToPlay(sf::TcpSocket& client, sf::Uint32 token, const ClientMessage& message)
+{
+    Room* room = &m_rooms.at(m_sessions.at(token).roomId);
+
+    // Check if room is full (ready to start)
+    if (room->players.size() >= room->size)
+    {
+        bool sideFlag = Random::getBool();
+
+        // Start assigning colors to the player
+        for (auto& player : room->players)
+        {
+            player.color = sideFlag ? Player::Color::White : Player::Color::Black;
+
+            // Tell the client that the game has started
+            auto message = ServerMessage(ServerMessage::Type::ChessGameStarted,
+                ServerMessage::ChessGameStarted{
+                    .side = player.color
+                });
+            this->sendMessage(player.session->client, message);
+
+            // reverse the flag so the other player will have the opposite color
+            sideFlag = !sideFlag;
+        }
+        // updates some room values
+        room->status = RoomStatus::InGame;
     }
     return ServerMessage();
 }

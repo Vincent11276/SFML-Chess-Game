@@ -18,6 +18,6 @@ struct PieceMovement
         coords = p_target;
     }
 
-    PieceAction action;
+    PieceAction action = PieceAction::None;
     sf::Vector2i coords;   
 };

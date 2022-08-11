@@ -1,6 +1,5 @@
 Renderer.1 {
-    BackgroundColor = white;
-    BorderColor = black;
+    BackgroundColor = rgb(80, 80, 80);
     TextureBackground = None;
 }
 
@@ -10,29 +9,6 @@ Picture.Background_Img {
     Renderer {
         Texture = "Resources/Background.png" Smooth;
         TransparentTexture = false;
-    }
-}
-
-Panel.ChessGame_Pnl {
-    Position = (217, 50% - (380 / 2));
-    Renderer = &1;
-    Size = (380, 380);
-}
-
-ChatBox.ChatBox_Chtb {
-    LinesStartFromTop = false;
-    NewLinesBelowOthers = true;
-    Position = (620, 248.228);
-    Size = (208, 174.937);
-    TextColor = black;
-    TextSize = 13;
-
-    Renderer {
-        BackgroundColor = #F5F5F5;
-        BorderColor = black;
-        Borders = (1, 1, 1, 1);
-        Padding = (0, 0, 0, 0);
-        TextureBackground = None;
     }
 }
 
@@ -46,36 +22,107 @@ ListView.MoveHistory_LstV {
     ResizableColumns = false;
     SeparatorWidth = 1;
     ShowVerticalGridLines = 1;
-    Size = (210, 178.095);
+    Size = (210, 168.095);
     TextSize = 13;
-
-    Renderer {
-        BackgroundColor = #F5F5F5;
-        BackgroundColorHover = white;
-        BorderColor = black;
-        Borders = (1, 1, 1, 1);
-        HeaderBackgroundColor = #E6E6E6;
-        HeaderTextColor = black;
-        Padding = (0, 0, 0, 0);
-        SelectedBackgroundColor = #006EFF;
-        SelectedBackgroundColorHover = #1E96FF;
-        SelectedTextColor = white;
-        SeparatorColor = #C8C8C8;
-        TextColor = #3C3C3C;
-        TextColorHover = black;
-        //TextureBackground = None;
-        TextureHeaderBackground = None;
-    }
 }
 
 Panel.EnemyProfile_Pnl {
     Position = (40, 80);
     Renderer = &1;
     Size = (150, 150);
+
+    Picture.Picture1 {
+        Position = (50% - (100 / 2), 10);
+        Size = (100, 100);
+
+        Renderer {
+            Texture = "resources/DefaultPicture.png" Smooth;
+            TransparentTexture = false;
+        }
+    }
 }
 
 Panel.YourProfile_Pnl {
     Position = (40, 250);
     Renderer = &1;
     Size = (150, 150);
+
+    Picture.Picture2 {
+        Position = (50% - (100 / 2), 10);
+        Size = (100, 100);
+
+        Renderer {
+            Texture = "resources/DefaultPicture.png" Smooth;
+            TransparentTexture = false;
+        }
+    }
+}
+
+Panel.Panel1 {
+    Position = (620, 240);
+    Renderer = &1;
+    Size = (210, 180);
+
+    ChatBox.ChatBox_Chtb {
+        LinesStartFromTop = false;
+        NewLinesBelowOthers = true;
+        Position = (2, 2);
+        Size = (100% - 4, 152);
+        TextColor = black;
+        TextSize = 13;
+
+        Renderer {
+            Padding = (3, 3, 3, 3);
+            TextureBackground = "themes/Black.png" Part(0, 22, 48, 48) Middle(16) Smooth;
+
+            Scrollbar {
+                TextureArrowDown = "themes/Black.png" Part(0, 0, 20, 20) Middle(0, 1, 20, 19) Smooth;
+                TextureArrowDownHover = "themes/Black.png" Part(22, 0, 20, 20) Middle(0, 1, 20, 19) Smooth;
+                TextureArrowUp = "themes/Black.png" Part(44, 0, 20, 20) Middle(0, 0, 20, 19) Smooth;
+                TextureArrowUpHover = "themes/Black.png" Part(66, 0, 20, 20) Middle(0, 0, 20, 19) Smooth;
+                TextureThumb = "themes/Black.png" Part(68, 465, 20, 20) Smooth;
+                TextureThumbHover = "themes/Black.png" Part(90, 465, 20, 20) Smooth;
+                TextureTrack = "themes/Black.png" Part(0, 499, 20, 20) Smooth;
+                TextureTrackHover = "themes/Black.png" Part(22, 499, 20, 20) Smooth;
+            }
+        }
+    }
+
+    EditBox.ChatBox_Edt {
+        Position = (2, 156);
+        Size = (150, 22);
+        TextSize = 13;
+
+        Renderer {
+            CaretColor = rgb(110, 110, 255);
+            DefaultTextColor = rgb(120, 120, 120);
+            Padding = (6, 4, 6, 4);
+            SelectedTextBackgroundColor = rgb( 10, 110, 255);
+            SelectedTextColor = White;
+            TextColor = rgb(190, 190, 190);
+            Texture = "themes/Black.png" Part(34, 246, 60, 40) Middle(15, 0) Smooth;
+            TextureDisabled = None;
+            TextureFocused = "themes/Black.png" Part(0, 288, 60, 40) Middle(15, 0) Smooth;
+            TextureHover = "themes/Black.png" Part(62, 288, 60, 40) Middle(15, 0) Smooth;
+        }
+    }
+
+    Button.Send_Btn {
+        Position = (155, 156);
+        Size = (50, 22);
+        Text = Send;
+        TextSize = 13;
+
+        Renderer {
+            TextColor = rgb(190, 190, 190);
+            TextColorHover = rgb(250, 250, 250);
+            Texture = "themes/Black.png" Part(50, 22, 45, 50) Middle(10, 0) Smooth;
+            TextureDisabled = None;
+            TextureDown = "themes/Black.png" Part(0, 74, 45, 50) Middle(10, 0) Smooth;
+            TextureDownFocused = None;
+            TextureDownHover = None;
+            TextureFocused = "themes/Black.png" Part(47, 74, 45, 50) Middle(10, 0) Smooth;
+            TextureHover = "themes/Black.png" Part(0, 126, 45, 50) Middle(10, 0) Smooth;
+        }
+    }
 }

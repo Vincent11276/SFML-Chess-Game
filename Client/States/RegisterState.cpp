@@ -30,14 +30,21 @@ void RegisterState::draw(sf::RenderTarget& target) const
 
 void RegisterState::initUI()
 {
-    m_gui.loadWidgetsFromFile("Assets/UI/RegistrationForm.ui");
+    try
+    {
+        m_gui.loadWidgetsFromFile("Assets/UI/RegistrationForm.ui");
 
-    auto editBox1 = m_gui.get<tgui::EditBox>("EditBox1");
+        m_editBox1 = m_gui.get<tgui::EditBox>("EditBox1");
+        m_button = m_gui.get<tgui::Button>("Button1");
 
-    auto button = m_gui.get<tgui::Button>("Button1");
-    button->onPress([&] {
-        ChessClient::getInstance().registerPlayer("Vincent");
-    });
+        m_button->onPress([&] {
+            ChessClient::getInstance().registerPlayer(m_editBox1->getText().toStdString());
+        });
+    }
+    catch (tgui::Exception e)
+    {
+        Logger::critical("TGUI Exception: {}", e.what());
+    }
 }
 
 RegisterState* RegisterState::getInstance()

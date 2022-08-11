@@ -14,7 +14,7 @@ class ClientMessage
 public:    
     enum class Type : sf::Uint8
     {
-        Undefined,
+        NotSet,
         Authenticate,
         RegisterPlayer,
         CreateNewRoom,
@@ -23,8 +23,10 @@ public:
         MovePiece,
         RequestForDraw,
         ResignGame,
+        PlayerSendMessage,
+        PlayerReadyToPlay
     };
-    Type type = Type::Undefined;
+    Type type = Type::NotSet;
 
     struct RegisterPlayer
     {
@@ -48,7 +50,13 @@ public:
 
     struct MovePiece
     {
-        PieceMovement movement;
+        sf::Vector2i    selected;
+        sf::Vector2i    target;
+    };
+
+    struct PlayerSendMessage
+    {
+        std::string text;
     };
 
     ClientMessage()
@@ -78,7 +86,8 @@ private:
         RegisterPlayer,
         CreateNewRoom,
         JoinExistingRoom,
-        MovePiece
+        MovePiece,
+        PlayerSendMessage
     >;
     Message_t message;
 };

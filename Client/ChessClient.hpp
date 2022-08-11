@@ -28,7 +28,7 @@ public:
 
     bool connect();
     bool isConnected();
-    void onMessageReceived(ServerMessage::Type type, std::function<void(ServerMessage*)> callback);
+    void registerCallback(ServerMessage::Type type, std::function<void(ServerMessage*)> callback);
     void sendMessage(ClientMessage& message);
 
     void authenticate();
@@ -36,7 +36,8 @@ public:
     void createNewRoom(const ClientMessage::CreateNewRoom& room);
     void joinExistingRoom(const std::string &roomId, const std::string password);
     void fetchAvailableRooms();
-    void movePiece(PieceMovement& pieceMovement);
+    void movePiece(const ClientMessage::MovePiece& pieceMovement);
+    void sendChatMessage(const std::string& message);
     void resign();
 
     ChessClient() = default;
@@ -55,23 +56,8 @@ private:
     std::thread t1;
     sf::TcpSocket m_socket;
 
+    std::map<ServerMessage::Type, 
+        std::function<void(ServerMessage*)>> m_callbacks;
+    
     void handleIncomingPacketsAsync();
-
-    std::function<void(ServerMessage*)> m_onAuthenticateSuccess;
-    std::function<void(ServerMessage*)> m_onAuthenticateFailed;
-    std::function<void(ServerMessage*)> m_onRegistrationSuccess;
-    std::function<void(ServerMessage*)> m_onRegistrationFailed;
-    std::function<void(ServerMessage*)> m_onCreateRoomSuccess;
-    std::function<void(ServerMessage*)> m_onCreateRoomFailed;
-    std::function<void(ServerMessage*)> m_onJoinRoomSuccess;
-    std::function<void(ServerMessage*)> m_onJoinRoomFailed;
-    std::function<void(ServerMessage*)> m_onFetchedAvailableRooms;
-    std::function<void(ServerMessage*)> m_onHostLeftRoom;
-    std::function<void(ServerMessage*)> m_onPlayerLeftRoom;
-    std::function<void(ServerMessage*)> m_onPlayerMovedPiece;
-    std::function<void(ServerMessage*)> m_onPlayerRequestsForDraw;
-    std::function<void(ServerMessage*)> m_onPlayerHasResigned;
-    std::function<void(ServerMessage*)> m_onPlayerHasDisconnected;
-    std::function<void(ServerMessage*)> m_onPlayerHasReconnected;
-
 };

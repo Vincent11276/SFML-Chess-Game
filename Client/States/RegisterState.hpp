@@ -32,6 +32,9 @@ public:
 
 private:
     mutable tgui::Gui m_gui;
+
+    tgui::EditBox::Ptr m_editBox1;
+    tgui::Button::Ptr m_button;
     
 protected:
     RegisterState();

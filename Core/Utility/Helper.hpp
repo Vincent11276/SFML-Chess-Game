@@ -62,6 +62,8 @@ namespace Helper
     {    
         sprite->setOrigin(sprite->getGlobalBounds().getSize() / 2.f);
     }
+
+
    // lol
 
 

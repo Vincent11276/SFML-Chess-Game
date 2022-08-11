@@ -3,6 +3,7 @@
 #include <string>
 #include <SFML/Graphics.hpp>
 #include <filesystem>
+#include <iostream>
 
 #include "../Engine/LoadResult.hpp"
 
@@ -18,11 +19,16 @@ public:
 		// default..
 	}
 
+	~TileSet()
+	{
+		std::cout << "bye bye" << std::endl;
+	}
+
 	bool create(const sf::Vector2f& tileSize, sf::Uint32 tileCount)
 	{
-		tileCount += 1; // for the new transparent tile
+		tileCount += 1; // for the additional transparent tile
 
-		if (this->m_tileSet_rendTex.create(tileSize.x * tileCount, tileSize.y))
+		if (m_tileSet_rendTex.create(tileSize.x * tileCount, tileSize.y))
 		{
 			return 1;
 		}

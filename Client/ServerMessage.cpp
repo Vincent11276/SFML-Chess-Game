@@ -58,9 +58,10 @@ sf::Packet& operator <<(sf::Packet& packet, const ServerMessage::FetchedAvailabl
     }
     return packet;
 }
+
 sf::Packet& operator >>(sf::Packet& packet, ServerMessage::FetchedAvailableRooms& m)
 {
-    std::size_t arrSize;
+    std::size_t arrSize;    
     packet >> arrSize;
 
     for (std::size_t i = 0; i < arrSize; i++)
@@ -74,18 +75,52 @@ sf::Packet& operator >>(sf::Packet& packet, ServerMessage::FetchedAvailableRooms
 
 sf::Packet& operator <<(sf::Packet& packet, const ServerMessage::PlayerMovedPiece& m)
 {
-    return packet << (sf::Uint8)m.movement.action << m.movement.coords.x << m.movement.coords.y;
+    return packet << m.selected.x << m.selected.y << m.target.x << m.target.y;
 }
 
 sf::Packet& operator >>(sf::Packet& packet, ServerMessage::PlayerMovedPiece& m)
 {
-    sf::Uint8 actionVal;
-    packet >> actionVal;
-    packet >> m.movement.coords.x ;
-    packet >> m.movement.coords.y;
-    m.movement.action = PieceAction(actionVal);
+    packet >> m.selected.x;
+    packet >> m.selected.y;
 
-    return packet; 
+    packet >> m.target.x;
+    packet >> m.target.y;
+
+    return packet;
+}
+
+sf::Packet& operator <<(sf::Packet& packet, const ServerMessage::PlayerSentMessage& m)
+{
+    return packet << m.author << m.text;
+}
+
+sf::Packet& operator >>(sf::Packet& packet, ServerMessage::PlayerSentMessage& m)
+{
+    return packet >> m.author >> m.text;
+}
+
+sf::Packet& operator <<(sf::Packet& packet, const ServerMessage::ChessGameStarted& m)
+{
+    return packet << (sf::Uint8)m.side;
+}
+
+sf::Packet& operator >>(sf::Packet& packet, ServerMessage::ChessGameStarted& m)
+{
+    sf::Uint8 sideVal;  
+    packet >> sideVal;
+    m.side = (Player::Color)sideVal;
+
+    return packet;
+}
+
+sf::Packet& operator <<(sf::Packet& packet, const ServerMessage::PlayerJoinedRoom& m)
+{
+    return packet << m.name;
+}
+
+sf::Packet& operator >>(sf::Packet& packet, ServerMessage::PlayerJoinedRoom& m)
+{
+    return packet >> m.name;
 }
 
 void ServerMessage::parseFromPacket(sf::Packet &packet)
@@ -128,6 +163,30 @@ void ServerMessage::parseFromPacket(sf::Packet &packet)
     }
     break;
 
+    case Type::PlayerSentMessage:
+    {
+        PlayerSentMessage playerSentMessage;
+        packet >> playerSentMessage;
+        content = playerSentMessage;
+    }
+    break;
+
+    case Type::ChessGameStarted:
+    {
+        ChessGameStarted chessGameStarted;
+        packet >> chessGameStarted;
+        content = chessGameStarted;
+    }
+    break;
+
+    case Type::PlayerJoinedRoom:
+    {
+        PlayerJoinedRoom playerJoinedRoom;
+        packet >> playerJoinedRoom;
+        content = playerJoinedRoom;
+    }
+    break;
+
     default:
         break;
     }
@@ -153,6 +212,18 @@ void ServerMessage::getPacket(sf::Packet* packet)
 
     case Type::PlayerMovedPiece:
         *packet << this->getContent<PlayerMovedPiece>();
+        break;
+
+    case Type::PlayerSentMessage:
+        *packet << this->getContent<PlayerSentMessage>();
+        break;
+
+    case Type::ChessGameStarted:
+        *packet << this->getContent<ChessGameStarted>();
+        break;
+
+    case Type::PlayerJoinedRoom:
+        *packet << this->getContent<PlayerJoinedRoom>();
         break;
 
     default:

@@ -5,7 +5,7 @@ void InOfflineGameState::init()
 {
 	Logger::debug("InOfflineGameState has been initialized");
 
-	m_chessGame.init();
+	m_chessGame.init(PieceColor::White);
 	m_chessGame.setScale(0.5, 0.5);
 	m_chessGame.setPosition(50, 50);
 }
@@ -26,13 +26,13 @@ void InOfflineGameState::update(float deltaTime)
 
 	if (MouseInput::isButtonJustPressed(sf::Mouse::Button::Left))
 	{
-		sf::Vector2i selected = m_chessGame.getMouseHoveringPiece();
+		sf::Vector2i selected = m_chessGame.getMouseHoveringCoords();
 
 		m_chessGame.trySelectPiece(selected);
 	}
 	else if (MouseInput::isButtonJustReleased(sf::Mouse::Button::Left))
 	{
-		sf::Vector2i target = m_chessGame.getMouseHoveringPiece();
+		sf::Vector2i target = m_chessGame.getMouseHoveringCoords();
 
 		m_chessGame.tryMoveSelectedPiece(target);	
 	}

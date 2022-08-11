@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "ChessServer.hpp"
+#include "Network/ChessServer.hpp"
 #include "Client/Scenes/Game.hpp"
 
 int main()

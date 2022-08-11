@@ -10,7 +10,7 @@
 #include "Client/States/InOfflineGameState.hpp"
 #include "Core/Engine/ResourceManager.hpp"
 
-#include "Client/ChessClient.hpp"
+#include "Network/ChessClient.hpp"
 
 class Game
 {

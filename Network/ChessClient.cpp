@@ -1,7 +1,7 @@
 #include "ChessClient.hpp"
-#include "Client/ClientMessage.hpp"
-#include "Client/Server.hpp"
-#include "Client/ServerMessage.hpp"
+#include "Network/ClientMessage.hpp"
+#include "Network/Server.hpp"
+#include "Network/ServerMessage.hpp"
 
 
 bool ChessClient::connect()

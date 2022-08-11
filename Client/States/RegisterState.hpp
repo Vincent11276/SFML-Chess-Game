@@ -1,10 +1,10 @@
 #pragma once
 
 #include <TGUI/TGUI.hpp>
-#include "Client/ClientMessage.hpp"
-#include "Client/ServerMessage.hpp"
+#include "Network/ClientMessage.hpp"
+#include "Network/ServerMessage.hpp"
 #include "GameStateManager.hpp"
-#include "Client/ChessClient.hpp"
+#include "Network/ChessClient.hpp"
 #include "Client/Scenes/Game.hpp"
 #include "Client/States/RoomSelectionState.hpp"
 

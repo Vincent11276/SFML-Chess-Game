@@ -10,7 +10,7 @@
 #include "SFML/Config.hpp"
 #include "Server.hpp"
 #include "ChessClient.hpp"
-#include "Random.hpp"
+#include "Core/Utility/Random.hpp"
 #include "Player.hpp"
 #include "Room.hpp"
 #include "ServerMessage.hpp"

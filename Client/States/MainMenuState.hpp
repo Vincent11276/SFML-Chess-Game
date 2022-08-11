@@ -3,7 +3,7 @@
 #include <iostream>
 #include <TGUI/Backends/SFML.hpp>
 #include <TGUI/TGUI.hpp>
-#include "Client/ChessClient.hpp"
+#include "Network/ChessClient.hpp"
 #include "Client/UI/RoomListing.hpp"
 #include "Client/States/RegisterState.hpp"
 #include "Client/States/GameStateManager.hpp"

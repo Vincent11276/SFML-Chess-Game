@@ -1,6 +1,6 @@
 #include "ChessServer.hpp"
-#include "Client/ClientMessage.hpp"
-#include "Client/ServerMessage.hpp"
+#include "Network/ClientMessage.hpp"
+#include "Network/ServerMessage.hpp"
 #include "SFML/Config.hpp"
 
 

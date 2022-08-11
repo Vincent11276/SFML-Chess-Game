@@ -60,7 +60,7 @@ void ChessGame::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	states.transform = this->getTransform();
 
 	target.draw(m_chessBoard_Spr, states);
-	//target.draw(m_pieceHighlighter, states);
+	target.draw(m_pieceHighlighter, states);
 	target.draw(m_chessPieces, states);
 
 	switch (m_state)
@@ -73,8 +73,6 @@ void ChessGame::draw(sf::RenderTarget& target, sf::RenderStates states) const
 		break;
 	}
 }
-
-// actions
 
 bool ChessGame::isPieceCanSelect(const sf::Vector2i& coords)
 {
@@ -102,7 +100,6 @@ bool ChessGame::isPieceInBounds(const sf::Vector2i& coords)
 {
 	return coords.x >= 0 && coords.y >= 0 && coords.x < 8 && coords.y < 8;
 }
-
 
 bool ChessGame::trySelectPiece(const sf::Vector2i& selected)
 {
@@ -201,11 +198,7 @@ void ChessGame::moveSelectedPiece(const sf::Vector2i& target)
 	m_pieceHighlighter.unmarkValidMoves(m_moveGenerator.getAllValidMoves());
 	m_pieceHighlighter.remove(m_previousMove.first.coords);
 	m_pieceHighlighter.remove(m_previousMove.second.coords);
-
-
 }
-
-
 
 void ChessGame::processAfterMove() 
 {

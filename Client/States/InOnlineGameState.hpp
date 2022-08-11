@@ -7,8 +7,8 @@
 
 #include "Client/Scenes/Chess.hpp"
 #include "Core/Utility/Helper.hpp"
-#include "Client/ServerMessage.hpp"
-#include "Client/ChessClient.hpp"
+#include "Network/ServerMessage.hpp"
+#include "Network/ChessClient.hpp"
 #include <TGUI/TGUI.hpp>
 
 

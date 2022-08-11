@@ -3,7 +3,7 @@
 #include <string>
 #include <sstream>
 #include <SFML/Graphics.hpp>
-#include "Client/Random.hpp"
+#include "Core/Utility/Random.hpp"
 
 namespace Helper
 {

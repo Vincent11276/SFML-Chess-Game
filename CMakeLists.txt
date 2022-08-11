@@ -8,40 +8,40 @@ FetchContent_Declare(SFML
     GIT_REPOSITORY https://github.com/SFML/SFML.git
     GIT_TAG 2.6.x
 )
+FetchContent_MakeAvailable(SFML)
 
 FetchContent_Declare(TGUI
     GIT_REPOSITORY https://github.com/texus/TGUI.git
     GIT_TAG v0.9.5
 )
-
-FetchContent_MakeAvailable(SFML)
 FetchContent_MakeAvailable(TGUI)
 
 add_executable(SFMLChessClient 
+    "Client/main.cpp" 
+    "Client/Scenes/Game.cpp"
+    "Client/Scenes/Chess.cpp"
+    "Client/Scenes/PieceHighlighter.cpp"
+    "Client/Scenes/MoveablePiece.cpp"
     "Core/Utility/Logger.cpp"
     "Core/Utility/ScopedTimer.cpp" 
     "Core/Engine/TileMap.cpp"
     "Core/Engine/ResourceManager.cpp"
     "Core/Inputs/Mouse.cpp"
     "Core/Inputs/Keyboard.cpp"
-    "Client/main.cpp" 
-    "Client/ChessClient.cpp"
-    "Client/ChessServer.cpp"
-    "Client/ServerMessage.cpp"
-    "Client/ClientMessage.cpp"
-    "Client/Scenes/Game.cpp"
-    "Client/Scenes/Chess.cpp"
-    "Client/Scenes/PieceHighlighter.cpp"
-    "Client/Scenes/MoveablePiece.cpp"
     "Client/States/MainMenuState.cpp"
     "Client/States/InOfflineGameState.cpp"
     "Client/States/InOnlineGameState.cpp"
     "Client/States/GameStateManager.cpp"      
     "Client/States/RoomSelectionState.cpp" 
-    "Client/UI/RoomListing.cpp" 
     "Client/States/RegisterState.cpp" 
+    "Client/UI/RoomListing.cpp" 
     "Client/UI/CreateRoomForm.cpp" 
-    "Client/UI/DirectConnectForm.cpp")
+    "Client/UI/DirectConnectForm.cpp"
+    "Network/ChessClient.cpp"
+    "Network/ChessServer.cpp"
+    "Network/ServerMessage.cpp"
+    "Network/ClientMessage.cpp"
+)
 
 include_directories(${PROJECT_SOURCE_DIR})
 
@@ -56,15 +56,14 @@ target_link_libraries(SFMLChessClient  PRIVATE
 target_compile_features(SFMLChessClient PRIVATE cxx_std_20)
 if (WIN32 AND BUILD_SHARED_LIBS)
     add_custom_command(TARGET SFMLChessClient POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_RUNTIME_DLLS:SFMLChessClient> $<TARGET_FILE_DIR:SFMLChessClient> COMMAND_EXPAND_LISTS)
+        COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_RUNTIME_DLLS:SFMLChessClient> 
+        $<TARGET_FILE_DIR:SFMLChessClient> COMMAND_EXPAND_LISTS)
 endif()
 
-#file(COPY ${PROJECT_SOURCE_DIR}/Assets DESTINATION .)
-
 add_custom_command(
-        TARGET SFMLChessClient PRE_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_directory
-                ${PROJECT_SOURCE_DIR}/Assets
-                ${CMAKE_CURRENT_BINARY_DIR}/Assets)
+    TARGET SFMLChessClient PRE_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${PROJECT_SOURCE_DIR}/Assets
+        ${CMAKE_CURRENT_BINARY_DIR}/Assets)
 
 install(TARGETS SFMLChessClient)

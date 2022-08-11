@@ -4,15 +4,15 @@
 #include <string>
 #include <iostream>
 
-#include "Client/ServerMessage.hpp"
+#include "Network/ServerMessage.hpp"
 #include "Core/Chess/PieceMovement.hpp"
 #include "SFML/Config.hpp"
 #include "SFML/Network/IpAddress.hpp"
 #include "SFML/Network/Packet.hpp"
 #include "SFML/Network/Socket.hpp"
 #include "SFML/Network/TcpSocket.hpp"
-#include "Client/ChessServer.hpp"
-#include "Client/ClientMessage.hpp"
+#include "Network/ChessServer.hpp"
+#include "Network/ClientMessage.hpp"
 #include "Client/Scenes/Game.hpp"
 #include "ClientSession.hpp"
 

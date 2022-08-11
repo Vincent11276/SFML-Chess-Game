@@ -1,7 +1,10 @@
 #pragma once
 
-enum LoadResult
+namespace egn
 {
-    Success,
-    Failure
-};
+    enum LoadResult
+    {
+        Success,
+        Failure
+    };
+}

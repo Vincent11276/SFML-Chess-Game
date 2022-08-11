@@ -1,15 +1,12 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
-
 #include "Core/Inputs/Mouse.hpp"
 #include "Core/Inputs/Keyboard.hpp"
 #include "Core/Engine/ResourceManager.hpp"
-
-#include "Client/States/GameStateManager.hpp"
-#include "Client/States/InOfflineGameState.hpp"
+#include "Core/Engine/GameStateManager.hpp"
 #include "Core/Engine/ResourceManager.hpp"
-
+#include "Client/States/InOfflineGameState.hpp"
 #include "Network/ChessClient.hpp"
 
 class Game

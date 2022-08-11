@@ -1,20 +1,20 @@
 #include "MoveablePiece.hpp"
 
 
-std::unordered_map<int, ResourceKey> MoveablePiece::m_resourceKeys
+std::unordered_map<int, egn::ResourceKey> MoveablePiece::m_resourceKeys
 {
-    { PieceType::B_PAWN, ResourceKey::WoodPiecePawnB },
-    { PieceType::B_ROOK, ResourceKey::WoodPieceRookB },
-    { PieceType::B_KNIGHT, ResourceKey::WoodPieceKnightB },
-    { PieceType::B_BISHOP, ResourceKey::WoodPieceBishopB },
-    { PieceType::B_QUEEN, ResourceKey::WoodPieceQueenB },
-    { PieceType::B_KING, ResourceKey::WoodPieceKingB },
-    { PieceType::W_PAWN, ResourceKey::WoodPiecePawnW },
-    { PieceType::W_ROOK, ResourceKey::WoodPieceRookW },
-    { PieceType::W_KNIGHT, ResourceKey::WoodPieceKnightW },
-    { PieceType::W_BISHOP, ResourceKey::WoodPieceBishopW },
-    { PieceType::W_QUEEN, ResourceKey::WoodPieceQueenW },
-    { PieceType::W_KING, ResourceKey::WoodPieceKingW },
+    { PieceType::B_PAWN, egn::ResourceKey::WoodPiecePawnB },
+    { PieceType::B_ROOK, egn::ResourceKey::WoodPieceRookB },
+    { PieceType::B_KNIGHT, egn::ResourceKey::WoodPieceKnightB },
+    { PieceType::B_BISHOP, egn::ResourceKey::WoodPieceBishopB },
+    { PieceType::B_QUEEN, egn::ResourceKey::WoodPieceQueenB },
+    { PieceType::B_KING, egn::ResourceKey::WoodPieceKingB },
+    { PieceType::W_PAWN, egn::ResourceKey::WoodPiecePawnW },
+    { PieceType::W_ROOK, egn::ResourceKey::WoodPieceRookW },
+    { PieceType::W_KNIGHT, egn::ResourceKey::WoodPieceKnightW },
+    { PieceType::W_BISHOP, egn::ResourceKey::WoodPieceBishopW },
+    { PieceType::W_QUEEN, egn::ResourceKey::WoodPieceQueenW },
+    { PieceType::W_KING, egn::ResourceKey::WoodPieceKingW },
 };
 
 MoveablePiece::MoveablePiece()
@@ -27,7 +27,7 @@ void MoveablePiece::changeType(int pieceType)
     if (m_resourceKeys.find(pieceType) != m_resourceKeys.end())
     {
         moveablePiece_Spr.setTexture(
-            ResourceManager::getTexture(m_resourceKeys[pieceType]));
+            egn::ResourceManager::getTexture(m_resourceKeys[pieceType]));
     }
     else
     {

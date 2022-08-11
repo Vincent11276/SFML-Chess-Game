@@ -5,38 +5,40 @@
 #include <TGUI/TGUI.hpp>
 #include "Network/ChessClient.hpp"
 #include "Client/UI/RoomListing.hpp"
+#include "Core/Engine/GameStateManager.hpp"
 #include "Client/States/RegisterState.hpp"
-#include "Client/States/GameStateManager.hpp"
 #include "Client/States/InOfflineGameState.hpp"
 
-class RoomSelectionState;
-
-
-class MainMenuState : public GameState
+namespace states
 {
-public:
-	void init() override;
-	void cleanup() override { };
-    void pause() override { };
-    void resume() override { };
+    class RoomSelectionState;
 
-	void handleEvent(sf::Event& e) override;
-	void update(float deltaTime) override { };
-    void physicsUpdate(float deltaTime) override { };
-    void draw(sf::RenderTarget& target) const override;
+    class MainMenuState : public egn::GameState
+    {
+    public:
+        void init() override;
+        void cleanup() override { };
+        void pause() override { };
+        void resume() override { };
 
-	static MainMenuState* getInstance();
+        void handleEvent(sf::Event& e) override;
+        void update(float deltaTime) override { };
+        void physicsUpdate(float deltaTime) override { };
+        void draw(sf::RenderTarget& target) const override;
 
-    void initUI();
+        static MainMenuState* getInstance();
 
-    void on_PlayBtn_Pressed();
-    void on_SettingsBtn_pressed();
-    void on_OnlineBtn_Pressed();
-    void on_ExitBtn_Pressed();
+        void initUI();
 
-protected:
-	MainMenuState();
+        void on_PlayBtn_Pressed();
+        void on_SettingsBtn_pressed();
+        void on_OnlineBtn_Pressed();
+        void on_ExitBtn_Pressed();
 
-private:
-    mutable tgui::Gui gui;
-};
+    protected:
+        MainMenuState();
+
+    private:
+        mutable tgui::Gui gui;
+    };
+}

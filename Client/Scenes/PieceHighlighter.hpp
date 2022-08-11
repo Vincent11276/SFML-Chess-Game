@@ -16,15 +16,15 @@ public:
     PieceHighlighter()
         : m_tilemap({ 8, 8 }, { 80.f, 80.f })
     {
-        m_tileSet = std::make_shared<TileSet>();
+        m_tileSet = std::make_shared<egn::TileSet>();
 
         if (!m_tileSet->create({ 80.f, 80.f }, 3))
         {
             Logger::error("Unable to create tileset object for PieceHighlighter class");
         }
-        m_tileSet->loadFromTexture(ResourceManager::getTexture(ResourceKey::ActionMark));
-        m_tileSet->loadFromTexture(ResourceManager::getTexture(ResourceKey::CanMoveMark));
-        m_tileSet->loadFromTexture(ResourceManager::getTexture(ResourceKey::CanTakeMark));
+        m_tileSet->loadFromTexture(egn::ResourceManager::getTexture(egn::ResourceKey::ActionMark));
+        m_tileSet->loadFromTexture(egn::ResourceManager::getTexture(egn::ResourceKey::CanMoveMark));
+        m_tileSet->loadFromTexture(egn::ResourceManager::getTexture(egn::ResourceKey::CanTakeMark));
 
         m_tilemap.setTileSet(m_tileSet);
     }
@@ -96,6 +96,6 @@ public:
     }
 
 private:
-    std::shared_ptr<TileSet> m_tileSet;
-    TileMap m_tilemap;
+    std::shared_ptr<egn::TileSet> m_tileSet;
+    egn::TileMap m_tilemap;
 };

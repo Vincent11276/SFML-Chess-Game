@@ -3,39 +3,42 @@
 #include <TGUI/TGUI.hpp>
 #include "Network/ClientMessage.hpp"
 #include "Network/ServerMessage.hpp"
-#include "GameStateManager.hpp"
+#include "Core/Engine/GameStateManager.hpp"
 #include "Network/ChessClient.hpp"
 #include "Client/Scenes/Game.hpp"
 #include "Client/States/RoomSelectionState.hpp"
 
 
-class RegisterState : public GameState
+namespace states
 {
-public:
-    void init() override;
+    class RegisterState : public egn::GameState
+    {
+    public:
+        void init() override;
 
-	void cleanup() override { }
-    void pause() override { }
-    void resume() override { }
+        void cleanup() override { }
+        void pause() override { }
+        void resume() override { }
 
-    void handleEvent(sf::Event& e) override;
+        void handleEvent(sf::Event& e) override;
 
-    void update(float deltaTime) override;
+        void update(float deltaTime) override;
 
-    void physicsUpdate(float deltaTime) override { }
+        void physicsUpdate(float deltaTime) override { }
 
-    void draw(sf::RenderTarget& target) const override;
+        void draw(sf::RenderTarget& target) const override;
 
-    void initUI();
-    
-    static RegisterState* getInstance();
+        void initUI();
 
-private:
-    mutable tgui::Gui m_gui;
+        static RegisterState* getInstance();
 
-    tgui::EditBox::Ptr m_editBox1;
-    tgui::Button::Ptr m_button;
-    
-protected:
-    RegisterState();
-};
+    private:
+        mutable tgui::Gui m_gui;
+
+        tgui::EditBox::Ptr m_editBox1;
+        tgui::Button::Ptr m_button;
+
+    protected:
+        RegisterState();
+    };
+}

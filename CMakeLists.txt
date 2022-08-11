@@ -31,7 +31,7 @@ add_executable(SFMLChessClient
     "Client/States/MainMenuState.cpp"
     "Client/States/InOfflineGameState.cpp"
     "Client/States/InOnlineGameState.cpp"
-    "Client/States/GameStateManager.cpp"      
+    "Core/Engine/GameStateManager.cpp"      
     "Client/States/RoomSelectionState.cpp" 
     "Client/States/RegisterState.cpp" 
     "Client/UI/RoomListing.cpp" 

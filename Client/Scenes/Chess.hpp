@@ -20,7 +20,7 @@
 #include "Core/Utility/Logger.hpp"
 #include "Core/Utility/Helper.hpp"
 
-#include "Client/States/GameStateManager.hpp"
+#include "Core/Engine/GameStateManager.hpp"
 #include "Client/Scenes/PieceHighlighter.hpp"
 #include "Client/Scenes/MoveablePiece.hpp"
 

@@ -21,7 +21,7 @@ void ChessGame::init(PieceColor pieceColor)
 	}
 	else m_state = State::Waiting;
 
-	auto chessBoardTex = &ResourceManager::getTexture(ResourceKey::WoodChessBoard);
+	auto chessBoardTex = &egn::ResourceManager::getTexture(egn::ResourceKey::WoodChessBoard);
 	m_chessBoard_Spr.setTexture(*chessBoardTex);
 	m_chessBoard_Spr.setOrigin(20, 22);
 	m_chessPieces.initialize(pieceColor);

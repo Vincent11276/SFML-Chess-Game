@@ -1,6 +1,6 @@
 #pragma once
 
-namespace egn
+namespace engine
 {
     enum LoadResult
     {

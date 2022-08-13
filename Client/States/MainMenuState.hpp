@@ -13,7 +13,7 @@ namespace states
 {
     class RoomSelectionState;
 
-    class MainMenuState : public egn::GameState
+    class MainMenuState : public engine::GameState
     {
     public:
         void init() override;

@@ -1,19 +1,13 @@
 #pragma once
 
-namespace egn
+namespace engine
 {
     enum ResourceKey
     {
-        Background,
-        ExitButton,
-        Logo,
-        OnlineButton,
-        PlayButton,
-        SettingsButton,
-
         ActionMark,
         CanMoveMark,
         CanTakeMark,
+        HoveringMark,
 
         StoneBlackChessBoard,
         StoneBlueChessBoard,

@@ -9,10 +9,7 @@ namespace chess
 {
     struct PieceMovement
     {
-        PieceMovement()
-        {
-            // default..
-        }
+        PieceMovement() = default;
 
         PieceMovement(PieceAction p_action, sf::Vector2i p_target)
         {
@@ -22,5 +19,7 @@ namespace chess
 
         PieceAction action = PieceAction::None;
         sf::Vector2i coords;
+
+        bool isKingChecked = false;
     };
 }

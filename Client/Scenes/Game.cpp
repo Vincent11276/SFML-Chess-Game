@@ -67,7 +67,7 @@ void Game::run()
 		netw::ChessClient::getInstance().authenticate();
 	}
 	// Proceed to starting state when loop starts
-	egn::GameStateManager::getInstance()->changeState(states::MainMenuState::getInstance());
+	engine::GameStateManager::getInstance()->changeState(states::MainMenuState::getInstance());
 
 	// Start the main loop
 	this->mainLoop();
@@ -102,39 +102,60 @@ void Game::mainLoop()
 			default:
 				break;
 			}
-			egn::GameStateManager::getInstance()->handleEvent(e);
+			engine::GameStateManager::getInstance()->handleEvent(e);
 		}
-		egn::GameStateManager::getInstance()->update(elapsed.asSeconds());
+		engine::GameStateManager::getInstance()->update(elapsed.asSeconds());
 
 		while (lag >= fixedUpdateInterval)
 		{
 			lag -= fixedUpdateInterval;
 
-			egn::GameStateManager::getInstance()->physicsUpdate(fixedUpdateInterval.asSeconds());
+			engine::GameStateManager::getInstance()->physicsUpdate(fixedUpdateInterval.asSeconds());
 		}
 
 		m_window.clear();
-		egn::GameStateManager::getInstance()->render(m_window);
+		engine::GameStateManager::getInstance()->render(m_window);
 		m_window.display();
 	}
 }
 
+void Game::setCursor(sf::Cursor::Type type)
+{
+	if (m_cursor.loadFromSystem(type))
+	{
+		m_window.setMouseCursor(m_cursor);
+	}
+}
+
+sf::RenderWindow& Game::getWindow()
+{
+	return m_window;
+}
+
+Game* Game::getInstance()
+{
+	static Game instance;
+
+	return &instance;
+}
+
 void Game::loadResources()
 {
-	egn::ResourceManager::addTexture(egn::ResourceKey::ActionMark, "Assets/action_mark.png");
-	egn::ResourceManager::addTexture(egn::ResourceKey::CanMoveMark, "Assets/can_move_mark.png");
-	egn::ResourceManager::addTexture(egn::ResourceKey::CanTakeMark, "Assets/can_take_mark.png");
-	egn::ResourceManager::addTexture(egn::ResourceKey::WoodChessBoard, "Assets/Chess_Artwork/Chess_Artwork/Chess Board/Wood/Chess_Board.png");
-	egn::ResourceManager::addTexture(egn::ResourceKey::WoodPieceBishopB, "Assets/Chess_Artwork/Chess_Artwork/Chess Pieces/Wood/BishopB.png");
-	egn::ResourceManager::addTexture(egn::ResourceKey::WoodPieceBishopW, "Assets/Chess_Artwork/Chess_Artwork/Chess Pieces/Wood/BishopW.png");
-	egn::ResourceManager::addTexture(egn::ResourceKey::WoodPieceKingB, "Assets/Chess_Artwork/Chess_Artwork/Chess Pieces/Wood/KingB.png");
-	egn::ResourceManager::addTexture(egn::ResourceKey::WoodPieceKingW, "Assets/Chess_Artwork/Chess_Artwork/Chess Pieces/Wood/KingW.png");
-	egn::ResourceManager::addTexture(egn::ResourceKey::WoodPieceKnightB, "Assets/Chess_Artwork/Chess_Artwork/Chess Pieces/Wood/KnightB.png");
-	egn::ResourceManager::addTexture(egn::ResourceKey::WoodPieceKnightW, "Assets/Chess_Artwork/Chess_Artwork/Chess Pieces/Wood/KnightW.png");
-	egn::ResourceManager::addTexture(egn::ResourceKey::WoodPiecePawnB, "Assets/Chess_Artwork/Chess_Artwork/Chess Pieces/Wood/PawnB.png");
-	egn::ResourceManager::addTexture(egn::ResourceKey::WoodPiecePawnW, "Assets/Chess_Artwork/Chess_Artwork/Chess Pieces/Wood/PawnW.png");
-	egn::ResourceManager::addTexture(egn::ResourceKey::WoodPieceQueenB, "Assets/Chess_Artwork/Chess_Artwork/Chess Pieces/Wood/QueenB.png");
-	egn::ResourceManager::addTexture(egn::ResourceKey::WoodPieceQueenW, "Assets/Chess_Artwork/Chess_Artwork/Chess Pieces/Wood/QueenW.png");
-	egn::ResourceManager::addTexture(egn::ResourceKey::WoodPieceRookB, "Assets/Chess_Artwork/Chess_Artwork/Chess Pieces/Wood/RookB.png");
-	egn::ResourceManager::addTexture(egn::ResourceKey::WoodPieceRookW, "Assets/Chess_Artwork/Chess_Artwork/Chess Pieces/Wood/RookW.png");
+	engine::ResourceManager::addTexture(engine::ResourceKey::ActionMark, "Assets/action_mark.png");
+	engine::ResourceManager::addTexture(engine::ResourceKey::CanMoveMark, "Assets/can_move_mark.png");
+	engine::ResourceManager::addTexture(engine::ResourceKey::CanTakeMark, "Assets/can_take_mark.png");
+	engine::ResourceManager::addTexture(engine::ResourceKey::HoveringMark, "Assets/hovering_mark.png");
+	engine::ResourceManager::addTexture(engine::ResourceKey::WoodChessBoard, "Assets/Chess_Artwork/Chess_Artwork/Chess Board/Wood/Chess_Board.png");
+	engine::ResourceManager::addTexture(engine::ResourceKey::WoodPieceBishopB, "Assets/Chess_Artwork/Chess_Artwork/Chess Pieces/Wood/BishopB.png");
+	engine::ResourceManager::addTexture(engine::ResourceKey::WoodPieceBishopW, "Assets/Chess_Artwork/Chess_Artwork/Chess Pieces/Wood/BishopW.png");
+	engine::ResourceManager::addTexture(engine::ResourceKey::WoodPieceKingB, "Assets/Chess_Artwork/Chess_Artwork/Chess Pieces/Wood/KingB.png");
+	engine::ResourceManager::addTexture(engine::ResourceKey::WoodPieceKingW, "Assets/Chess_Artwork/Chess_Artwork/Chess Pieces/Wood/KingW.png");
+	engine::ResourceManager::addTexture(engine::ResourceKey::WoodPieceKnightB, "Assets/Chess_Artwork/Chess_Artwork/Chess Pieces/Wood/KnightB.png");
+	engine::ResourceManager::addTexture(engine::ResourceKey::WoodPieceKnightW, "Assets/Chess_Artwork/Chess_Artwork/Chess Pieces/Wood/KnightW.png");
+	engine::ResourceManager::addTexture(engine::ResourceKey::WoodPiecePawnB, "Assets/Chess_Artwork/Chess_Artwork/Chess Pieces/Wood/PawnB.png");
+	engine::ResourceManager::addTexture(engine::ResourceKey::WoodPiecePawnW, "Assets/Chess_Artwork/Chess_Artwork/Chess Pieces/Wood/PawnW.png");
+	engine::ResourceManager::addTexture(engine::ResourceKey::WoodPieceQueenB, "Assets/Chess_Artwork/Chess_Artwork/Chess Pieces/Wood/QueenB.png");
+	engine::ResourceManager::addTexture(engine::ResourceKey::WoodPieceQueenW, "Assets/Chess_Artwork/Chess_Artwork/Chess Pieces/Wood/QueenW.png");
+	engine::ResourceManager::addTexture(engine::ResourceKey::WoodPieceRookB, "Assets/Chess_Artwork/Chess_Artwork/Chess Pieces/Wood/RookB.png");
+	engine::ResourceManager::addTexture(engine::ResourceKey::WoodPieceRookW, "Assets/Chess_Artwork/Chess_Artwork/Chess Pieces/Wood/RookW.png");
 }

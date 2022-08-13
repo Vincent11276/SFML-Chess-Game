@@ -7,27 +7,25 @@
 #include <string>
 #include <iostream>
 #include <memory>
-
 #include "Core/Engine/TileMap.hpp"
 #include "Core/Engine/ResourceManager.hpp"
-
+#include "Core/Engine/GameStateManager.hpp"
 #include "Core/Chess/PieceType.hpp"
 #include "Core/Chess/PieceColor.hpp"
 #include "Core/Chess/MoveGenerator.hpp"
-#include "Core/Chess/ChessPieces.hpp"
-
 #include "Core/Inputs/Mouse.hpp"
 #include "Core/Utility/Logger.hpp"
 #include "Core/Utility/Helper.hpp"
-
-#include "Core/Engine/GameStateManager.hpp"
-#include "Client/Scenes/PieceHighlighter.hpp"
-#include "Client/Scenes/MoveablePiece.hpp"
+#include "PieceMarker.hpp"
+#include "MoveablePiece.hpp"
+#include "PieceMarker.hpp"
+#include "ChessBoard.hpp"
+#include "ChessPieces.hpp"
 
 
 typedef std::vector<std::pair<std::string, std::string>> MoveHistory;
 
-class ChessGame: public sf::Drawable, public sf::Transformable
+class ChessGame : public sf::Drawable, public sf::Transformable
 {
 public:
 	ChessGame();
@@ -42,6 +40,7 @@ public:
 	bool tryMoveSelectedPiece(const sf::Vector2i& target);
 	void moveSelectedPiece(const sf::Vector2i& target);
 	bool isCheckMate() { };
+	void switchPlayerTurn();
 
 	sf::Vector2i getMouseHoveringCoords();
 	sf::Vector2i getSelectedCoords();
@@ -61,21 +60,21 @@ private:
 	bool isPieceCanSelect(const sf::Vector2i& coords);
 	bool isPieceInBounds(const sf::Vector2i& coords);
 
-	void switchPlayerTurn();
-	void processAfterMove();
+	void processAfterMove(chess::PieceMovement movement);
 
 	chess::PieceColor getPlayerTurn();
 
-	chess::Piece m_selectedPiece;
-	chess::PieceColor m_playerTurn;
-	chess::MoveGenerator m_moveGenerator;
-	MoveHistory m_moveHistory;
-
 	std::pair<chess::Piece, chess::PieceMovement> m_previousMove;
-	sf::Sprite m_chessBoard_Spr;
-	PieceHighlighter m_pieceHighlighter;
-	chess::ChessPieces m_chessPieces;
-	MoveablePiece m_moveablePiece;
+
+	std::pair<bool, bool>	m_isKingChecked;
+	chess::PieceColor		m_playerTurn;
+	chess::Piece			m_selectedPiece;
+	chess::MoveGenerator	m_moveGenerator;
+
+	ChessBoard		m_chessBoard;
+	PieceMarker		m_pieceMarker;
+	ChessPieces		m_chessPieces;
+	MoveablePiece	m_moveablePiece;
 
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 };

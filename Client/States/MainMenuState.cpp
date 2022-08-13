@@ -53,7 +53,7 @@ namespace states
     {
         std::cout << "You have pressed the play button" << std::endl;
 
-        egn::GameStateManager::getInstance()->changeState(InOfflineGameState::getInstance());
+        engine::GameStateManager::getInstance()->changeState(InOfflineGameState::getInstance());
     }
 
     void MainMenuState::on_SettingsBtn_pressed()
@@ -85,11 +85,11 @@ namespace states
         {
             Logger::info("You are not yet registered! Please identify yourself");
 
-            egn::GameStateManager::getInstance()->changeState(RegisterState::getInstance());
+            engine::GameStateManager::getInstance()->changeState(RegisterState::getInstance());
         }
 
         // If there's no exception, continue to the next game state
-        else egn::GameStateManager::getInstance()->changeState(RoomSelectionState::getInstance());
+        else engine::GameStateManager::getInstance()->changeState(RoomSelectionState::getInstance());
     }
 
     void MainMenuState::on_ExitBtn_Pressed()

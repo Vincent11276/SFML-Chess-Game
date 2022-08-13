@@ -16,7 +16,7 @@
 #include <iostream>
 
 
-namespace egn
+namespace engine
 {
     class ResourceManager
     {

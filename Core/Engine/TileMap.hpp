@@ -8,7 +8,7 @@
 #include "../Engine/TileSet.hpp"
 
 
-namespace egn
+namespace engine
 {
     class TileMap : public sf::Drawable, public sf::Transformable
     {

@@ -11,7 +11,7 @@
 
 namespace states
 {
-    class RegisterState : public egn::GameState
+    class RegisterState : public engine::GameState
     {
     public:
         void init() override;

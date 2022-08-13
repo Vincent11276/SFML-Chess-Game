@@ -1,7 +1,7 @@
 #include "GameStateManager.hpp"
 
 
-namespace egn
+namespace engine
 {
 	GameStateManager::GameStateManager()
 	{

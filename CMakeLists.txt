@@ -20,14 +20,17 @@ add_executable(SFMLChessClient
     "Client/main.cpp" 
     "Client/Scenes/Game.cpp"
     "Client/Scenes/Chess.cpp"
-    "Client/Scenes/PieceHighlighter.cpp"
+    
     "Client/Scenes/MoveablePiece.cpp"
+    "Client/Scenes/ChessBoard.cpp" 
+    "Client/Scenes/PieceMarker.cpp" 
     "Core/Utility/Logger.cpp"
     "Core/Utility/ScopedTimer.cpp" 
     "Core/Engine/TileMap.cpp"
     "Core/Engine/ResourceManager.cpp"
     "Core/Inputs/Mouse.cpp"
     "Core/Inputs/Keyboard.cpp"
+    "Core/Chess/MoveGenerator.cpp"
     "Client/States/MainMenuState.cpp"
     "Client/States/InOfflineGameState.cpp"
     "Client/States/InOnlineGameState.cpp"
@@ -41,7 +44,8 @@ add_executable(SFMLChessClient
     "Network/ChessServer.cpp"
     "Network/ServerMessage.cpp"
     "Network/ClientMessage.cpp"
-)
+
+ "Client/Scenes/ChessPieces.cpp")
 
 include_directories(${PROJECT_SOURCE_DIR})
 

@@ -20,7 +20,7 @@ public:
     void followMouse();
 
 private:
-    static std::unordered_map<int, egn::ResourceKey> m_resourceKeys;
+    static std::unordered_map<int, engine::ResourceKey> m_resourceKeys;
 
     sf::Sprite moveablePiece_Spr;
 

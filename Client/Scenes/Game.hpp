@@ -18,20 +18,15 @@ public:
 
 	void loadResources();
 
-	static Game* getInstance()
-	{
-		static Game instance;
+	sf::RenderWindow& getWindow();
 
-		return &instance;
-	}
+	void setCursor(sf::Cursor::Type type);
 
-	sf::RenderWindow& getWindow()
-	{
-		return m_window;
-	}
+	static Game* getInstance();
 
 private:
 	Game();
 
+	sf::Cursor m_cursor;
 	sf::RenderWindow m_window;
 };

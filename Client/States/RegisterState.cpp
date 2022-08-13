@@ -20,7 +20,7 @@ namespace states
         if (netw::ChessClient::getInstance().session.isRegistered)
         {
             // Proceed to next game state
-            egn::GameStateManager::getInstance()->changeState(RoomSelectionState::getInstance());
+            engine::GameStateManager::getInstance()->changeState(RoomSelectionState::getInstance());
         }
     }
 

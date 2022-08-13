@@ -2,7 +2,7 @@
 
 #include <SFML/Graphics.hpp>
 
-namespace egn
+namespace engine
 {
 	class GameState
 	{

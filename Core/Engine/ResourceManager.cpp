@@ -1,7 +1,7 @@
 #include "ResourceManager.hpp"
 
 
-namespace egn
+namespace engine
 {
     std::unordered_map<uint32_t, std::unique_ptr<sf::Texture>> ResourceManager::m_textures{ };
 

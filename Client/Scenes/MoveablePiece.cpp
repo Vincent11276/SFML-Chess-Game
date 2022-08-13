@@ -1,20 +1,20 @@
 #include "MoveablePiece.hpp"
 
 
-std::unordered_map<int, egn::ResourceKey> MoveablePiece::m_resourceKeys
+std::unordered_map<int, engine::ResourceKey> MoveablePiece::m_resourceKeys
 {
-    { chess::PieceType::B_PAWN, egn::ResourceKey::WoodPiecePawnB },
-    { chess::PieceType::B_ROOK, egn::ResourceKey::WoodPieceRookB },
-    { chess::PieceType::B_KNIGHT, egn::ResourceKey::WoodPieceKnightB },
-    { chess::PieceType::B_BISHOP, egn::ResourceKey::WoodPieceBishopB },
-    { chess::PieceType::B_QUEEN, egn::ResourceKey::WoodPieceQueenB },
-    { chess::PieceType::B_KING, egn::ResourceKey::WoodPieceKingB },
-    { chess::PieceType::W_PAWN, egn::ResourceKey::WoodPiecePawnW },
-    { chess::PieceType::W_ROOK, egn::ResourceKey::WoodPieceRookW },
-    { chess::PieceType::W_KNIGHT, egn::ResourceKey::WoodPieceKnightW },
-    { chess::PieceType::W_BISHOP, egn::ResourceKey::WoodPieceBishopW },
-    { chess::PieceType::W_QUEEN, egn::ResourceKey::WoodPieceQueenW },
-    { chess::PieceType::W_KING, egn::ResourceKey::WoodPieceKingW },
+    { chess::PieceType::B_PAWN, engine::ResourceKey::WoodPiecePawnB },
+    { chess::PieceType::B_ROOK, engine::ResourceKey::WoodPieceRookB },
+    { chess::PieceType::B_KNIGHT, engine::ResourceKey::WoodPieceKnightB },
+    { chess::PieceType::B_BISHOP, engine::ResourceKey::WoodPieceBishopB },
+    { chess::PieceType::B_QUEEN, engine::ResourceKey::WoodPieceQueenB },
+    { chess::PieceType::B_KING, engine::ResourceKey::WoodPieceKingB },
+    { chess::PieceType::W_PAWN, engine::ResourceKey::WoodPiecePawnW },
+    { chess::PieceType::W_ROOK, engine::ResourceKey::WoodPieceRookW },
+    { chess::PieceType::W_KNIGHT, engine::ResourceKey::WoodPieceKnightW },
+    { chess::PieceType::W_BISHOP, engine::ResourceKey::WoodPieceBishopW },
+    { chess::PieceType::W_QUEEN, engine::ResourceKey::WoodPieceQueenW },
+    { chess::PieceType::W_KING, engine::ResourceKey::WoodPieceKingW },
 };
 
 MoveablePiece::MoveablePiece()
@@ -27,7 +27,7 @@ void MoveablePiece::changeType(int pieceType)
     if (m_resourceKeys.find(pieceType) != m_resourceKeys.end())
     {
         moveablePiece_Spr.setTexture(
-            egn::ResourceManager::getTexture(m_resourceKeys[pieceType]));
+            engine::ResourceManager::getTexture(m_resourceKeys[pieceType]));
     }
     else
     {

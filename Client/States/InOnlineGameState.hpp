@@ -13,7 +13,7 @@
 
 namespace states
 {
-	class InOnlineGameState : public egn::GameState
+	class InOnlineGameState : public engine::GameState
 	{
 	public:
 		void init() override;

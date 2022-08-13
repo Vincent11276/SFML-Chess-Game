@@ -5,7 +5,7 @@
 #include "Core/Utility/Logger.hpp"
 #include "GameState.hpp"
 
-namespace egn
+namespace engine
 {
 	class GameState;
 

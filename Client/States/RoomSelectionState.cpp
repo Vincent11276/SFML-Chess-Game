@@ -21,7 +21,7 @@ namespace states
         netw::ChessClient::getInstance().registerCallback(netw::ServerMessage::Type::CreateRoomSuccess, [&](netw::ServerMessage* messsage) {
             Logger::info("Succesfully created room to the server");
 
-            egn::GameStateManager::getInstance()->changeState(InOnlineGameState::getInstance());
+            engine::GameStateManager::getInstance()->changeState(InOnlineGameState::getInstance());
             });
 
         netw::ChessClient::getInstance().registerCallback(netw::ServerMessage::Type::CreateRoomFailed, [&](netw::ServerMessage* messsage) {
@@ -31,7 +31,7 @@ namespace states
         netw::ChessClient::getInstance().registerCallback(netw::ServerMessage::Type::JoinExistingRoomSuccess, [&](netw::ServerMessage* messsage) {
             Logger::info("Succesfuly joined the designated room");
 
-            egn::GameStateManager::getInstance()->changeState(InOnlineGameState::getInstance());
+            engine::GameStateManager::getInstance()->changeState(InOnlineGameState::getInstance());
             });
 
         netw::ChessClient::getInstance().registerCallback(netw::ServerMessage::Type::JoinExistingRoomFailed, [&](netw::ServerMessage* messsage) {
@@ -157,7 +157,7 @@ namespace states
     {
         Logger::info("You have pressed cancel button");
 
-        egn::GameStateManager::getInstance()->changeState(MainMenuState::getInstance());
+        engine::GameStateManager::getInstance()->changeState(MainMenuState::getInstance());
     }
 
     void RoomSelectionState::updateRoomListing(const std::vector<netw::ServerMessage::FetchedAvailableRooms::RoomListing>& listing)

@@ -1,8 +1,8 @@
 #include "Chess.hpp"
 #include "Core/Inputs/Mouse.hpp"
 #include "SFML/System/Vector2.hpp"
-
 #include <functional>
+#include "Game.hpp"
 
 
 ChessGame::ChessGame()
@@ -21,56 +21,53 @@ void ChessGame::init(chess::PieceColor pieceColor)
 	}
 	else m_state = State::Waiting;
 
-	auto chessBoardTex = &egn::ResourceManager::getTexture(egn::ResourceKey::WoodChessBoard);
-	m_chessBoard_Spr.setTexture(*chessBoardTex);
-	m_chessBoard_Spr.setOrigin(20, 22);
+	m_chessBoard.setOrigin(20, 22);
 	m_chessPieces.initialize(pieceColor);
 	m_moveGenerator.setPiecesToAnalyze(m_chessPieces);
+
+	m_pieceMarker.init();
 
 	Logger::debug("Chess Game has been initialized!");
 }
 
 void ChessGame::handleEvents(const sf::Event& e)
 {	
-	switch (m_state)
-	{
-	case State::SelectingPiece:
-		break;
+	sf::Vector2i coords = this->getMouseHoveringCoords();
 
-	case State::DraggingPiece:
+	if (m_state == State::SelectingPiece)
+	{
+		if (this->isPieceCanSelect(coords))
+		{
+			Game::getInstance()->setCursor(sf::Cursor::Hand);
+		}
+		else
+		{
+			Game::getInstance()->setCursor(sf::Cursor::Arrow);
+		}
+	}
+	else if (m_state == State::DraggingPiece)
+	{
+		m_pieceMarker.setHoveringTile(coords);
 		m_moveablePiece.followMouse();
-		break;
 	}
 }
 
 void ChessGame::update(float delta)
 {
-	switch (m_state)
-	{
-	case State::SelectingPiece:
-		break;
-
-	case State::DraggingPiece:
-		break;
-	}
+	// amogus
 }
 
 void ChessGame::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	states.transform = this->getTransform();
 
-	target.draw(m_chessBoard_Spr, states);
-	target.draw(m_pieceHighlighter, states);
+	target.draw(m_chessBoard, states);
+	target.draw(m_pieceMarker, states);
 	target.draw(m_chessPieces, states);
 
-	switch (m_state)
+	if (m_state == State::DraggingPiece)
 	{
-	case State::SelectingPiece:
-		break;
-
-	case State::DraggingPiece:
 		target.draw(m_moveablePiece, states);
-		break;
 	}
 }
 
@@ -105,32 +102,22 @@ bool ChessGame::trySelectPiece(const sf::Vector2i& selected)
 {
 	if (this->isPieceCanSelect(selected))
 	{
-		// delete previously marked valid moves
-		m_pieceHighlighter.unmarkValidMoves(m_moveGenerator.getAllValidMoves());
-		m_pieceHighlighter.remove(m_selectedPiece.coords);
-
 		// important to update the values before quering for valid moves
 		m_selectedPiece = m_chessPieces.getPiece(selected);
 
 		// generate new valid moves for the newly selected piece
 		m_moveGenerator.processValidMoves(m_selectedPiece.coords, m_previousMove);
 
-		// mark new valid moves after deleting old one and new moves are generated
-		m_pieceHighlighter.markValidMoves(m_moveGenerator.getAllValidMoves());
-		m_pieceHighlighter.markAsHighlighted(m_selectedPiece.coords);
-		
-		// highlight the previous move back as it has been deleted
-		m_pieceHighlighter.markAsHighlighted(m_previousMove.first.coords);
-		m_pieceHighlighter.markAsHighlighted(m_previousMove.second.coords);
+		// mark the selected piece and the newly generated valid moves
+		m_pieceMarker.setValidMoves(m_moveGenerator.getAllValidMoves());
+		m_pieceMarker.setSelectedPiece(m_selectedPiece.coords); 
 
-		// remove selected piece from tile map
+		// remove the selected piece from the tilemap and spawn moveable object
 		m_chessPieces.removePiece(m_selectedPiece.coords);
-
-		// spawn moveable sprite that follows mouse position in real time
 		m_moveablePiece.changeType(m_selectedPiece.type);
 		m_moveablePiece.followMouse();
 
-		// update current state
+		// proceed to the next state
 		m_state = State::DraggingPiece;
 
 		Logger::debug("You have selected your piece at [{}, {}]!", 
@@ -138,19 +125,17 @@ bool ChessGame::trySelectPiece(const sf::Vector2i& selected)
 
 		return true;
 	}
-
-	Logger::debug("You cannot selected your enemy's piece!");
-	
+	Logger::debug("You cannot selected your enemy's piece!"); 
 	return false;
 }
 
 void ChessGame::selectPiece(const sf::Vector2i& selected)
 {
-	// important to update the values before quering for valid moves
-	m_selectedPiece = m_chessPieces.getPiece(selected);
+	//// important to update the values before quering for valid moves
+	//m_selectedPiece = m_chessPieces.getPiece(selected);
 
-	// generate new valid moves for the newly selected piece
-	m_moveGenerator.processValidMoves(m_selectedPiece.coords, m_previousMove);
+	//// generate new valid moves for the newly selected piece
+	//m_moveGenerator.processValidMoves(m_selectedPiece.coords, m_previousMove);
 }
 
 bool ChessGame::tryMoveSelectedPiece(const sf::Vector2i& target)
@@ -161,29 +146,18 @@ bool ChessGame::tryMoveSelectedPiece(const sf::Vector2i& target)
 	if (m_selectedPiece.color == m_playerTurn)
 	{
 		m_chessPieces.setPiece(m_selectedPiece, m_selectedPiece.coords);
+		m_pieceMarker.resetHoveringTile();
 
 		if (m_moveGenerator.isCoordsValidMove(target))
 		{
-			// unhighlight the previous move
-			m_pieceHighlighter.unmarkValidMoves(m_moveGenerator.getAllValidMoves());
-			m_pieceHighlighter.remove(m_previousMove.first.coords);
-			m_pieceHighlighter.remove(m_previousMove.second.coords);
-
-			// find the right piece movement on the generator based on the selected target param
+			// find the right piece movement on the generator based on the selected target cords
 			chess::PieceMovement targetMove = m_moveGenerator.findValidMoveByCoords(target);
-			
-			// store previous selected piece and the move taken
-			m_previousMove = std::make_pair(m_selectedPiece, targetMove);
 			
 			// execute the piecemovement
 			m_chessPieces.executeMovement(m_selectedPiece, targetMove);
 			
-			// highlight the new recent move after deleting the old one
-			m_pieceHighlighter.markAsHighlighted(m_previousMove.first.coords);
-			m_pieceHighlighter.markAsHighlighted(m_previousMove.second.coords);
-			
-			// process pieces after action
-			this->processAfterMove();
+			// process pieces after moving
+			this->processAfterMove(targetMove);
 
 			// tell the "controller" that the piece succesfully moved
 			return true;
@@ -194,17 +168,33 @@ bool ChessGame::tryMoveSelectedPiece(const sf::Vector2i& target)
 
 void ChessGame::moveSelectedPiece(const sf::Vector2i& target)
 {
-	// unhighlight the previous move
-	m_pieceHighlighter.unmarkValidMoves(m_moveGenerator.getAllValidMoves());
-	m_pieceHighlighter.remove(m_previousMove.first.coords);
-	m_pieceHighlighter.remove(m_previousMove.second.coords);
+
 }
 
-void ChessGame::processAfterMove() 
+void ChessGame::processAfterMove(chess::PieceMovement movement)
 {
-	// Check if king is checked
+	// Check if the white king is in check
+	if (!m_moveGenerator.isTileFreeFromAttacks(m_chessPieces.getWhiteKingCoords()))
+	{
+		Logger::info("White king has been checked");
 
-	// Check if it is checkmate
+		m_isKingChecked.first = true;
+	}
+
+	// Check if the black king is in check
+	if (!m_moveGenerator.isTileFreeFromAttacks(m_chessPieces.getBlackKingCoords()))
+	{
+		Logger::info("Black king has been checked");
+
+		m_isKingChecked.second = true;
+	}
+
+	// update piece marker
+	m_pieceMarker.setPreviousMove(m_selectedPiece.coords, movement.coords);
+	m_pieceMarker.resetValidMoves();
+
+	// store previous selected piece and the move taken
+	m_previousMove = std::make_pair(m_selectedPiece, movement);
 
 	// other player's turn to make an action
 	this->switchPlayerTurn();

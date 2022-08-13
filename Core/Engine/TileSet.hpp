@@ -8,7 +8,7 @@
 #include "../Engine/LoadResult.hpp"
 
 
-namespace egn
+namespace engine
 {
 	class TileSet
 	{
@@ -20,11 +20,6 @@ namespace egn
 		TileSet()
 		{
 			// default..
-		}
-
-		~TileSet()
-		{
-			std::cout << "bye bye" << std::endl;
 		}
 
 		bool create(const sf::Vector2f& tileSize, sf::Uint32 tileCount)
@@ -86,7 +81,6 @@ namespace egn
 			std::copy(std::filesystem::directory_iterator(path),
 				std::filesystem::directory_iterator(), std::back_inserter(filesInDirectory));
 			std::sort(filesInDirectory.begin(), filesInDirectory.end());
-
 
 			if (sortMethod == SortMethod::Alphabetical) {
 				std::sort(filesInDirectory.begin(), filesInDirectory.end());

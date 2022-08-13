@@ -1,7 +1,7 @@
 #include "TileMap.hpp"
 
 
-namespace egn
+namespace engine
 {
     TileMap::TileMap()
     {
@@ -126,16 +126,21 @@ namespace egn
         states.texture = &this->m_tileSet->getTileSet();
 
         target.draw(this->tileVertices, states);
-        //target.draw(sf::Sprite(this->m_tileSet->getTileSet()));
     }
 
     void TileMap::clear()
     {
+        /*std::memset(&mapdata, -1, sizeof(mapdata));
 
-        mapdata.clear();
+        tileVertices.resize(0);*/
+        sf::Vector2i size = this->getDimension();
 
-        m_tileSet->clear();
-
-        tileVertices.clear();
+        for (int i = 0; i < size.x; i++)
+        {
+            for (int j = 0; j < size.y; j++)
+            {
+                this->setCell(-1, { i, j });
+            }
+        }
     }
 }
